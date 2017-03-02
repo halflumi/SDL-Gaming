@@ -206,3 +206,48 @@ Just form my personal perspective:
 - A world has some other vivid views like the trees, the grass and the houses and blabla, you name it.
 - A world has many entities, i.e. players, NPCs, and monsters.
 
+If so, then the world is going to have a bunch of arrays (vectors) that store these objects respectively, hence the **World** class has (currently):
+
+	enum LayerType
+	{
+		LAYER_SPRITE,
+		LAYER_TILE,
+		LAYER_ENTITY,
+		LAYER_PROJECTILE,
+		LAYER_PLAYER
+	};
+
+	vector<vector<Object*>> layers;
+**layers** just represents five vectors, and every vector stores the responsive objects, so we can use a simple loop in the updating() of **World** to update everything in this game. There goes the most cheerful moment of OOP:
+
+    void World::updating()
+    {
+    	int k, i;
+    	int len;
+    
+    	for (k = 0; k < LAYERCOUNT; k++)
+    	{
+    		len = layers[k].size();
+    		for (i = 0; i < len; i++)
+    			layers[k][i]->update();
+    	}
+    }
+
+
+And finally the **World** class should have a pile of "Creators" if I need to give it a name. For now I only add a "newProjectile" method, which is ofc used to create projectiles when necessary, like when players shooting arrows, bullets or magic missles. In the future I think there will be "newEnemy", "newNPC" or even "newTile". It depends.
+
+Hum... yeah, nearly forgot, there is a relatively important technique I used in **World** class I gotta mention. It is a little bit clumsy though... since it is something I came up with.
+
+The technique doesn't have a massive name like the **Singleton** bro does. It is used to scroll the map.
+
+You see, a game map cannot only be as big as the window goes. That would be ridiculous. Like a map will be 3000 sized, where ATM a game window may only width 800. So the background will scroll as the player moving forward.
+
+To implement this kind of effect, I calculated everything centered with the player, making the program only draw the things near the player, aka. drawing section = **(player.position.x - window.width/2, player.position.x + window.width/2)**.
+
+Down the detailed implementations there will be several things to be cautioned, but now u just need to catch the idea then it is ok.
+
+
+----------
+
+### TextureLoad.h　TextureLoad.cpp　　SoundLoader.h　SoundLoader.cpp　　Inputor.h　Inputor.cpp ###
+
