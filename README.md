@@ -181,7 +181,7 @@ As u can see, when this **frametime** somehow is bigger than 1000/FPS, i.e. your
 
 ----------
 
-### Main.h　Main.cpp　　World.h　World.cpp###
+### Main and World###
 
 I seem to write too much trivial stuff... I'll try to grab essentials from now on.
 
@@ -249,5 +249,72 @@ Down the detailed implementations there will be several things to be cautioned, 
 
 ----------
 
-### TextureLoad.h　TextureLoad.cpp　　SoundLoader.h　SoundLoader.cpp　　Inputor.h　Inputor.cpp ###
+#### TextureLoader　SoundLoader　Inputor　Camera####
 
+These are all the Singleton classes of the game for now.
+
+**TextureLoader** is used to load textures (pictures) and **SoundLoader** is used to load sound files (musics or sfxes). Nothing special.
+
+The way Textureloader draws pictures onto the screen and Soundloader broadcasts sounds are just like how the game is being run - first to load, second to use. Everthing u want to use needs first to be loaded, more specifically loaded from file to the memories.
+
+So it makes sense to put some arrays in **TextureLoader** and **SoundLoader**, they are respectively:
+
+	map<string, SDL_Texture*> textureMap;
+
+	map<string, Mix_Chunk*> sfxs;
+	map<string, Mix_Music*> musics;
+
+Hum... they are "maps" instead of "SDL_Texture*[]" or something likewise. This also makes sense because the textures or the sounds we'll be using won't be in a perfect liner list. We'll be using IDs instead, which is a way that is way more efficient and convenient.
+
+So when we want to play a piece of music in the game, we need to call **Sound::Inst()->load("C:\\music.mp3, "examplemusic", SOUND_MUSIC)** first. The first param is the file path of the music file, the second param is the id of the particular music, and the third param is the type of the sound (is it music or sfx?). What this does is basically loading the music file from the disk and return a pointer of the music stored for the use.<br>
+After this, we can use **Sound::Inst()->playMusic("examplemusic", -1)** to play the music anytime we want, and we simply need to pass the id the music. "-1" means loop endlessly.
+
+I guess an indie game like our making won't be so huge that starts to lag most people's computers. A 200000-line-code and 20000-texture game still won't break a 4G-computer. So most likely we will be loading all the resources that the game is going to use or have potentials to use at the very beginning of the game.
+
+Next class is the **Inputor**. Like the **TextureLoader** and **SoundLoader**, these classes are only some simple encapsulations of SDL functions that make it easier for us to call the functions.
+
+**Inputor** simply encapsulates some keyboard and mouse events. Depending on future development, we can port the game to the mobile platforms like phones, ipads and consoles by adding according controller surpports.
+
+For now I've implemented some basic functions like "iskeydown" , "getMouseButtonState" and "getMouseRelativePosition". In the future there should be more complicated controls like combination keyboard patterns and mouse wheel events.
+
+I guess I need to wrtie a fuction sheet on the wiki which gives you guys a way to get all the API functions. If I were you, I would be already freaking out with this guy writing all these. God.
+
+And we have **Camera**. This is a very simple class that records the position of player. You can regard it as a player-position recorder. Everything besides player use the position of **Camera** to calculate their drawing position (whether to draw or not). The **Camera** will be focusing on a player object and then being upadted in the **World::updating()** fuction exclusively.
+
+In a way **Camera** is verbose here, since we have  the option to make **Player** a Singleton class to solve all these references problems.
+
+The existence of class **Camera** merely refrain **Player** bring a Singleton class. I think the game in the future will definitely be a multiplayer game instead of singleplayer game. Singleplayer sucks sometimes. So **Player** class could not be Singleton. If there is 3 players then the vector of **Player** is gonna have 3 different elements.
+
+
+----------
+
+### IDSheet　Vector2D　Object　 Dice###
+
+**IDSheet.h**, when our game have lots of... let's say thousands of different types of stuff, we'll need a effecient way to organize the IDs. We need to keep them easy to find, and precise to find. So we need a ID sheet like this.
+
+The way how ID sheet is implemented in c++ is exactly the characteristic of c++, because in java u'll (only can) be using static class and final variables. In c++, however, we use macros.<br>
+Hum... I guess Singleton'll do just fine here, but let's keep it thtta way.
+
+**Vector2D.h**, this is a small class represents a point or a 2D vector in the 2D space. It implements a few most basic calculations and is ready to use.
+
+
+**Object.h**, why Object exists is because everything in the game world will have ID, position, size and some other common properties. So we need to create an **Object** class to extract these abstract featrues and make everthing in our game inherit from the **Object** class. THIS IS THE POWER OF OOP!!!<br>
+Long lives OOP forever!!!
+
+(Don't tell others I'm learning Assembly recently, don't wanna be a paradox person)
+
+**Dice.h**, it's a small random number generator. A game is bound to have lots of unstable factors.
+
+
+----------
+
+
+### 3/2/2017 22:03:20 ###
+
+I guess that's all for now. There are a few files I don't cover them here, but they are only some base game classes inherit from the **Object** class, not much to explain. I have full faith in your being able to figure them out yourself.
+
+I don't really want to write this readme since I'm a coder not a writer. Most of the time I will complicate things more than I can explain things. I hope I don't screw up your mind when trying to make things clear.
+
+My code is hard to understand not because they are superior but merely due to the bad habit with my code writing. If you can understand my code naturely, you can.... well, you can do nothing and have absolutely ZERO amount of self-pround since it is useless...
+
+**If have any question then ask.**
