@@ -1,15 +1,16 @@
 # SDL-Gaming
+<br>
 ok, so, yeah, this is um... a project, a game project, maybe not... well, just sorta like thtta way, a project that conducts making a game.
 
 I wch of here, writing down some explanations of the most basic elements of the game itself so far, in case em... the chaotic codes of the game make u feel sick.
 
 The game has 27 source files for now:
-Camera.cpp
-Camera.h
-Dice.cpp
-Dice.h
-Entity.h
-IDSheet.h
+    Camera.cpp
+    Camera.h
+    Dice.cpp
+    Dice.h
+    Entity.h
+    IDSheet.h
 Inputor.cpp
 Inputor.h
 Main.cpp
@@ -41,8 +42,8 @@ I'm only gonna illustrate how I implement these things, if u're having problems 
 
 Okay, enough joking around.
 The files consist of both .h and .cpp, where almost every .cpp has a parallel .h file. This is becasue:
-·   the game is highly OOP featured
-·   the way how C++ implements classes
+- the game is highly OOP featured
+- the way how C++ implements classes
 
 Like player.h and player.cpp, the former is the definition (assignment) of class 'player' and the latter is implementation of that.
 I just want to point this out since this is indispensible, especially this is the utmost difference of how OOP looks like between C++ and Java or C#
@@ -73,3 +74,4 @@ Main* mainClass;
 mainClass = new Main();
 '
 We shouldn't do this with 'Main' (and many other drivers) class here, since this implicate that 'Main' is a repeatable and recreatable object, which is against
+\<br>
