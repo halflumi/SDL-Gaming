@@ -1,0 +1,1 @@
+For /R %%x in (*.png) do PNGCRUSH.EXE -ow -rem allb -reduce "%%x"
