@@ -236,15 +236,15 @@ void World::RenderUI()
 	TextureLoader::Inst()->draw(ManaBar, 105, Main::Inst()->getRenderHeight() + 117, player->mana * 292.0f / player->maxmana, 26);
 	
 	Vector2D nameTextpos(20, Main::Inst()->getRenderHeight() + 10);
-	Vector2D healthNumTextpos(406, Main::Inst()->getRenderHeight() + 60);
-	Vector2D manaNumTextpos(406, Main::Inst()->getRenderHeight() + 110);
-	nameText = new Textbox(nameTextpos, player->name, arial48, { 255,255,255 }, -1);
+	Vector2D healthNumTextpos(406, Main::Inst()->getRenderHeight() + 65);
+	Vector2D manaNumTextpos(406, Main::Inst()->getRenderHeight() + 117);
+	nameText = new Textbox(nameTextpos, player->name, arial28, { 255,255,255 }, -1);
 	nameText->draw();
 	delete nameText;
-	healthNumText = new Textbox(healthNumTextpos, to_string(player->life) + " / " + to_string(player->maxlife), arial48, { 255,255,255 }, -1);
+	healthNumText = new Textbox(healthNumTextpos, to_string(player->life) + " / " + to_string(player->maxlife), arial28, { 255,255,255 }, -1);
 	healthNumText->draw();
 	delete healthNumText;
-	manaNumText = new Textbox(manaNumTextpos, to_string(player->mana) + " / " + to_string(player->maxmana), arial48, { 255,255,255 }, -1);
+	manaNumText = new Textbox(manaNumTextpos, to_string(player->mana) + " / " + to_string(player->maxmana), arial28, { 255,255,255 }, -1);
 	manaNumText->draw();
 	delete manaNumText;
 }

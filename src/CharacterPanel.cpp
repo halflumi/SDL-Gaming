@@ -1,11 +1,12 @@
 #include "CharacterPanel.h"
+#include "Main.h"
 #include "TextureLoader.h"
 #include "Inputor.h"
 #include "Camera.h"
 
 #define TITLEHEIGHT 53
 #define LEVEL_X 97
-#define LEVEL_Y 250
+#define LEVEL_Y 232
 #define EXP_X 29
 #define EXP_Y 310
 #define EXPNEXT_X 291
@@ -44,6 +45,7 @@ void CharacterPanel::update()
 	int length;
 
 	closeButton.setPosition(position.x + 260, position.y + 2);
+	closeButton.update();
 	if (closeButton.outsideUpdate())
 		active = false;
 

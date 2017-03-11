@@ -6,6 +6,7 @@
 #include <vector>
 #include <map>
 #include "Object.h"
+#include "Button.h"
 
 using namespace std;
 
@@ -24,11 +25,13 @@ private:
 	bool _running;
 	int windowWidth;
 	int windowHeight;
+
+	bool HandleMenuEvents();
 public:
 	int renderWidth;
 	int renderHeight;
 	bool inMainMenu;
-	vector<Object*> menuElments;
+	vector<Button*> menuButtons;
 
 	static Main* Inst()
 	{
@@ -48,15 +51,13 @@ public:
 	int getWindowHeight() const { return windowHeight; }
 	int getRenderWidth() const { return renderWidth; }
 	int getRenderHeight() const { return renderHeight; }
-
 	bool isRunning() { return _running; }
 	void quit() { _running = false; }
 
-	bool initialize(const char* title, int xpos, int ypos, int width, int height, bool fullscreen);
+	bool initialize(const char* title, int xpos, int ypos, int width, int height);
 	void prossessing();
+	void changeMenu(int menuID);
 	void updateMainMenu();
 	void renderMainMenu();
-
 	void close();
 };
-

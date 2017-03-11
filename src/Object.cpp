@@ -1,4 +1,5 @@
 #include "Object.h"
+#include "Main.h"
 #include "Camera.h"
 
 void Object::VisiableCheck()

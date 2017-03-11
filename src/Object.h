@@ -8,13 +8,12 @@ using namespace std;
 class Object
 {
 protected:
-	Object() : position(0, 0), width(0), height(0), currentRow(0), currentFrame(0), numFrames(1), animatedSpeed(250), angle(0), alpha(255), visiable(false), active(true) {}
+	Object() : position(0, 0), width(0), height(0), currentRow(0), currentFrame(0), numFrames(1), animatedSpeed(250), uniqueID(""), angle(0), alpha(255), visiable(false), active(true) {}
 	Vector2D position;
 
 	int width;
 	int height;
 
-	int currentRow;
 	int currentFrame;
 	int numFrames;
 	int animatedSpeed;
@@ -26,10 +25,9 @@ protected:
 	virtual void Load() = 0;
 	void VisiableCheck();
 public:
+	int currentRow;
 	bool visiable;
 	bool active;
-
-	virtual ~Object() {}
 
 	virtual string type() = 0;
 	string getUniqueID() { return uniqueID; }

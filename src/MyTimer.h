@@ -15,7 +15,7 @@ public:
 
 	bool isStarted() { return started; }
 	bool isPaused() { return paused; }
-	Uint32 getTicks();
+	int getTicks();
 
 	void start();
 	void start(int shift);

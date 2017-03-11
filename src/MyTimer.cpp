@@ -21,7 +21,7 @@ MyTimer::MyTimer(bool defaultStarted)
 		start();
 }
 
-Uint32 MyTimer::getTicks()
+int MyTimer::getTicks()
 {
 	Uint32 time = 0;
 

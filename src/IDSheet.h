@@ -1,24 +1,35 @@
 #pragma once
 
 //global
-#define CLICKCOOLDOWN 60
+#define CLICKCOOLDOWN 100
 #define PRESSCOOLDOWN 100
 #define UIHEIGHT 168
+//colors
+#define COLOR_WHITE {255,255,255}
+#define COLOR_RED {255,0,0}
+#define COLOR_GREEN {0,255,0}
+#define COLOR_BLUE {0,0,255}
+#define COLOR_ORANGE {241,145,73}
+//menuID
+#define Menu_Main 10000
+#define Menu_Options 10001
 //menu elements
 #define MainMenu "Main_Menu"
 #define MainMenuFile "assets\\Main_Menu.png"
-#define NewGameButton "New_Game_Button"
-#define NewGameButtonFile "assets\\New_Game_Button.png"
-#define ExitButton "Exit_Button"
-#define ExitButtonFile "assets\\Exit_Button.png"
-#define OptionButton "Option_Button"
-#define OptionButtonFile "assets\\Option_Button.png"
+#define NewGameButton "NewGameButton"
+#define ExitButton "ExitButton"
+#define OptionButton "OptionButton"
+#define FullscreenText "FullscreenText"
+#define FullscreenCheckbox "FullscreenCheckbox"
+#define FullscreenCheckboxFile "assets\\FullscreenCheckbox.png"
+#define BackButton "BackButton"
 //fonts
 #define segoeuiFile "fonts\\segoeui.ttf"
 #define segoeui18 "segoeui18"
 #define segoeui22 "segoeui22"
 #define segoeui28 "segoeui28"
 #define arialFile "fonts\\arial.ttf"
+#define arial28 "arial28"
 #define arial48 "arial48"
 //mapID
 #define MapTest01 10001

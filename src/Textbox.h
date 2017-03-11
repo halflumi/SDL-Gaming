@@ -1,6 +1,5 @@
 #pragma once
 #include <SDL_image.h>
-#include "Main.h"
 #include "IDSheet.h"
 #include "Entity.h"
 

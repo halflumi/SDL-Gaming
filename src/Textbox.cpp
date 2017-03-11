@@ -1,4 +1,5 @@
 #include "Textbox.h"
+#include "Main.h"
 #include "Camera.h"
 
 Textbox::Textbox() : textTexture(NULL)
