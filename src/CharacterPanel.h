@@ -20,7 +20,7 @@ public:
 
 	CharacterPanel();
 
-	string type() { return TypeCharacterPanel; }
+	int type() { return TypeCharacterPanel; }
 	void update();
 	void draw();
 

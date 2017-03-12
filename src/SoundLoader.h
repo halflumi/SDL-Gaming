@@ -1,7 +1,7 @@
 #pragma once
 
 #include <iostream>
-#include <map>
+#include <unordered_map>
 #include <string>
 #include "SDL_mixer.h"
 
@@ -22,8 +22,8 @@ private:
 	SoundLoader(const SoundLoader&);
 	SoundLoader& operator=(const SoundLoader&) {};
 
-	map<string, Mix_Chunk*> sfxs;
-	map<string, Mix_Music*> musics;
+	unordered_map<int, Mix_Chunk*> sfxs;
+	unordered_map<int, Mix_Music*> musics;
 public:
 	static SoundLoader* Inst()
 	{
@@ -35,8 +35,9 @@ public:
 		return INSTANCE;
 	}
 
-	bool load(string fileName, string id, sound_type type);
+	bool load(string fileName, int id, sound_type type);
 
-	void playSound(string id, int loop = 0);
-	void playMusic(string id, int loop = 0);
+	void applyVolumn();
+	void playSound(int id, int loop = 0);
+	void playMusic(int id, int loop = 0);
 };

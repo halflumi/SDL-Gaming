@@ -18,7 +18,7 @@ InventoryItem::InventoryItem(int _index) : slotpos(0, 0), stack(1)
 	Load();
 }
 
-InventoryItem::InventoryItem(string id, int _index, int _stack) : slotpos(0, 0), stack(_stack)
+InventoryItem::InventoryItem(int id, int _index, int _stack) : slotpos(0, 0), stack(_stack)
 {
 	selectCooldown = NULL;
 	uniqueID = id;
@@ -26,7 +26,7 @@ InventoryItem::InventoryItem(string id, int _index, int _stack) : slotpos(0, 0),
 	Load();
 }
 
-void InventoryItem::init(string id, int _index, int _stack)
+void InventoryItem::init(int id, int _index, int _stack)
 {
 	active = true;
 	uniqueID = id;
@@ -50,17 +50,20 @@ void InventoryItem::Load()
 	defense = 0;
 	if (uniqueID == WoodenSword)
 	{
+		name = WoodenSwordName;
+		itemClass = ItemClass_Weapon;
+
 		width = 40;
 		height = 40;
-		itemClass = ItemClass_Weapon;
 		minATT = -10;
 		maxATT = 10;
 	}
 	if (uniqueID == OrichalcumShortsword)
 	{
+		itemClass = ItemClass_Weapon;
+
 		width = 38;
 		height = 38;
-		itemClass = ItemClass_Weapon;
 		minATT = 10;
 		maxATT = 20;
 	}
@@ -69,7 +72,7 @@ void InventoryItem::Load()
 
 void InventoryItem::InitItemInfo()
 {
-	itemInfoTexts.push_back(new Textbox(position, uniqueID, segoeui22, { 0,0,255 }, -1));
+	itemInfoTexts.push_back(new Textbox(position, name, segoeui22, { 0,0,255 }, -1));
 	itemInfoTexts.push_back(new Textbox(position, "attack: " + to_string(minATT) + "~" + to_string(maxATT), segoeui18, { 0,255,0 }, -1));
 	//itemInfoTexts.push_back(new Textbox(position, "defense: 10", segoeui18, { 0,255,0 }, -1));
 	//itemInfoTexts.push_back(new Textbox(position, "and other things here", segoeui18, { 0,255,0 }, -1));
@@ -145,7 +148,7 @@ void InventoryItem::update()
 				{
 					if (index == -2) // exchange with equipment slots of character panel
 					{
-						string tempID = player->selectingItem->uniqueID;
+						int tempID = player->selectingItem->uniqueID;
 						int tempIndex = player->selectingItem->index;
 						int tempStack = player->selectingItem->stack;
 						player->selectingItem->init(uniqueID, tempIndex, stack);
@@ -299,7 +302,7 @@ bool Inventory::outsideCheckMouseOver()
 	return false;
 }
 
-bool Inventory::addItem(string itemID, int width, int height, int stack, int maxStack)
+bool Inventory::addItem(int itemID, int width, int height, int stack, int maxStack)
 {
 	bool availSlots[36] = { 0 };
 	int itemsArrayIndex[36] = { 0 };

@@ -36,11 +36,11 @@ public:
 	int defense;
 
 	InventoryItem(int index);
-	InventoryItem(string id, int index, int stack);
+	InventoryItem(int id, int index, int stack);
 	~InventoryItem() { delete selectCooldown; }
-	void init(string id, int _index, int stack);
+	void init(int id, int _index, int stack);
 
-	string type() { return TypeInventoryItem; }
+	int type() { return TypeInventoryItem; }
 	void update();
 	void draw();
 
@@ -62,12 +62,12 @@ public:
 	
 	const InventoryItem* getItem(int i) const { return items[i]; };
 
-	string type() { return TypeInventory; }
+	int type() { return TypeInventory; }
 	void update();
 	void draw();
 
 	bool outsideCheckMouseOver();
 	bool outsideCheckMouseTitle();
-	bool addItem(string itemID, int width, int height, int stack, int maxStack);
+	bool addItem(int itemID, int stack, int maxStack, int width, int height);
 	bool addItem(Item* item);
 };

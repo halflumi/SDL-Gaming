@@ -4,7 +4,7 @@
 #include <SDL_ttf.h>
 #include <iostream>
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include "Object.h"
 #include "Button.h"
 
@@ -20,7 +20,7 @@ private:
 
 	SDL_Window* window;
 	SDL_Renderer* renderer;
-	map<string, TTF_Font*> theFont;
+	unordered_map<int, TTF_Font*> theFont;
 
 	bool _running;
 	int windowWidth;
@@ -46,7 +46,7 @@ public:
 
 	SDL_Window* getWindow() const { return window; }
 	SDL_Renderer* getRenderer() const { return renderer; }
-	TTF_Font* getFont(string fontID) { return theFont[fontID]; }
+	TTF_Font* getFont(int fontID) { return theFont[fontID]; }
 	int getWindowWidth() const { return windowWidth; }
 	int getWindowHeight() const { return windowHeight; }
 	int getRenderWidth() const { return renderWidth; }

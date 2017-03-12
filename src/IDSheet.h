@@ -1,5 +1,5 @@
 #pragma once
-
+///const
 //global
 #define CLICKCOOLDOWN 100
 #define PRESSCOOLDOWN 100
@@ -10,143 +10,156 @@
 #define COLOR_GREEN {0,255,0}
 #define COLOR_BLUE {0,0,255}
 #define COLOR_ORANGE {241,145,73}
-//menuID
-#define Menu_Main 10000
-#define Menu_Options 10001
-//menu elements
-#define MainMenu "Main_Menu"
-#define MainMenuFile "assets\\Main_Menu.png"
-#define NewGameButton "NewGameButton"
-#define ExitButton "ExitButton"
-#define OptionButton "OptionButton"
-#define ResolutionText "ResolutionText"
-#define ResolutionListbox "ResolutionListbox"
-#define FullscreenText "FullscreenText"
-#define FullscreenCheckbox "FullscreenCheckbox"
-#define FullscreenCheckboxFile "assets\\FullscreenCheckbox.png"
-#define BackButton "BackButton"
-//fonts
-#define segoeuiFile "fonts\\segoeui.ttf"
-#define segoeui18 "segoeui18"
-#define segoeui22 "segoeui22"
-#define segoeui28 "segoeui28"
-#define arialFile "fonts\\arial.ttf"
-#define arial28 "arial28"
-#define arial48 "arial48"
-//mapID
-#define MapTest01 10001
-#define MapTest02 10002
-//background
-#define Background "background"
-#define BackgroundFile "assets\\Background.png"
-#define Background2 "background2"
-#define Background2File "assets\\background2.png"
-//panel and UIs
-#define UIpic "UIpic"
-#define UIpicFile "assets\\UIpic.png"
-#define HealthBar "HealthBar"
-#define HealthBarFile "assets\\HealthBar.png"
-#define ManaBar "ManaBar"
-#define ManaBarFile "assets\\ManaBar.png"
-#define InventoryGrid "InventoryGrid"
-#define InventoryGridFile "assets\\InventoryGrid.png"
-#define InventoryGridMask "InventoryGridMask"
-#define InventoryGridMaskFile "assets\\InventoryGridMask.png"
-#define InventoryCloseButton "InventoryCloseButton"
-#define InventoryCloseButtonFile "assets\\InventoryCloseButton.png"
-#define CharacterPanelPic "CharacterPanel"
-#define CharacterPanelPicFile "assets\\CharacterPanel.png"
-#define ExpBar "ExpBar"
-#define ExpBarFile "assets\\ExpBar.png"
-#define DialogBackground "DialogBackground"
-#define DialogBackgroundFile "assets\\DialogBackground.png"
-
+///typeID 100xxxxx
 //Object type
-#define TypeButton "button"
-#define TypeInventory "inventory"
-#define TypeInventoryItem "inventoryitem"
-#define TypeCharacterPanel "characterpanel"
-#define TypeDialog "dialog"
-#define TypeTextbox "textbox"
-#define TypeNPC "npc"
-#define TypeHostile "hostile"
-#define TypeTile "tile"
-#define TypePlayer "player"
-#define TypeProjectile "projectile"
-#define TypeSprite "sprite"
-#define TypeItem "item"
-
-//Hostile
-#define BlackBlock "BlackBlock"
+#define TypeButton 10010000
+#define TypeInventory 10010001
+#define TypeInventoryItem 10010002
+#define TypeCharacterPanel 10010003
+#define TypeDialog 10010004
+#define TypeTextbox 10010005
+#define TypeNPC 10010006
+#define TypeHostile 10010007
+#define TypeTile 10010008
+#define TypePlayer 10010009
+#define TypeProjectile 10010010
+#define TypeSprite 10010011
+#define TypeItem 10010012
+//menuID 101
+#define MenuMain 10110000
+#define MenuOptions 10110001
+//mapID 102
+#define MapTest01 10210001
+#define MapTest02 10210002
+//menu elementsID 103
+#define NewGameButton 10310000
+#define ExitButton 10310001
+#define OptionButton 10310002
+#define ResolutionText 10310003
+#define ResolutionListbox 10310004
+#define FullscreenText 10310005
+#define FullscreenCheckbox 10310006
+#define FullscreenCheckboxFile "assets\\FullscreenCheckbox.png"
+#define VolumnLButton 10310007
+#define VolumnLButtonFile "assets\\VolumnLButton.png"
+#define VolumnRButton 10310008
+#define VolumnRButtonFile "assets\\VolumnRButton.png"
+#define VolumnMasterText 10310009
+#define VolumnMasterNumber 10310010
+#define VolumnMusicText 10310011
+#define VolumnMusicNumber 10310012
+#define VolumnSfxText 10310013
+#define VolumnSfxNumber 10310014
+#define BackButton 10310015
+//ItemClass 104
+#define ItemClass_Weapon 10410000
+///fonts 200xxxxx
+#define segoeuiFile "fonts\\segoeui.ttf"
+#define segoeui18 20010000
+#define segoeui22 20010001
+#define segoeui28 20010002
+#define arialFile "fonts\\arial.ttf"
+#define arial28 20010010
+#define arial48 20010011
+///texture res 300xxxxx
+//menu res
+#define MainMenuPic 30010000
+#define MainMenuPicFile "assets\\Main_Menu.png"
+//background 301
+#define MapBackground 30110000
+#define MapBackgroundFile "assets\\Background.png"
+#define MapBackground2 30110001
+#define MapBackground2File "assets\\background2.png"
+//panel and UIs 302
+#define UIpic 30210000
+#define UIpicFile "assets\\UIpic.png"
+#define HealthBar 30210001
+#define HealthBarFile "assets\\HealthBar.png"
+#define ManaBar 30210002
+#define ManaBarFile "assets\\ManaBar.png"
+#define InventoryGrid 30210003
+#define InventoryGridFile "assets\\InventoryGrid.png"
+#define InventoryGridMask 30210004
+#define InventoryGridMaskFile "assets\\InventoryGridMask.png"
+#define InventoryCloseButton 30210005
+#define InventoryCloseButtonFile "assets\\InventoryCloseButton.png"
+#define CharacterPanelPic 30210006
+#define CharacterPanelPicFile "assets\\CharacterPanel.png"
+#define ExpBar 30210007
+#define ExpBarFile "assets\\ExpBar.png"
+#define DialogBackground 30210008
+#define DialogBackgroundFile "assets\\DialogBackground.png"
+//Hostile 303
+#define BlackBlock 30310000
 #define BlackBlockFile "assets\\BlackBlock.png"
-//ItemClass
-#define ItemClass_Weapon 1
-//Item
-#define WoodenSword "WoodenSword"
+//Item 304
+#define WoodenSword 30410000
+#define WoodenSwordName "Wooden Sword"
 #define WoodenSwordFile "assets\\WoodenSword.png"
-#define OrichalcumShortsword "OrichalcumShortsword"
+#define OrichalcumShortsword 30410001
 #define OrichalcumShortswordFile "assets\\OrichalcumShortsword.png"
-//NPC
-#define LeafNPC "LeafNPC"
+//NPC 305
+#define LeafNPC 30510000
 #define LeafNPCFile "assets\\LeafNPC.png"
-#define GhostNPC "GhostNPC"
+#define GhostNPC 30510001
 #define GhostNPCFile "assets\\GhostNPC.png"
-#define TestPortal "TestPortal"
+#define TestPortal 30510002
 #define TestPortalFile "assets\\TestPortal.png"
-//player
-#define PlayerFrame "PlayerFrame"
+//player 306
+#define PlayerFrame 30610000
 #define PlayerFrameFile "assets\\PlayerFrame.png"
-//projectile
-#define IchorKnifeProjectile "IchorKnifeProjectile"
+//projectile 307
+#define IchorKnifeProjectile 30710000
 #define IchorKnifeProjectileFile "assets\\IchorKnifeProjectile.png"
-#define OrichalcumShortswordProjectile "OrichalcumShortswordProjectile"
+#define OrichalcumShortswordProjectile 30710001
 #define OrichalcumShortswordProjectileFile "assets\\OrichalcumShortsword.png"
-//sprite
-#define WaterMushroomFrame "WaterMushroomFrame"
+//sprite 308
+#define WaterMushroomFrame 30810000
 #define WaterMushroomFrameFile "assets\\WaterMushroomFrame.png"
-#define LadderSprite "LadderSprite"
+#define LadderSprite 30810001
 #define LadderSpriteFile "assets\\LadderSprite.png"
-#define MapGate "MapGate"
+#define MapGate 30810002
 #define MapGateFile "assets\\MapGate.png"
-#define MapGate2 "MapGate2"
+#define MapGate2 30810003
 #define MapGate2File "assets\\MapGate2.png"
-//Tile
-#define Brick "Brick"
+//Tile 309
+#define Brick 30910000
 #define BrickFile "assets\\Brick.png"
-#define Tile01 "Tile01"
+#define Tile01 30910001
 #define Tile01File "assets\\Tile01.png"
-//sounds
-#define Music01 "GoPicnic"
+///sounds 400xxxxx
+//musics 400
+#define Music01 40010000
 #define Music01File "sounds\\GoPicnic.mp3"
-
-#define MenuMouseClick "MenuMouseClick"
+//sfxs 401
+#define MenuMouseClick 40110000
 #define MenuMouseClickFile "sounds\\MenuMouseClick.mp3"
 
-#define WalkOnSnow1 "Snow1"
+#define WalkOnSnow1 40110001
 #define WalkOnSnow1File "sounds\\Snow1.ogg"
-#define WalkOnSnow2 "Snow2"
+#define WalkOnSnow2 40110002
 #define WalkOnSnow2File "sounds\\Snow2.ogg"
-#define WalkOnSnow3 "Snow3"
+#define WalkOnSnow3 40110003
 #define WalkOnSnow3File "sounds\\Snow3.ogg"
-#define WalkOnSnow4 "Snow4"
+#define WalkOnSnow4 40110004
 #define WalkOnSnow4File "sounds\\Snow4.ogg"
-#define AttackSound "barehands.Attack"
+#define AttackSound 40110005
 #define AttackSoundFile "sounds\\barehands.Attack.mp3"
-#define CollisionSound "dualBow.Attack2"
+#define CollisionSound 40110006
 #define CollisionSouldFile "sounds\\dualBow.Attack2.mp3"
-#define DamageSound "0100131.Damage"
+#define DamageSound 40110007
 #define DamageSoundFile "sounds\\0100131.Damage.mp3"
-#define DeathSound "0100131.Die"
+#define DeathSound 40110008
 #define DeathSoundFile "sounds\\0100131.Die.mp3"
-#define PortalNoise "PortalNoise"
+#define PortalNoise 40110009
 #define PortalNoiseFile "sounds\\PortalNoise.wav"
-#define PickupSound "PickUpItem"
+#define PickupSound 40110010
 #define PickupSoundFile "sounds\\PickUpItem.mp3"
-#define LevelupSound "LevelupSound"
+#define LevelupSound 40110011
 #define LevelupSoundFile "sounds\\LevelupSound.wav"
-#define JumpSound "JumpSound"
+#define JumpSound 40110012
 #define JumpSoundFile "sounds\\Jump.mp3"
-#define PlayerDamageSound "0100100.Damage"
+#define PlayerDamageSound 40110013
 #define PlayerDamageSoundFile "sounds\\0100100.Damage.mp3"
-#define WrapGateNoise "Portal"
+#define WrapGateNoise 40110014
 #define WrapGateNoiseFile "sounds\\Portal.mp3"

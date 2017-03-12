@@ -7,7 +7,7 @@
 #include "Inputor.h"
 #include "Dice.h"
 
-Hostile::Hostile(int x, int y, string id, int _worldID)
+Hostile::Hostile(int id, int _worldID, int x, int y)
 {
 	timer = new MyTimer();
 	position.x = x;
@@ -77,7 +77,7 @@ void Hostile::kill()
 		numFrames = 11;
 
 		Camera::Inst()->getTarget_nonConst()->exp += exp; //************xp should not be distributed globally
-		World::Inst()->newItem(position.x + width / 2, position.y + height / 2, WoodenSword, 1);
+		World::Inst()->newItem(WoodenSword, 1, position.x + width / 2, position.y + height / 2);
 		return;
 	}
 }
@@ -88,20 +88,24 @@ void Hostile::onHit(int damage, int critChance)
 	if (Dice::Inst()->rand(100) < critChance)
 	{
 		actualDamage = 2 * (damage - defense);
+		if (actualDamage < 2)
+			actualDamage = 2;
 		life -= actualDamage;
 
 		angle += 45;
 		Vector2D textShift(entityCenter.x + Dice::Inst()->randInverse(20), position.y + Dice::Inst()->randInverse(20));
-		World::Inst()->createText(60, textShift, 0, -0.1f, to_string(actualDamage) + "!", segoeui28,{ 255,0,0 });
+		World::Inst()->createText(textShift, 0, -0.1f, to_string(actualDamage) + "!", segoeui28, COLOR_RED, 60);
 	}
 	else
 	{
 		actualDamage = damage - defense;
-		life -= damage - defense;
+		if (actualDamage < 1)
+			actualDamage = 1;
+		life -= actualDamage;
 
 		angle += 45;
 		Vector2D textShift(entityCenter.x + Dice::Inst()->randInverse(20), position.y + Dice::Inst()->randInverse(20));
-		World::Inst()->createText(60, textShift, 0, -0.1f, to_string(actualDamage), segoeui22,{ 0,255,0 });
+		World::Inst()->createText(textShift, 0, -0.1f, to_string(actualDamage), segoeui22, COLOR_GREEN, 60);
 	}
 	SoundLoader::Inst()->playSound(DamageSound);
 }

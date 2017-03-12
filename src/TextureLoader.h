@@ -2,8 +2,7 @@
 
 #include <SDL.h>
 #include <SDL_ttf.h>
-#include <string>
-#include <map>
+#include <unordered_map>
 
 using namespace std;
 
@@ -15,7 +14,7 @@ private:
 	TextureLoader(const TextureLoader&);
 	static TextureLoader* INSTANCE;
 
-	map<string, SDL_Texture*> textureMap;
+	unordered_map<int, SDL_Texture*> textureMap;
 public:
 	static TextureLoader* Inst()
 	{
@@ -28,16 +27,16 @@ public:
 		return INSTANCE;
 	}
 
-	map<string, SDL_Texture*>& getTextureMap() { return textureMap; }
+	unordered_map<int, SDL_Texture*>& getTextureMap() { return textureMap; }
 
-	bool load(string fileName, string id);
+	bool load(string fileName, int id);
 	void clearTextureMap() { textureMap.clear(); }
-	void clearFromTextureMap(string id);
-	void draw(string id, int x, int y, int width, int height, SDL_RendererFlip flip = SDL_FLIP_NONE);
-	void drawEx(string id, int src_x, int src_y, int dest_x, int dest_y, int width, int height,  SDL_RendererFlip flip = SDL_FLIP_NONE);
-	void drawEx2(string id, int x, int y, int src_width, int src_height, int dest_width, int dest_height, SDL_RendererFlip flip = SDL_FLIP_NONE);
-	void drawFrame(std::string id, int x, int y, int width, int height, int currentRow, int currentFrame,  double angle, int alpha, SDL_RendererFlip flip = SDL_FLIP_NONE);
-	void drawFrameEx(std::string id, int x, int y, int src_width, int src_height, int dest_width, int dest_height, int currentRow, int currentFrame, double angle, int alpha, SDL_RendererFlip flip = SDL_FLIP_NONE);
+	void clearFromTextureMap(int id);
+	void draw(int id, int x, int y, int width, int height, SDL_RendererFlip flip = SDL_FLIP_NONE);
+	void drawEx(int id, int src_x, int src_y, int dest_x, int dest_y, int width, int height,  SDL_RendererFlip flip = SDL_FLIP_NONE);
+	void drawEx2(int id, int x, int y, int src_width, int src_height, int dest_width, int dest_height, SDL_RendererFlip flip = SDL_FLIP_NONE);
+	void drawFrame(int id, int x, int y, int width, int height, int currentRow, int currentFrame,  double angle, int alpha, SDL_RendererFlip flip = SDL_FLIP_NONE);
+	void drawFrameEx(int id, int x, int y, int src_width, int src_height, int dest_width, int dest_height, int currentRow, int currentFrame, double angle, int alpha, SDL_RendererFlip flip = SDL_FLIP_NONE);
 };
 
 

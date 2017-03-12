@@ -11,9 +11,9 @@ private:
 	void Load();
 	bool CheckPlayerNearby();
 public:
-	NPC(int x, int y, string id);
+	NPC(int id, int x, int y);
 
-	string type() { return TypeNPC; }
+	int type() { return TypeNPC; }
 	void update();
 	void draw();
 

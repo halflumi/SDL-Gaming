@@ -15,10 +15,9 @@ private:
 	bool CollisionCheck_tile(Vector2D newpos);
 	bool CollisionCheck_entity(Vector2D newpos);
 public:
-	Projectile(Vector2D pos, string id, int worldID, float velocity_x, float velocity_y, Entity* owner, bool gravitational = true);
+	Projectile(int id, int worldID, Vector2D pos, float velocity_x, float velocity_y, Entity* owner, bool gravitational = true);
 	
-	string type() { return TypeProjectile; }
-
+	int type() { return TypeProjectile; }
 	void update();
 	void draw();
 };

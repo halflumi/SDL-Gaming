@@ -1,4 +1,5 @@
 #include "SoundLoader.h"
+#include "XmlParser.h"
 
 SoundLoader* SoundLoader::INSTANCE = 0;
 
@@ -7,7 +8,7 @@ SoundLoader::~SoundLoader()
 	Mix_CloseAudio();
 }
 
-bool SoundLoader::load(string fileName, string id, sound_type type)
+bool SoundLoader::load(string fileName, int id, sound_type type)
 {
 	if (type == SOUND_MUSIC)
 	{
@@ -36,14 +37,18 @@ bool SoundLoader::load(string fileName, string id, sound_type type)
 	return false;
 }
 
-void SoundLoader::playMusic(string id, int loop)
+void SoundLoader::applyVolumn()
 {
-	Mix_VolumeMusic(100);
+	Mix_VolumeMusic(XmlParser::Inst()->volumn_master * XmlParser::Inst()->volumn_music);
+	Mix_Volume(-1, XmlParser::Inst()->volumn_master * XmlParser::Inst()->volumn_sfx);
+}
+
+void SoundLoader::playMusic(int id, int loop)
+{
 	Mix_PlayMusic(musics[id], loop);
 }
 
-void SoundLoader::playSound(string id, int loop)
+void SoundLoader::playSound(int id, int loop)
 {
-	Mix_Volume(-1, 100);
 	Mix_PlayChannel(-1, sfxs[id], loop);
 }

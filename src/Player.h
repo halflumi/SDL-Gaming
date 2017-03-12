@@ -43,7 +43,7 @@ private:
 	bool CheckCollision_tileY(float y);
 	void CheckCollision_hostile(Vector2D newpos);
 	void CheckInteractive();
-	void DoInteractive(string id);
+	void DoInteractive(int id);
 	void CheckPickup();
 	void HitGround();
 public:
@@ -56,14 +56,14 @@ public:
 	InventoryItem* helmet_equ;
 	int expToNextLevel;
 
-	Player(int x, int y, string id);
+	Player(int id, int x, int y);
 	~Player() { delete inventory; delete keyCooldown; delete mouseCooldown; }
 
 	void setFocused() { focused = true; }
 	void removeFocused() { focused = false; }
 	Vector2D& getDisplayPos() { return display_pos; }
 
-	string type() { return TypePlayer; }
+	int type() { return TypePlayer; }
 	void update();
 	void draw();
 };

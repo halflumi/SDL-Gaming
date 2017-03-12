@@ -32,5 +32,5 @@ void Entity::heal(int point)
 {
 	life = life + point > maxlife ? maxlife : life + point;
 	Vector2D textShift(position.x + width / 2 + Dice::Inst()->randInverse(40), position.y + Dice::Inst()->randInverse(40));
-	World::Inst()->createText(120, textShift, 0.f, -0.5f, to_string(point), segoeui22, { 0, 255, 0 });
+	World::Inst()->createText(textShift, 0.f, -0.5f, to_string(point), segoeui22, COLOR_GREEN, 120);
 }

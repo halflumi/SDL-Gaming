@@ -4,7 +4,7 @@
 #include "TextureLoader.h"
 #include "Camera.h"
 
-Tile::Tile(int x, int y, string id)
+Tile::Tile(int id, int x, int y)
 {
 	position.x = x;
 	position.y = y;

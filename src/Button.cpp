@@ -20,9 +20,17 @@
 //#define EXIT_W 100
 //#define EXIT_H 35
 
-Button::Button(string id) : clickCooldown(true)
+Button::Button(int id) : clickCooldown(true)
 {
 	uniqueID = id;
+	flag = 0;
+	Load();
+}
+
+Button::Button(int id, int _flag) : clickCooldown(true)
+{
+	uniqueID = id;
+	flag = _flag;
 	Load();
 }
 
@@ -70,16 +78,16 @@ void Button::Load()
 		switch (XmlParser::Inst()->window_w)
 		{
 		case 800:
-			currentFrame = 0;
+			flag = 0;
 			break;
 		case 1024:
-			currentFrame = 1;
+			flag = 1;
 			break;
 		case 1280:
-			currentFrame = 2;
+			flag = 2;
 			break;
 		case 1600:
-			currentFrame = 3;
+			flag = 3;
 			break;
 		}
 		return;
@@ -100,10 +108,92 @@ void Button::Load()
 		height = 20;
 		return;
 	}
+	if (uniqueID == VolumnLButton)
+	{
+		switch (flag)
+		{
+		case 0:
+			position.x = NEWGAME_X + 225;
+			position.y = NEWGAME_Y + 110;
+			break;
+		case 1:
+			position.x = NEWGAME_X + 225;
+			position.y = NEWGAME_Y + 160;
+			break;
+		case 2:
+			position.x = NEWGAME_X + 225;
+			position.y = NEWGAME_Y + 210;
+			break;
+		}
+		width = 15;
+		height = 20;
+	}
+	if (uniqueID == VolumnRButton)
+	{
+		switch (flag)
+		{
+		case 0:
+			position.x = NEWGAME_X + 290;
+			position.y = NEWGAME_Y + 110;
+			break;
+		case 1:
+			position.x = NEWGAME_X + 290;
+			position.y = NEWGAME_Y + 160;
+			break;
+		case 2:
+			position.x = NEWGAME_X + 290;
+			position.y = NEWGAME_Y + 210;
+			break;
+		}
+		width = 15;
+		height = 20;
+	}
+	if (uniqueID == VolumnMasterText)
+	{
+		position.x = NEWGAME_X;
+		position.y = NEWGAME_Y + 100;
+		buttonText = new Textbox(position, "Master Volumn", arial28, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28), "Master Volumn", &width, &height);
+		return;
+	}
+	if (uniqueID == VolumnMasterNumber)
+	{
+		position.x = NEWGAME_X + 245;
+		position.y = NEWGAME_Y + 100;
+		buttonText = new Textbox(position, to_string(XmlParser::Inst()->volumn_master), arial28, COLOR_WHITE, -1);
+	}
+	if (uniqueID == VolumnMusicText)
+	{
+		position.x = NEWGAME_X;
+		position.y = NEWGAME_Y + 150;
+		buttonText = new Textbox(position, "Music Volumn", arial28, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28), "Master Volumn", &width, &height);
+		return;
+	}
+	if (uniqueID == VolumnMusicNumber)
+	{
+		position.x = NEWGAME_X + 245;
+		position.y = NEWGAME_Y + 150;
+		buttonText = new Textbox(position, to_string(XmlParser::Inst()->volumn_music), arial28, COLOR_WHITE, -1);
+	}
+	if (uniqueID == VolumnSfxText)
+	{
+		position.x = NEWGAME_X;
+		position.y = NEWGAME_Y + 200;
+		buttonText = new Textbox(position, "Sfx Volumn", arial28, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28), "Master Volumn", &width, &height);
+		return;
+	}
+	if (uniqueID == VolumnSfxNumber)
+	{
+		position.x = NEWGAME_X + 245;
+		position.y = NEWGAME_Y + 200;
+		buttonText = new Textbox(position, to_string(XmlParser::Inst()->volumn_sfx), arial28, COLOR_WHITE, -1);
+	}
 	if (uniqueID == BackButton)
 	{
 		position.x = EXIT_X;
-		position.y = EXIT_Y;
+		position.y = EXIT_Y + 100;
 		buttonText = new Textbox(position, "Back to the Main Menu", arial28, COLOR_WHITE, -1);
 		TTF_SizeText(Main::Inst()->getFont(arial28), "Back to the Main Menu", &width, &height);
 		return;
@@ -113,7 +203,6 @@ void Button::Load()
 	if (uniqueID == InventoryCloseButton)
 	{
 		width = height = 42;
-		numFrames = 2;
 		return;
 	}
 }
@@ -123,43 +212,25 @@ void Button::update()
 	if (uniqueID == NewGameButton)
 	{
 		if (CheckMouseOver())
-		{
-			currentRow = 1;
 			buttonText->changeColor(COLOR_RED);
-		}
-		else if (currentRow == 1)
-		{
-			currentRow = 0;
+		else
 			buttonText->changeColor(COLOR_WHITE);
-		}
 		return;
 	}
-	if (uniqueID == OptionButton)
+	if (uniqueID == OptionButton || uniqueID == BackButton)
 	{
 		if (CheckMouseOver())
-		{
-			currentRow = 1;
 			buttonText->changeColor(COLOR_ORANGE);
-		}
-		else if (currentRow == 1)
-		{
-			currentRow = 0;
+		else
 			buttonText->changeColor(COLOR_WHITE);
-		}
 		return;
 	}
 	if (uniqueID == ExitButton)
 	{
 		if (CheckMouseOver())
-		{
-			currentRow = 1;
 			buttonText->changeColor(COLOR_BLUE);
-		}
-		else if (currentRow == 1)
-		{
-			currentRow = 0;
+		else
 			buttonText->changeColor(COLOR_WHITE);
-		}
 		return;
 	}
 	if (uniqueID == ResolutionListbox)
@@ -169,7 +240,7 @@ void Button::update()
 		else
 			buttonText->changeColor(COLOR_WHITE);
 
-		switch (currentFrame % 4)
+		switch (flag % 4)
 		{
 		case 0:
 			if (buttonText->changeText("800x600"))
@@ -219,20 +290,27 @@ void Button::update()
 			currentRow = 0;
 		return;
 	}
-	if (uniqueID == BackButton)
+	if (uniqueID == VolumnLButton || uniqueID == VolumnRButton)
 	{
 		if (CheckMouseOver())
-		{
 			currentRow = 1;
-			buttonText->changeColor(COLOR_ORANGE);
-		}
-		else if (currentRow == 1)
-		{
+		else
 			currentRow = 0;
-			buttonText->changeColor(COLOR_WHITE);
-		}
 		return;
 	}
+	if (uniqueID == VolumnMasterNumber)
+	{
+		buttonText->changeText(to_string(XmlParser::Inst()->volumn_master));
+	}
+	if (uniqueID == VolumnMusicNumber)
+	{
+		buttonText->changeText(to_string(XmlParser::Inst()->volumn_music));
+	}
+	if (uniqueID == VolumnSfxNumber)
+	{
+		buttonText->changeText(to_string(XmlParser::Inst()->volumn_sfx));
+	}
+	
 	//ui
 	if (uniqueID == InventoryCloseButton)
 	{

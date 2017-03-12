@@ -10,11 +10,10 @@ private:
 
 	void Load();
 public:
-	Hostile(int x, int y, string id, int worldID);
+	Hostile(int id, int worldID, int x, int y);
 	~Hostile() { delete timer; }
 
-	string type() { return TypeHostile; }
-
+	int type() { return TypeHostile; }
 	void update();
 	void draw();
 	void kill();

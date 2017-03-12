@@ -94,11 +94,15 @@ bool Main::initialize(const char* title, int xpos, int ypos, int width, int heig
 		return false;
 	}
 	TTF_SetFontStyle(theFont[arial48], TTF_STYLE_BOLD);
-	///load menu texture
-	TextureLoader::Inst()->load(MainMenuFile, MainMenu);
+	///load menu res
+	TextureLoader::Inst()->load(MainMenuPicFile, MainMenuPic);
 	TextureLoader::Inst()->load(FullscreenCheckboxFile, FullscreenCheckbox);
+	TextureLoader::Inst()->load(VolumnLButtonFile, VolumnLButton);
+	TextureLoader::Inst()->load(VolumnRButtonFile, VolumnRButton);
+	SoundLoader::Inst()->load(Music01File, Music01, SOUND_MUSIC);
+	SoundLoader::Inst()->playMusic(Music01, 2);
 	SoundLoader::Inst()->load(MenuMouseClickFile, MenuMouseClick, SOUND_SFX);
-	changeMenu(Menu_Main);
+	changeMenu(MenuMain);
 
 	_running = true;
 	inMainMenu = true;
@@ -109,6 +113,7 @@ void Main::prossessing()
 {
 	renderWidth = windowWidth;
 	renderHeight = windowHeight - UIHEIGHT;
+	
 	Inputor::Inst()->updating();
 
 	SDL_RenderClear(Main::Inst()->getRenderer());
@@ -128,6 +133,7 @@ void Main::prossessing()
 	}
 
 	SDL_RenderPresent(renderer);
+	SoundLoader::Inst()->applyVolumn();
 }
 
 bool Main::HandleMenuEvents()
@@ -150,7 +156,7 @@ bool Main::HandleMenuEvents()
 			if (menuButtons[i]->getUniqueID() == OptionButton)
 			{
 				SoundLoader::Inst()->playSound(MenuMouseClick);
-				changeMenu(Menu_Options);
+				changeMenu(MenuOptions);
 				return true;
 			}
 			if (menuButtons[i]->getUniqueID() == ExitButton)
@@ -163,7 +169,7 @@ bool Main::HandleMenuEvents()
 			if (menuButtons[i]->getUniqueID() == ResolutionListbox)
 			{
 				SoundLoader::Inst()->playSound(MenuMouseClick);
-				menuButtons[i]->currentFrame++;
+				menuButtons[i]->flag++;
 				return false;
 			}
 			if (menuButtons[i]->getUniqueID() == FullscreenCheckbox)
@@ -172,10 +178,52 @@ bool Main::HandleMenuEvents()
 				XmlParser::Inst()->fullscreen = !XmlParser::Inst()->fullscreen;
 				return false;
 			}
+			if (menuButtons[i]->getUniqueID() == VolumnLButton)
+			{
+				switch (menuButtons[i]->flag)
+				{
+				case 0:
+					XmlParser::Inst()->volumn_master--;
+					if (XmlParser::Inst()->volumn_master == -1)
+						XmlParser::Inst()->volumn_master = 10;
+					break;
+				case 1:
+					XmlParser::Inst()->volumn_music--;
+					if (XmlParser::Inst()->volumn_music == -1)
+						XmlParser::Inst()->volumn_music = 10;
+					break;
+				case 2:
+					XmlParser::Inst()->volumn_sfx--;
+					if (XmlParser::Inst()->volumn_sfx == -1)
+						XmlParser::Inst()->volumn_sfx = 10;
+					break;
+				}
+			}
+			if (menuButtons[i]->getUniqueID() == VolumnRButton)
+			{
+				switch (menuButtons[i]->flag)
+				{
+				case 0:
+					XmlParser::Inst()->volumn_master++;
+					if (XmlParser::Inst()->volumn_master == 11)
+						XmlParser::Inst()->volumn_master = 0;
+					break;
+				case 1:
+					XmlParser::Inst()->volumn_music++;
+					if (XmlParser::Inst()->volumn_music == 11)
+						XmlParser::Inst()->volumn_music = 0;
+					break;
+				case 2:
+					XmlParser::Inst()->volumn_sfx++;
+					if (XmlParser::Inst()->volumn_sfx == 11)
+						XmlParser::Inst()->volumn_sfx = 0;
+					break;
+				}
+			}
 			if (menuButtons[i]->getUniqueID() == BackButton)
 			{
 				SoundLoader::Inst()->playSound(MenuMouseClick);
-				changeMenu(Menu_Main);
+				changeMenu(MenuMain);
 				return true;
 			}
 		}
@@ -188,16 +236,28 @@ void Main::changeMenu(int menuID)
 	menuButtons.clear();
 	switch (menuID)
 	{
-	case Menu_Main:
+	case MenuMain:
 		menuButtons.push_back(new Button(NewGameButton));
 		menuButtons.push_back(new Button(ExitButton));
 		menuButtons.push_back(new Button(OptionButton));
 		break;
-	case Menu_Options:
+	case MenuOptions:
 		menuButtons.push_back(new Button(ResolutionText));
 		menuButtons.push_back(new Button(ResolutionListbox));
 		menuButtons.push_back(new Button(FullscreenCheckbox));
 		menuButtons.push_back(new Button(FullscreenText));
+		menuButtons.push_back(new Button(VolumnMasterText));
+		menuButtons.push_back(new Button(VolumnLButton, 0));
+		menuButtons.push_back(new Button(VolumnRButton, 0));
+		menuButtons.push_back(new Button(VolumnMasterNumber));
+		menuButtons.push_back(new Button(VolumnMusicText));
+		menuButtons.push_back(new Button(VolumnLButton, 1));
+		menuButtons.push_back(new Button(VolumnRButton, 1));
+		menuButtons.push_back(new Button(VolumnMusicNumber));
+		menuButtons.push_back(new Button(VolumnSfxText));
+		menuButtons.push_back(new Button(VolumnLButton, 2));
+		menuButtons.push_back(new Button(VolumnRButton, 2));
+		menuButtons.push_back(new Button(VolumnSfxNumber));
 		menuButtons.push_back(new Button(BackButton));
 		break;
 	}
@@ -213,7 +273,7 @@ void Main::updateMainMenu()
 
 void Main::renderMainMenu()
 {
-	TextureLoader::Inst()->drawEx2(MainMenu, 0, 0, 1024, 768, windowWidth, windowHeight);
+	TextureLoader::Inst()->drawEx2(MainMenuPic, 0, 0, 1024, 768, windowWidth, windowHeight);
 
 	int i, len;
 	len = menuButtons.size();

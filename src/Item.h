@@ -13,11 +13,10 @@ public:
 	int maxStack;
 
 	//Item(int x, int y, string id);
-	Item(int x, int y, string id, int stack);
-	Item(int x, int y, float velocity_x, float velocity_y, string id, int stack);
+	Item(int id, int stack, int x, int y);
+	Item(int id, int stack, int x, int y, float velocity_x, float velocity_y);
 
-	string type() { return TypeItem; }
-
+	int type() { return TypeItem; }
 	void update();
 	void draw();
 };

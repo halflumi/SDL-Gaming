@@ -17,7 +17,7 @@
 #define LADDERSPEED 1.0f
 #define LADDERJUMPSPEED -7.f
 
-Player::Player(int x, int y, string id)
+Player::Player(int id, int x, int y)
 {
 	name = "Who am I?";
 	position.set(x, y);
@@ -292,7 +292,6 @@ void Player::HandleInput()
 		direction.x *= 4;
 		direction.y *= 10;
 		World::Inst()->newItem(entityCenter.x, entityCenter.y,direction.x, direction.y, selectingItem->getUniqueID(), selectingItem->stack);
-		selectingItem->setUniqueID("");
 		selectingItem->active = false;
 		selectingItem->beingPicked = false;
 		if (selectingItem->index == -1)
@@ -320,7 +319,7 @@ void Player::HandleInput()
 			for (int i = 0; i < 10; i++)
 			{
 				Vector2D randpos(entityCenter.x + Dice::Inst()->rand(80), entityCenter.y + Dice::Inst()->randInverse(80));
-				World::Inst()->newProjectile(randpos, IchorKnifeProjectile, direction.x, direction.y, this);
+				World::Inst()->newProjectile(IchorKnifeProjectile, randpos, direction.x, direction.y, this);
 				SoundLoader::Inst()->playSound(AttackSound);
 
 				life--;
@@ -340,12 +339,12 @@ void Player::Attacking()
 		direction.normalize();
 		direction.x *= 10;
 		direction.y *= 5;
-		World::Inst()->newProjectile(entityCenter, IchorKnifeProjectile, direction.x, direction.y, this);
+		World::Inst()->newProjectile(IchorKnifeProjectile, entityCenter, direction.x, direction.y, this);
 		SoundLoader::Inst()->playSound(AttackSound);
 
 		life--;
 		Vector2D textShift(position.x + width / 2 + Dice::Inst()->randInverse(20), position.y + Dice::Inst()->randInverse(20));
-		World::Inst()->createText(120, textShift, 0.f, -0.5f, "-1s", segoeui22, { 255, 0, 0 });
+		World::Inst()->createText(textShift, 0.f, -0.5f, "-1s", segoeui22, COLOR_RED, 120);
 	}
 	else if (rightHand_equ->getUniqueID() == OrichalcumShortsword)
 	{
@@ -358,12 +357,12 @@ void Player::Attacking()
 		if (direction.x > 0)
 		{
 			Vector2D swordpos(position.x + width, entityCenter.y - 20.f);
-			meleeProjectile = new Projectile(swordpos, OrichalcumShortswordProjectile, -1, 0.1f, 0.f, this);
+			meleeProjectile = new Projectile(OrichalcumShortswordProjectile, -1, swordpos, 0.1f, 0.f, this);
 		}
 		else
 		{
 			Vector2D swordpos(position.x, entityCenter.y - 20.f);
-			meleeProjectile = new Projectile(swordpos, OrichalcumShortswordProjectile, -1, -0.1f, 0.f, this);
+			meleeProjectile = new Projectile(OrichalcumShortswordProjectile, -1, swordpos, -0.1f, 0.f, this);
 		}
 			
 		SoundLoader::Inst()->playSound(AttackSound);
@@ -376,12 +375,12 @@ void Player::Attacking()
 		direction.normalize();
 		direction.x *= 10;
 		direction.y *= 5;
-		World::Inst()->newProjectile(entityCenter, IchorKnifeProjectile, direction.x, direction.y, this);
+		World::Inst()->newProjectile(IchorKnifeProjectile, entityCenter, direction.x, direction.y, this);
 		SoundLoader::Inst()->playSound(AttackSound);
 
 		life--;
 		Vector2D textShift(position.x + width / 2 + Dice::Inst()->randInverse(20), position.y + Dice::Inst()->randInverse(20));
-		World::Inst()->createText(120, textShift, 0.f, -0.5f, "-1s", segoeui22, { 255, 0, 0 });
+		World::Inst()->createText(textShift, 0.f, -0.5f, "-1s", segoeui22, COLOR_RED, 120);
 	}
 }
 
@@ -636,7 +635,7 @@ void Player::CheckCollision_hostile(Vector2D newpos)
 		int damage = Dice::Inst()->rand(entities[i]->minATT, entities[i]->maxATT) - defense;
 		life -= damage;
 		Vector2D textShift(entityCenter.x + Dice::Inst()->randInverse(20), position.y + Dice::Inst()->randInverse(20));
-		World::Inst()->createText(60, textShift, 0, -0.1f, to_string(damage), segoeui22, { 0,255,0 });
+		World::Inst()->createText(textShift, 0, -0.1f, to_string(damage), segoeui22, COLOR_RED, 60);
 		velocity.y = -1.f;
 		if (entities[i]->getPosition().x > position.x)
 			velocity.x = -5.f;
@@ -702,7 +701,7 @@ void Player::CheckInteractive()
 	}
 }
 
-void Player::DoInteractive(string id)
+void Player::DoInteractive(int id)
 {
 	if (id == TestPortal)
 	{

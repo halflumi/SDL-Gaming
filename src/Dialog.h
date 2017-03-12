@@ -15,7 +15,7 @@ public:
 	Dialog();
 	~Dialog() { delete dialogText; };
 
-	string type() { return TypeDialog; }
+	int type() { return TypeDialog; }
 	void update();
 	void draw();
 };

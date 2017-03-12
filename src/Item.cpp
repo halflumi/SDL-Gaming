@@ -6,7 +6,7 @@
 #include "Camera.h"
 #include "Dice.h"
 
-Item::Item(int x, int y, string id, int _stack) : stack(_stack)
+Item::Item(int id, int _stack, int x, int y) : stack(_stack)
 {
 	position.x = x;
 	position.y = y;
@@ -14,7 +14,7 @@ Item::Item(int x, int y, string id, int _stack) : stack(_stack)
 	Load();
 }
 
-Item::Item(int x, int y, float velocity_x, float velocity_y, string id, int _stack) : stack(_stack)
+Item::Item(int id, int _stack, int x, int y, float velocity_x, float velocity_y) : stack(_stack)
 {
 	position.x = x;
 	position.y = y;

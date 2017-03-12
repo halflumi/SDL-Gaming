@@ -16,11 +16,13 @@ private:
 	void Load();
 	bool CheckMouseOver();
 public:
-	//Button() { };
-	Button(string id);
+	int flag;
+
+	Button(int id);
+	Button(int id, int flag);
 	~Button() { if (buttonText) delete buttonText; }
 
-	string type() { return TypeButton; }
+	int type() { return TypeButton; }
 	void update();
 	void draw();
 

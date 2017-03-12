@@ -16,8 +16,8 @@ void World::initialize()
 {
 	currentMapID = 0;
 	///Load backgrounds
-	TextureLoader::Inst()->load(BackgroundFile, Background);
-	TextureLoader::Inst()->load(Background2File, Background2);
+	TextureLoader::Inst()->load(MapBackgroundFile, MapBackground);
+	TextureLoader::Inst()->load(MapBackground2File, MapBackground2);
 	///Load panels and uis
 	TextureLoader::Inst()->load(UIpicFile, UIpic);
 	TextureLoader::Inst()->load(HealthBarFile, HealthBar);
@@ -49,8 +49,6 @@ void World::initialize()
 	TextureLoader::Inst()->load(WoodenSwordFile, WoodenSword);
 	TextureLoader::Inst()->load(OrichalcumShortswordFile, OrichalcumShortsword);
 	///Load sounds
-	SoundLoader::Inst()->load(Music01File, Music01, SOUND_MUSIC);
-	SoundLoader::Inst()->playMusic(Music01, 2);
 	SoundLoader::Inst()->load(WalkOnSnow1File, WalkOnSnow1, SOUND_SFX);
 	SoundLoader::Inst()->load(WalkOnSnow2File, WalkOnSnow2, SOUND_SFX);
 	SoundLoader::Inst()->load(WalkOnSnow3File, WalkOnSnow3, SOUND_SFX);
@@ -92,7 +90,7 @@ void World::changeMap(int mapID)
 {
 	if (layer_player.empty())
 	{
-		Player* player = new Player(0, 0, PlayerFrame);
+		Player* player = new Player(PlayerFrame, 0, 0);
 		getLayer_player().push_back(player);
 		Camera::Inst()->Focus(player);
 	}
@@ -103,36 +101,36 @@ void World::changeMap(int mapID)
 	{
 		width = 3072;
 		height = 1000;
-		backgroundID = Background;
+		backgroundID = MapBackground;
 		///Spawn point
 		Camera::Inst()->getTarget_nonConst()->setPosition(1000, height - 100);
 		///tiles
 		for (int i = 0; i < 10; i++)
-			getLayer_tile().push_back(new Tile(47 * i, height - 37, Brick));
+			getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 37));
 		for (int i = 10; i < 20; i++)
-			getLayer_tile().push_back(new Tile(47 * i, height - 244, Brick));
+			getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 244));
 		///sprites
-		getLayer_background().push_back(new Sprite(1000, height - 136, WaterMushroomFrame));
-		getLayer_foreground().push_back(new Sprite(19 * 47, height - 244, LadderSprite));
-		getLayer_foreground().push_back(new Sprite(1600, height - 154, MapGate));
+		getLayer_background().push_back(new Sprite(WaterMushroomFrame, 1000, height - 136));
+		getLayer_foreground().push_back(new Sprite(LadderSprite, 19 * 47, height - 244));
+		getLayer_foreground().push_back(new Sprite(MapGate, 1600, height - 154));
 		///entities
-		getLayer_entity().push_back(new NPC(2000, height - 100, LeafNPC));
-		getLayer_entity().push_back(new NPC(1400, height - 80, GhostNPC));
-		getLayer_entity().push_back(new NPC(1200, height - 105, TestPortal));
-		getLayer_entity().push_back(new Hostile(2500, height - 200, BlackBlock, 0));
+		getLayer_entity().push_back(new NPC(LeafNPC, 2000, height - 100));
+		getLayer_entity().push_back(new NPC(GhostNPC, 1400, height - 80));
+		getLayer_entity().push_back(new NPC(TestPortal, 1200, height - 105));
+		getLayer_entity().push_back(new Hostile(BlackBlock, 0, 2500, height - 200));
 		return;
 	}
 	if (mapID == MapTest02)
 	{
 		width = 2048;
 		height = 700;
-		backgroundID = Background2;
+		backgroundID = MapBackground2;
 		///Spawn point
 		Camera::Inst()->getTarget_nonConst()->setPosition(0, height - 100);
 		///sprites
-		getLayer_foreground().push_back(new Sprite(100, height - 154, MapGate2));
+		getLayer_foreground().push_back(new Sprite(MapGate2, 100, height - 154));
 		///items
-		getLayer_entity().push_back(new Item(800, 0, OrichalcumShortsword, 1));
+		getLayer_entity().push_back(new Item(OrichalcumShortsword, 1, 800, 0));
 	}
 }
 
@@ -255,7 +253,7 @@ void World::RenderUI()
 	manaNumText.draw();
 }
 
-void World::newProjectile(Vector2D pos, string id, float velocity_x, float velocity_y, Entity* owner, bool gravitational)
+void World::newProjectile(int id, Vector2D pos, float velocity_x, float velocity_y, Entity* owner, bool gravitational)
 {
 	vector<Projectile*>& projectiles = getLayer_projectile();
 	int len = projectiles.size();
@@ -265,15 +263,15 @@ void World::newProjectile(Vector2D pos, string id, float velocity_x, float veloc
 		if (!projectiles[i]->active)
 		{
 			delete projectiles[i];
-			projectiles[i] = new Projectile(pos, id, i, velocity_x, velocity_y, owner, gravitational);
+			projectiles[i] = new Projectile(id, i, pos, velocity_x, velocity_y, owner, gravitational);
 			return;
 		}
 	}
 
-	projectiles.push_back(new Projectile(pos, id, len, velocity_x, velocity_y, owner, gravitational));
+	projectiles.push_back(new Projectile(id, len, pos, velocity_x, velocity_y, owner, gravitational));
 }
 
-void World::createText(int lastingTime, Vector2D pos, float velocity_x, float velocity_y, string text, string fontID, SDL_Color color)
+void World::createText(Vector2D pos, float velocity_x, float velocity_y, string text, int fontID, SDL_Color color, int lastingTime)
 {
 	vector<Textbox*>& texts = getLayer_text();
 	int len = texts.size();
@@ -291,7 +289,7 @@ void World::createText(int lastingTime, Vector2D pos, float velocity_x, float ve
 	texts.push_back(new Textbox(pos, velocity_x, velocity_y, text, fontID, color, lastingTime));
 }
 
-void World::newHostile(int x, int y, string id)
+void World::newHostile(int id, int x, int y)
 {
 	vector<Entity*>& entites = getLayer_entity();
 	int len = entites.size();
@@ -301,15 +299,15 @@ void World::newHostile(int x, int y, string id)
 		if (entites[i]->dead)
 		{
 			delete entites[i];
-			entites[i] = new Hostile(x, y, id, i);
+			entites[i] = new Hostile(id, i, x, y);
 			return;
 		}
 	}
 
-	entites.push_back(new Hostile(x, y, id, i));
+	entites.push_back(new Hostile(id, i, x, y));
 }
 
-void World::newItem(int x, int y, string id, int stack)
+void World::newItem(int id, int stack, int x, int y)
 {
 	vector<Entity*>& entites = getLayer_entity();
 	int len = entites.size();
@@ -319,15 +317,15 @@ void World::newItem(int x, int y, string id, int stack)
 		if (entites[i]->dead)
 		{
 			delete entites[i];
-			entites[i] = new Item(x, y, id, stack);
+			entites[i] = new Item(id, stack, x, y);
 			return;
 		}
 	}
 
-	entites.push_back(new Item(x, y, id, stack));
+	entites.push_back(new Item(id, stack, x, y));
 }
 
-void World::newItem(int x, int y, float velocity_x, float velocity_y, string id, int stack)
+void World::newItem(int id, int stack, int x, int y, float velocity_x, float velocity_y)
 {
 	vector<Entity*>& entites = getLayer_entity();
 	int len = entites.size();
@@ -337,10 +335,10 @@ void World::newItem(int x, int y, float velocity_x, float velocity_y, string id,
 		if (entites[i]->dead)
 		{
 			delete entites[i];
-			entites[i] = new Item(x, y, velocity_x, velocity_y, id, stack);
+			entites[i] = new Item(id, stack, x, y, velocity_x, velocity_y);
 			return;
 		}
 	}
 
-	entites.push_back(new Item(x, y, velocity_x, velocity_y, id, stack));
+	entites.push_back(new Item(id, stack, x, y, velocity_x, velocity_y));
 }

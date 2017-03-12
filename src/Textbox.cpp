@@ -14,7 +14,7 @@ Textbox::Textbox() : textTexture(NULL)
 	maxlife = -1;
 }
 
-Textbox::Textbox(Vector2D pos, string _text, string _fontID, SDL_Color _color, int lastingTime) : textTexture(NULL)
+Textbox::Textbox(Vector2D pos, string _text, int _fontID, SDL_Color _color, int lastingTime) : textTexture(NULL)
 {
 	position = pos;
 	text = _text;
@@ -24,7 +24,7 @@ Textbox::Textbox(Vector2D pos, string _text, string _fontID, SDL_Color _color, i
 	Load();
 }
 
-Textbox::Textbox(Vector2D pos, float velocity_x, float velocity_y, string _text, string _fontID, SDL_Color _color, int lastingTime) : textTexture(NULL)
+Textbox::Textbox(Vector2D pos, float velocity_x, float velocity_y, string _text, int _fontID, SDL_Color _color, int lastingTime) : textTexture(NULL)
 {
 	position = pos;
 	velocity.x = velocity_x;
@@ -36,7 +36,7 @@ Textbox::Textbox(Vector2D pos, float velocity_x, float velocity_y, string _text,
 	Load();
 }
 
-void Textbox::init(Vector2D* pos, string _text, string _fontID, SDL_Color _color) 
+void Textbox::init(Vector2D* pos, string _text, int _fontID, SDL_Color _color) 
 {
 	position.x = pos->x;
 	position.y = pos->y;
@@ -55,7 +55,7 @@ bool Textbox::changeText(string _text)
 	return true;
 }
 
-void Textbox::changeFont(string _fontID)
+void Textbox::changeFont(int _fontID)
 {
 	if (fontID == _fontID)
 		return;

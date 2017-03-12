@@ -28,7 +28,7 @@ private:
 	World& operator=(const World&) {};
 
 	int currentMapID;
-	string backgroundID;
+	int backgroundID;
 	int width;
 	int height;
 	Textbox nameText;
@@ -72,9 +72,9 @@ public:
 	void updating();
 	void rendering();
 
-	void newProjectile(Vector2D pos, string id, float velocity_x, float velocity_y, Entity* owner, bool gravitational = true);
-	void createText(int lastingTime, Vector2D pos, float velocity_x, float velocity_y, string text, string fontID, SDL_Color color = { 0,0,0 });
-	void newHostile(int x, int y, string id);
-	void newItem(int x, int y, string id, int stack);
-	void newItem(int x, int y, float velocity_x, float velocity_y, string id, int stack);
+	void newProjectile(int id, Vector2D pos, float velocity_x, float velocity_y, Entity* owner, bool gravitational = true);
+	void createText(Vector2D pos, float velocity_x, float velocity_y, string text, int fontID, SDL_Color color, int lastingTime);
+	void newHostile(int id, int x, int y);
+	void newItem(int id, int stack, int x, int y);
+	void newItem(int id, int stack, int x, int y, float velocity_x, float velocity_y);
 };

@@ -9,7 +9,7 @@
 
 #define PI 3.1415926F
 
-Projectile::Projectile(Vector2D pos, string id, int _worldID, float velocity_x, float velocity_y, Entity* _owner, bool gravitational)
+Projectile::Projectile(int id, int _worldID, Vector2D pos, float velocity_x, float velocity_y, Entity* _owner, bool gravitational)
 {
 	position = pos;
 	uniqueID = id;

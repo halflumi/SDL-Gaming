@@ -8,7 +8,7 @@
 
 #define INTERACTDISTENCE 100
 
-NPC::NPC(int x, int y, string id)
+NPC::NPC(int id, int x, int y)
 {
 	position.x = x;
 	position.y = y;
@@ -56,7 +56,7 @@ void NPC::update()
 		{
 			if (Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && clickCooldown->getTicks() > CLICKCOOLDOWN )
 			{
-				World::Inst()->newHostile(2000 + Dice::Inst()->rand(500), Dice::Inst()->rand(600, 800), BlackBlock);
+				World::Inst()->newHostile(BlackBlock, 2000 + Dice::Inst()->rand(500), Dice::Inst()->rand(600, 800));
 			}
 			currentRow = 1;
 		}
