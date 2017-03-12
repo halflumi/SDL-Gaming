@@ -38,7 +38,7 @@ public:
 	InventoryItem(int index);
 	InventoryItem(string id, int index, int stack);
 	~InventoryItem() { delete selectCooldown; }
-	void init(string id, int stack);
+	void init(string id, int _index, int stack);
 
 	string type() { return TypeInventoryItem; }
 	void update();

@@ -49,8 +49,8 @@ void World::initialize()
 	TextureLoader::Inst()->load(WoodenSwordFile, WoodenSword);
 	TextureLoader::Inst()->load(OrichalcumShortswordFile, OrichalcumShortsword);
 	///Load sounds
-	//SoundLoader::Inst()->load(Music01File, Music01, SOUND_MUSIC);
-	//SoundLoader::Inst()->playMusic(Music01, 2);
+	SoundLoader::Inst()->load(Music01File, Music01, SOUND_MUSIC);
+	SoundLoader::Inst()->playMusic(Music01, 2);
 	SoundLoader::Inst()->load(WalkOnSnow1File, WalkOnSnow1, SOUND_SFX);
 	SoundLoader::Inst()->load(WalkOnSnow2File, WalkOnSnow2, SOUND_SFX);
 	SoundLoader::Inst()->load(WalkOnSnow3File, WalkOnSnow3, SOUND_SFX);
@@ -62,8 +62,20 @@ void World::initialize()
 	SoundLoader::Inst()->load(PortalNoiseFile, PortalNoise, SOUND_SFX);
 	SoundLoader::Inst()->load(PickupSoundFile, PickupSound, SOUND_SFX);
 	SoundLoader::Inst()->load(LevelupSoundFile, LevelupSound, SOUND_SFX);
-	//defaultly load test01
+	SoundLoader::Inst()->load(JumpSoundFile, JumpSound, SOUND_SFX);
+	SoundLoader::Inst()->load(PlayerDamageSoundFile, PlayerDamageSound, SOUND_SFX);
+	SoundLoader::Inst()->load(WrapGateNoiseFile, WrapGateNoise, SOUND_SFX);
+	///defaultly load test01
 	changeMap(MapTest01);
+	///load UI
+	const Player* player = Camera::Inst()->getTarget();
+	Vector2D nameTextpos(20, Main::Inst()->getRenderHeight() + 10);
+	Vector2D healthNumTextpos(406, Main::Inst()->getRenderHeight() + 65);
+	Vector2D manaNumTextpos(406, Main::Inst()->getRenderHeight() + 117);
+	nameText = Textbox(nameTextpos, "", arial28, { 255,255,255 }, -1);
+	healthNumText = Textbox(healthNumTextpos, "", arial28, { 255,255,255 }, -1);
+	manaNumText = Textbox(manaNumTextpos, "", arial28, { 255,255,255 }, -1);
+
 }
 
 void World::ClearWorld()
@@ -120,7 +132,7 @@ void World::changeMap(int mapID)
 		///sprites
 		getLayer_foreground().push_back(new Sprite(100, height - 154, MapGate2));
 		///items
-		getLayer_entity().push_back(new Item(1200, 0, OrichalcumShortsword, 1));
+		getLayer_entity().push_back(new Item(800, 0, OrichalcumShortsword, 1));
 	}
 }
 
@@ -234,19 +246,13 @@ void World::RenderUI()
 	const Player* player = Camera::Inst()->getTarget();
 	TextureLoader::Inst()->draw(HealthBar, 105, Main::Inst()->getRenderHeight() + 67, player->life * 292.0f / player->maxlife, 26);
 	TextureLoader::Inst()->draw(ManaBar, 105, Main::Inst()->getRenderHeight() + 117, player->mana * 292.0f / player->maxmana, 26);
-	
-	Vector2D nameTextpos(20, Main::Inst()->getRenderHeight() + 10);
-	Vector2D healthNumTextpos(406, Main::Inst()->getRenderHeight() + 65);
-	Vector2D manaNumTextpos(406, Main::Inst()->getRenderHeight() + 117);
-	nameText = new Textbox(nameTextpos, player->name, arial28, { 255,255,255 }, -1);
-	nameText->draw();
-	delete nameText;
-	healthNumText = new Textbox(healthNumTextpos, to_string(player->life) + " / " + to_string(player->maxlife), arial28, { 255,255,255 }, -1);
-	healthNumText->draw();
-	delete healthNumText;
-	manaNumText = new Textbox(manaNumTextpos, to_string(player->mana) + " / " + to_string(player->maxmana), arial28, { 255,255,255 }, -1);
-	manaNumText->draw();
-	delete manaNumText;
+
+	nameText.changeText(player->name);
+	nameText.draw();
+	healthNumText.changeText(to_string(player->life) + " / " + to_string(player->maxlife));
+	healthNumText.draw();
+	manaNumText.changeText(to_string(player->mana) + " / " + to_string(player->maxmana));
+	manaNumText.draw();
 }
 
 void World::newProjectile(Vector2D pos, string id, float velocity_x, float velocity_y, Entity* owner, bool gravitational)

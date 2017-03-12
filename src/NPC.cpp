@@ -56,7 +56,7 @@ void NPC::update()
 		{
 			if (Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && clickCooldown->getTicks() > CLICKCOOLDOWN )
 			{
-				World::Inst()->newHostile(2000+Dice::Inst()->rand(500), Dice::Inst()->rand(100,400), BlackBlock);
+				World::Inst()->newHostile(2000 + Dice::Inst()->rand(500), Dice::Inst()->rand(600, 800), BlackBlock);
 			}
 			currentRow = 1;
 		}

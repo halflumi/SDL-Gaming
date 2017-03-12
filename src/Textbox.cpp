@@ -2,6 +2,13 @@
 #include "Main.h"
 #include "Camera.h"
 
+bool operator==(SDL_Color& color, SDL_Color& _color)
+{
+	if (color.r == _color.r && color.g == _color.g && color.b == _color.b)
+		return true;
+	return false;
+}
+
 Textbox::Textbox() : textTexture(NULL)
 {
 	maxlife = -1;
@@ -39,20 +46,27 @@ void Textbox::init(Vector2D* pos, string _text, string _fontID, SDL_Color _color
 	Load();
 }
 
-void Textbox::changeText(string& _text)
+bool Textbox::changeText(string _text)
 {
+	if (text == _text)
+		return false;
 	text = _text;
 	Load();
+	return true;
 }
 
 void Textbox::changeFont(string _fontID)
 {
+	if (fontID == _fontID)
+		return;
 	fontID = _fontID;
 	Load();
 }
 
 void Textbox::changeColor(SDL_Color _color)
 {
+	if (color == _color)
+		return;
 	color = _color;
 	Load();
 }
@@ -66,8 +80,6 @@ void Textbox::Load()
 	}
 	else
 	{
-		//if(textTexture)
-		//	SDL_DestroyTexture(textTexture);
 		textTexture = SDL_CreateTextureFromSurface(Main::Inst()->getRenderer(), textSurface);
 
 		if (textTexture == NULL)

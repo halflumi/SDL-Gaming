@@ -15,7 +15,14 @@ private:
 
 	bool CheckXMLError(XMLError error);
 public:
-	bool fullscreen;
+	int window_x = 100;
+	int window_y = 100;
+	int window_w = 1024;
+	int window_h = 768;
+	bool fullscreen = false;
+	int volumn_master = 10;
+	int volumn_music = 10;
+	int volumn_sfx = 10;
 
 	static XmlParser* Inst()
 	{

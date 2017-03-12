@@ -2,20 +2,20 @@
 
 #include "Main.h"
 #include "Dice.h"
+#include "XmlParser.h"
 
 const int FPS = 60;
 const int DELAY_TIME = 1000.0f / FPS;
-const int WINDOW_POS_X = 100;
-const int WINDOW_POS_Y = 100;
-const int WINDOW_WIDTH = 1024;
-const int WINDOW_HEIGHT = 768;
 
 int main(int argc, char **argv)
 {
 	Uint32 frameStart, frameTime;
 
+	//temporary xml loading here
+	XmlParser::Inst()->load();
+
 	cout << "Game initialization starts!" << endl;
-	if (!Main::Inst()->initialize("A Window!", WINDOW_POS_X, WINDOW_POS_Y, WINDOW_WIDTH, WINDOW_HEIGHT))
+	if (!Main::Inst()->initialize("A Window!", XmlParser::Inst()->window_x, XmlParser::Inst()->window_y, XmlParser::Inst()->window_w, XmlParser::Inst()->window_h))
 	{
 		cout << "Could not initialize!\n" << SDL_GetError() << endl;
 		return -1;
@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 
 			if (frameTime < DELAY_TIME)
 				SDL_Delay((int)(DELAY_TIME - frameTime));
-			if (!Dice::Inst()->rand(20))
+			if (!Dice::Inst()->rand(100))
 				cout << "FPS: " << 1000 / (SDL_GetTicks() - frameStart) << endl;
 		}
 	}

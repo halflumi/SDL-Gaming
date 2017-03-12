@@ -28,9 +28,6 @@ bool Main::initialize(const char* title, int xpos, int ypos, int width, int heig
 		return false;
 	}
 	///create window
-	//temporary xml loading here
-	XmlParser::Inst()->load();
-
 	if(XmlParser::Inst()->fullscreen)
 		window = SDL_CreateWindow(title, xpos, ypos, width, height, SDL_WINDOW_FULLSCREEN);
 	else
@@ -97,7 +94,7 @@ bool Main::initialize(const char* title, int xpos, int ypos, int width, int heig
 		return false;
 	}
 	TTF_SetFontStyle(theFont[arial48], TTF_STYLE_BOLD);
-
+	///load menu texture
 	TextureLoader::Inst()->load(MainMenuFile, MainMenu);
 	TextureLoader::Inst()->load(FullscreenCheckboxFile, FullscreenCheckbox);
 	SoundLoader::Inst()->load(MenuMouseClickFile, MenuMouseClick, SOUND_SFX);
@@ -163,6 +160,12 @@ bool Main::HandleMenuEvents()
 				quit();
 				return true;
 			}
+			if (menuButtons[i]->getUniqueID() == ResolutionListbox)
+			{
+				SoundLoader::Inst()->playSound(MenuMouseClick);
+				menuButtons[i]->currentFrame++;
+				return false;
+			}
 			if (menuButtons[i]->getUniqueID() == FullscreenCheckbox)
 			{
 				SoundLoader::Inst()->playSound(MenuMouseClick);
@@ -191,6 +194,8 @@ void Main::changeMenu(int menuID)
 		menuButtons.push_back(new Button(OptionButton));
 		break;
 	case Menu_Options:
+		menuButtons.push_back(new Button(ResolutionText));
+		menuButtons.push_back(new Button(ResolutionListbox));
 		menuButtons.push_back(new Button(FullscreenCheckbox));
 		menuButtons.push_back(new Button(FullscreenText));
 		menuButtons.push_back(new Button(BackButton));
@@ -218,11 +223,11 @@ void Main::renderMainMenu()
 
 void Main::close()
 {
+	cout << "Saving settings to xml..." << endl;
+	XmlParser::Inst()->save();
 	cout << "Closing game..." << endl;
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
-	cout << "Saving settings to xml..." << endl;
-	XmlParser::Inst()->save();
 
 	SDL_Quit();
 }

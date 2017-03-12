@@ -20,7 +20,7 @@ public:
 	Textbox(Vector2D pos, float velocity_x, float velocity_y, string text, string fontID, SDL_Color color, int lastingTime);
 	~Textbox() { SDL_DestroyTexture(textTexture); }
 	void init(Vector2D* pos, string text, string fontID, SDL_Color color);
-	void changeText(string& text);
+	bool changeText(string text);
 	void changeFont(string fontID);
 	void changeColor(SDL_Color color);
 

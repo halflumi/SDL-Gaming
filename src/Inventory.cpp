@@ -26,10 +26,11 @@ InventoryItem::InventoryItem(string id, int _index, int _stack) : slotpos(0, 0),
 	Load();
 }
 
-void InventoryItem::init(string id, int _stack)
+void InventoryItem::init(string id, int _index, int _stack)
 {
 	active = true;
 	uniqueID = id;
+	index = _index;
 	stack = _stack;
 	itemInfoTexts.clear();
 	Load();
@@ -142,14 +143,13 @@ void InventoryItem::update()
 				}
 				else if (active)	//exchange one item
 				{
-					if (index == -1) // exchange with equipment slots of character panel
+					if (index == -2) // exchange with equipment slots of character panel
 					{
 						string tempID = player->selectingItem->uniqueID;
 						int tempIndex = player->selectingItem->index;
 						int tempStack = player->selectingItem->stack;
-						player->selectingItem->init(uniqueID, stack);
-						player->selectingItem->index = tempIndex;
-						init(tempID, tempStack);
+						player->selectingItem->init(uniqueID, tempIndex, stack);
+						init(tempID, -2, tempStack);
 						player->selectingItem = NULL;
 					}
 					else
@@ -164,25 +164,25 @@ void InventoryItem::update()
 				}
 				else //put down one item
 				{
-					if (index == -1) // equipment slots of character panel
+					if (index == -2 || player->selectingItem->index == -2) // equipment slots of character panel or come from equipment slots
 					{
-						init(player->selectingItem->getUniqueID(), player->selectingItem->stack);
+						init(player->selectingItem->getUniqueID(), index, player->selectingItem->stack);
 						player->selectingItem->active = false;
 						player->selectingItem->beingPicked = false;
 						player->selectingItem = NULL;
 					}
-					else if (player->selectingItem->index != -1) //means it is not splited, exchange the index
+					else if (player->selectingItem->index == -1) // means it is splited, mimic the item to the empty slot
+					{
+						init(player->selectingItem->getUniqueID(), index, player->selectingItem->stack);
+						delete player->selectingItem;
+						player->selectingItem = NULL;
+					}
+					else // means it is neither splited not coming from equipment slots, exchange the index
 					{
 						int currentIndex = index;
 						index = player->selectingItem->index;
 						player->selectingItem->index = currentIndex;
 						player->selectingItem->beingPicked = false;
-						player->selectingItem = NULL;
-					}
-					else // means it is splited, mimic the item to the empty slot
-					{
-						init(player->selectingItem->getUniqueID(), player->selectingItem->stack);
-						delete player->selectingItem;
 						player->selectingItem = NULL;
 					}
 				}

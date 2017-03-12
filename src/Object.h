@@ -14,7 +14,6 @@ protected:
 	int width;
 	int height;
 
-	int currentFrame;
 	int numFrames;
 	int animatedSpeed;
 	string uniqueID;
@@ -25,6 +24,7 @@ protected:
 	virtual void Load() = 0;
 	void VisiableCheck();
 public:
+	int currentFrame;
 	int currentRow;
 	bool visiable;
 	bool active;

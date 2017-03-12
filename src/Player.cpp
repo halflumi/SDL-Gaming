@@ -32,9 +32,9 @@ Player::Player(int x, int y, string id)
 	inventory->active = false;
 	dialog = NULL;
 	selectingItem = NULL;
-	rightHand_equ = characterPanel->rightHandSlot;
-	leftHand_equ = characterPanel->leftHandSlot;
-	helmet_equ = characterPanel->helmetSlot;
+	rightHand_equ = NULL;
+	leftHand_equ = NULL;
+	helmet_equ = NULL;
 	keyCooldown = new MyTimer(true);
 	mouseCooldown = new MyTimer(true);
 	Load();
@@ -136,8 +136,16 @@ void Player::isLevelingup()
 
 void Player::updateAttributes()
 {
-	minATT = baseATT + rightHand_equ->minATT;
-	maxATT = baseATT + 5 + rightHand_equ->maxATT;
+	if (rightHand_equ == NULL || !rightHand_equ->active)
+	{
+		minATT = baseATT;
+		maxATT = baseATT + 5;
+	}
+	else
+	{
+		minATT = baseATT + rightHand_equ->minATT;
+		maxATT = baseATT + 5 + rightHand_equ->maxATT;
+	}
 	defense = baseDEF;
 
 	if (attackTick)
@@ -254,8 +262,10 @@ void Player::HandleInput()
 		movingRight = false;
 	}
 
-	if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_SPACE))
+	if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_SPACE) && keyCooldown->getTicks() > PRESSCOOLDOWN)
 	{
+		if (!midair)
+			SoundLoader::Inst()->playSound(JumpSound);
 		jumped = true;
 		onLadder = false;
 	}
@@ -285,6 +295,9 @@ void Player::HandleInput()
 		selectingItem->setUniqueID("");
 		selectingItem->active = false;
 		selectingItem->beingPicked = false;
+		if (selectingItem->index == -1)
+			delete selectingItem;
+
 		selectingItem = NULL;
 
 		mouseCooldown->start(100); // **********cooldown broken
@@ -319,7 +332,22 @@ void Player::HandleInput()
 
 void Player::Attacking()
 {
-	if (rightHand_equ->getUniqueID() == OrichalcumShortsword)
+	if (rightHand_equ == NULL || !rightHand_equ->active)
+	{
+		attackTick = 1;
+		Vector2D* mousepos = Inputor::Inst()->getMouseDefinitePosition();
+		Vector2D direction = *mousepos - entityCenter;
+		direction.normalize();
+		direction.x *= 10;
+		direction.y *= 5;
+		World::Inst()->newProjectile(entityCenter, IchorKnifeProjectile, direction.x, direction.y, this);
+		SoundLoader::Inst()->playSound(AttackSound);
+
+		life--;
+		Vector2D textShift(position.x + width / 2 + Dice::Inst()->randInverse(20), position.y + Dice::Inst()->randInverse(20));
+		World::Inst()->createText(120, textShift, 0.f, -0.5f, "-1s", segoeui22, { 255, 0, 0 });
+	}
+	else if (rightHand_equ->getUniqueID() == OrichalcumShortsword)
 	{
 		attackTick = 1;
 		Vector2D* mousepos = Inputor::Inst()->getMouseDefinitePosition();
@@ -374,6 +402,7 @@ void Player::HandleMovement()
 			velocity.y = 0;
 		}
 		position.y += velocity.y;
+		entityCenter.set(position.x + width / 2, position.y + height / 2);
 		return;
 	}
 	////calculate acc and direction
@@ -603,6 +632,7 @@ void Player::CheckCollision_hostile(Vector2D newpos)
 			continue;
 
 		//onhit
+		SoundLoader::Inst()->playSound(PlayerDamageSound);
 		int damage = Dice::Inst()->rand(entities[i]->minATT, entities[i]->maxATT) - defense;
 		life -= damage;
 		Vector2D textShift(entityCenter.x + Dice::Inst()->randInverse(20), position.y + Dice::Inst()->randInverse(20));
@@ -666,24 +696,8 @@ void Player::CheckInteractive()
 	{
 		if (objects[i]->outsideCheckPlayerWithin()) // player in range
 		{
-			if (objects[i]->getUniqueID() == LadderSprite)
-			{
-				onLadder = true;
-				jumped = false;
-				midair = false;
-				currentRow = 3;
-				return;
-			}
-			if (objects[i]->getUniqueID() == MapGate)
-			{
-				World::Inst()->changeMap(MapTest02);
-				return;
-			}
-			if (objects[i]->getUniqueID() == MapGate2)
-			{
-				World::Inst()->changeMap(MapTest01);
-				return;
-			}
+			DoInteractive(objects[i]->getUniqueID());
+			return;
 		}
 	}
 }
@@ -695,6 +709,26 @@ void Player::DoInteractive(string id)
 		SoundLoader::Inst()->playSound(PortalNoise);
 		position.x = 2500;
 		position.y = World::Inst()->getWorldHeight() - height;
+	}
+	if (id == LadderSprite)
+	{
+		onLadder = true;
+		jumped = false;
+		midair = false;
+		currentRow = 3;
+		return;
+	}
+	if (id == MapGate)
+	{
+		SoundLoader::Inst()->playSound(WrapGateNoise);
+		World::Inst()->changeMap(MapTest02);
+		return;
+	}
+	if (id == MapGate2)
+	{
+		SoundLoader::Inst()->playSound(WrapGateNoise);
+		World::Inst()->changeMap(MapTest01);
+		return;
 	}
 }
 

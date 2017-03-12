@@ -31,9 +31,9 @@ private:
 	string backgroundID;
 	int width;
 	int height;
-	Textbox* nameText;
-	Textbox* healthNumText;
-	Textbox* manaNumText;
+	Textbox nameText;
+	Textbox healthNumText;
+	Textbox manaNumText;
 
 	vector<Sprite*> layer_background;
 	vector<Tile*> layer_tile;

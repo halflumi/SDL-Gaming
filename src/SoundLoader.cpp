@@ -38,11 +38,12 @@ bool SoundLoader::load(string fileName, string id, sound_type type)
 
 void SoundLoader::playMusic(string id, int loop)
 {
+	Mix_VolumeMusic(100);
 	Mix_PlayMusic(musics[id], loop);
 }
 
 void SoundLoader::playSound(string id, int loop)
 {
-	//Mix_SetDistance(-1, 200);
+	Mix_Volume(-1, 100);
 	Mix_PlayChannel(-1, sfxs[id], loop);
 }
