@@ -26,9 +26,6 @@ private:
 	bool focused;
 	Vector2D display_pos;
 
-	MyTimer* keyCooldown;
-	MyTimer* mouseCooldown;
-
 	void Load();
 	
 	void isLevelingup();
@@ -47,6 +44,9 @@ private:
 	void CheckPickup();
 	void HitGround();
 public:
+	MyTimer keyCooldown;
+	MyTimer mouseCooldown;
+
 	Dialog* dialog;
 	CharacterPanel* characterPanel;
 	Inventory* inventory;
@@ -57,7 +57,7 @@ public:
 	int expToNextLevel;
 
 	Player(int id, int x, int y);
-	~Player() { delete inventory; delete keyCooldown; delete mouseCooldown; }
+	~Player() { delete inventory; }
 
 	void setFocused() { focused = true; }
 	void removeFocused() { focused = false; }

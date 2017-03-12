@@ -47,10 +47,13 @@ void CharacterPanel::update()
 	closeButton.setPosition(position.x + 260, position.y + 2);
 	closeButton.update();
 	if (closeButton.outsideUpdate())
+	{
 		active = false;
+		player->mouseCooldown.start();
+	}
 
 	Vector2D levelpos(position.x + LEVEL_X, position.y + LEVEL_Y);
-	levelText = new Textbox(levelpos, to_string(player->level), arial48, { 0,0,0 }, -1);
+	levelText = new Textbox(levelpos, to_string(player->level), arial48_bold, { 0,0,0 }, -1);
 	Vector2D exppos(position.x + EXP_X, position.y + EXP_Y);
 	expText = new Textbox(exppos, to_string(player->exp), segoeui22, { 0,0,0 }, -1);
 	TTF_SizeText(Main::Inst()->getFont(segoeui22), to_string(player->expToNextLevel).c_str(), &length, NULL);

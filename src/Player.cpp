@@ -35,8 +35,8 @@ Player::Player(int id, int x, int y)
 	rightHand_equ = NULL;
 	leftHand_equ = NULL;
 	helmet_equ = NULL;
-	keyCooldown = new MyTimer(true);
-	mouseCooldown = new MyTimer(true);
+	keyCooldown = MyTimer(true);
+	mouseCooldown = MyTimer(true);
 	Load();
 }
 
@@ -177,22 +177,30 @@ void Player::HandleInput()
 	{
 		movingRight = false;
 		movingLeft = false;
-		if (Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && mouseCooldown->getTicks() > CLICKCOOLDOWN)
+		if (Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && mouseCooldown.getTicks() > CLICKCOOLDOWN)
 		{
 			Dialog* temp = dialog->next;
 			delete dialog;
 			dialog = temp;
 
-			mouseCooldown->start();
+			mouseCooldown.start();
 		}
 		else
 			return;
 	}
 
-	if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_ESCAPE))
+	if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_ESCAPE) && keyCooldown.getTicks() > PRESSCOOLDOWN)
 	{
-		characterPanel->active = false;
-		inventory->active = false;
+		if (characterPanel->active || inventory->active)
+		{
+			characterPanel->active = false;
+			inventory->active = false;
+		}
+		else
+		{
+			Main::Inst()->changeMenu(MenuGameMain);
+		}
+		keyCooldown.start();
 	}
 	if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_W))
 	{
@@ -223,15 +231,15 @@ void Player::HandleInput()
 	{
 		CheckPickup();
 	}
-	if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_C) && keyCooldown->getTicks() > PRESSCOOLDOWN)
+	if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_C) && keyCooldown.getTicks() > PRESSCOOLDOWN)
 	{
 		characterPanel->active = !characterPanel->active;
-		keyCooldown->start();
+		keyCooldown.start();
 	}
-	if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_I) && keyCooldown->getTicks() > PRESSCOOLDOWN)
+	if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_I) && keyCooldown.getTicks() > PRESSCOOLDOWN)
 	{
 		inventory->active = !inventory->active;
-		keyCooldown->start();
+		keyCooldown.start();
 	}
 
 	if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_A) && !Inputor::Inst()->isKeyDown(SDL_SCANCODE_D))
@@ -262,7 +270,7 @@ void Player::HandleInput()
 		movingRight = false;
 	}
 
-	if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_SPACE) && keyCooldown->getTicks() > PRESSCOOLDOWN)
+	if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_SPACE) && keyCooldown.getTicks() > PRESSCOOLDOWN)
 	{
 		if (!midair)
 			SoundLoader::Inst()->playSound(JumpSound);
@@ -299,11 +307,11 @@ void Player::HandleInput()
 
 		selectingItem = NULL;
 
-		mouseCooldown->start(100); // **********cooldown broken
+		mouseCooldown.start(100); // **********cooldown broken
 	}
 	else
 	{
-		if (!attackTick && Inputor::Inst()->getMouseButtonState(MOUSE_LEFT))
+		if (!attackTick && Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && mouseCooldown.getTicks() > CLICKCOOLDOWN)
 		{
 			Attacking();
 		}
@@ -325,7 +333,6 @@ void Player::HandleInput()
 				life--;
 			}
 		}
-		mouseCooldown->start();
 	}
 }
 
@@ -461,6 +468,7 @@ void Player::HandleMovement()
 		position.x = newposition.x;
 	if (!CheckCollision_tileY(newposition.y))
 		position.y = newposition.y;
+	
 	CheckCollision_hostile(newposition);
 }
 
@@ -540,9 +548,15 @@ bool Player::CheckCollision_tileX(float x)
 {
 	//touch world border
 	if (x < 0)
+	{
+		position.x = 0;
 		return true;
+	}
 	if (x + width > World::Inst()->getWorldWidth())
+	{
+		position.x = World::Inst()->getWorldWidth() - width;
 		return true;
+	}
 
 	//touch tile or enemy
 	vector<Tile*>& objects = World::Inst()->getLayer_tile();
@@ -566,7 +580,9 @@ bool Player::CheckCollision_tileX(float x)
 			else
 			{
 				if (movingRight)
-					velocity.x = 0.4f;
+					position.x = objectLeft;
+				else
+					position.x = objectRight;
 				return true;
 			}
 		}
@@ -578,9 +594,13 @@ bool Player::CheckCollision_tileX(float x)
 bool Player::CheckCollision_tileY(float y)
 {
 	if (y < 0)
+	{
+		position.y = 0;
 		return true;
+	}
 	if (y + height > World::Inst()->getWorldHeight())
 	{
+		position.y = World::Inst()->getWorldHeight() - height;
 		HitGround();
 		return true;
 	}
@@ -599,7 +619,16 @@ bool Player::CheckCollision_tileY(float y)
 		float& objectTop = objects[i]->getPosition().y;
 		float objectBottom = objectTop + objects[i]->getHeight();
 
-
+		if (!(position.x + width <= objectLeft || position.x >= objectRight))
+		{
+			if (y >= objectBottom || y + height <= objectTop)
+				continue;
+			else
+			{
+				HitGround();
+				return true;
+			}
+		}
 	}
 	return false;
 }

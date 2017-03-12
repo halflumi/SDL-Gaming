@@ -1,7 +1,7 @@
 #pragma once
 ///const
 //global
-#define CLICKCOOLDOWN 100
+#define CLICKCOOLDOWN 80
 #define PRESSCOOLDOWN 100
 #define UIHEIGHT 168
 //colors
@@ -9,6 +9,7 @@
 #define COLOR_RED {255,0,0}
 #define COLOR_GREEN {0,255,0}
 #define COLOR_BLUE {0,0,255}
+#define COLOR_CLAN {0,255,255}
 #define COLOR_ORANGE {241,145,73}
 ///typeID 100xxxxx
 //Object type
@@ -28,6 +29,7 @@
 //menuID 101
 #define MenuMain 10110000
 #define MenuOptions 10110001
+#define MenuGameMain 10110002
 //mapID 102
 #define MapTest01 10210001
 #define MapTest02 10210002
@@ -51,16 +53,26 @@
 #define VolumnSfxText 10310013
 #define VolumnSfxNumber 10310014
 #define BackButton 10310015
-//ItemClass 104
-#define ItemClass_Weapon 10410000
+
+#define GameMenuBackground 10310100
+#define GameMenuBackgroundFile "assets\\GameMenuBackground.png"
+#define ResumeButton 10310101
+#define ExittoMainMenuButton 10310102
+#define ExittoDestopButton 10310103
+//button typeID 104
+#define ButtonTypeTextbox 10410000
+#define ButtonTypeButton 10410001
+//ItemClass 105
+#define ItemClass_Weapon 10510000
 ///fonts 200xxxxx
 #define segoeuiFile "fonts\\segoeui.ttf"
 #define segoeui18 20010000
 #define segoeui22 20010001
 #define segoeui28 20010002
 #define arialFile "fonts\\arial.ttf"
-#define arial28 20010010
-#define arial48 20010011
+#define arial28_bold 20010010
+#define arial48_bold 20010011
+#define arial72_bold 20010012
 ///texture res 300xxxxx
 //menu res
 #define MainMenuPic 30010000
@@ -97,6 +109,7 @@
 #define WoodenSwordName "Wooden Sword"
 #define WoodenSwordFile "assets\\WoodenSword.png"
 #define OrichalcumShortsword 30410001
+#define OrichalcumShortswordName "Orichalcum Shortsword"
 #define OrichalcumShortswordFile "assets\\OrichalcumShortsword.png"
 //NPC 305
 #define LeafNPC 30510000

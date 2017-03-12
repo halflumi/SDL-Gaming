@@ -15,6 +15,8 @@ World* World::INSTANCE = 0;
 void World::initialize()
 {
 	currentMapID = 0;
+	///Load menu elements
+	TextureLoader::Inst()->load(GameMenuBackgroundFile, GameMenuBackground);
 	///Load backgrounds
 	TextureLoader::Inst()->load(MapBackgroundFile, MapBackground);
 	TextureLoader::Inst()->load(MapBackground2File, MapBackground2);
@@ -70,9 +72,9 @@ void World::initialize()
 	Vector2D nameTextpos(20, Main::Inst()->getRenderHeight() + 10);
 	Vector2D healthNumTextpos(406, Main::Inst()->getRenderHeight() + 65);
 	Vector2D manaNumTextpos(406, Main::Inst()->getRenderHeight() + 117);
-	nameText = Textbox(nameTextpos, "", arial28, { 255,255,255 }, -1);
-	healthNumText = Textbox(healthNumTextpos, "", arial28, { 255,255,255 }, -1);
-	manaNumText = Textbox(manaNumTextpos, "", arial28, { 255,255,255 }, -1);
+	nameText = Textbox(nameTextpos, "", arial28_bold, { 255,255,255 }, -1);
+	healthNumText = Textbox(healthNumTextpos, "", arial28_bold, { 255,255,255 }, -1);
+	manaNumText = Textbox(manaNumTextpos, "", arial28_bold, { 255,255,255 }, -1);
 
 }
 

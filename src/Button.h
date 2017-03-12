@@ -16,6 +16,7 @@ private:
 	void Load();
 	bool CheckMouseOver();
 public:
+	int buttonClass;
 	int flag;
 
 	Button(int id);

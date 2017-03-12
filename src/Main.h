@@ -13,11 +13,12 @@ using namespace std;
 class Main
 {
 private:
-	Main() {}
+	Main() : keyCooldown(true) {}
 	~Main() {}
 	Main(const Main&);
 	static Main* INSTANCE;
 
+	MyTimer keyCooldown;
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 	unordered_map<int, TTF_Font*> theFont;
@@ -25,12 +26,16 @@ private:
 	bool _running;
 	int windowWidth;
 	int windowHeight;
+	int currentMenu;
 
 	bool HandleMenuEvents();
+	void UpdateMenu();
+	void RenderMenu();
 public:
 	int renderWidth;
 	int renderHeight;
 	bool inMainMenu;
+	bool inGameMenu;
 	vector<Button*> menuButtons;
 
 	static Main* Inst()
@@ -57,7 +62,5 @@ public:
 	bool initialize(const char* title, int xpos, int ypos, int width, int height);
 	void prossessing();
 	void changeMenu(int menuID);
-	void updateMainMenu();
-	void renderMainMenu();
 	void close();
 };

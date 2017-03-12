@@ -8,6 +8,7 @@
 #include "World.h"
 #include "Player.h"
 #include "XmlParser.h"
+#include "Camera.h"
 
 using namespace tinyxml2;
 
@@ -80,32 +81,40 @@ bool Main::initialize(const char* title, int xpos, int ypos, int width, int heig
 		return false;
 	}
 	//arial
-	theFont[arial28] = TTF_OpenFont(arialFile, 28);
-	if (theFont[arial28] == NULL)
+	theFont[arial28_bold] = TTF_OpenFont(arialFile, 28);
+	if (theFont[arial28_bold] == NULL)
 	{
 		printf("SDL_TTF_ERROR loading .ttf: %s\n", TTF_GetError());
 		return false;
 	}
-	TTF_SetFontStyle(theFont[arial28], TTF_STYLE_BOLD);
-	theFont[arial48] = TTF_OpenFont(arialFile, 48);
-	if (theFont[arial48] == NULL)
+	TTF_SetFontStyle(theFont[arial28_bold], TTF_STYLE_BOLD);
+	theFont[arial48_bold] = TTF_OpenFont(arialFile, 48);
+	if (theFont[arial48_bold] == NULL)
 	{
 		printf("SDL_TTF_ERROR loading .ttf: %s\n", TTF_GetError());
 		return false;
 	}
-	TTF_SetFontStyle(theFont[arial48], TTF_STYLE_BOLD);
+	TTF_SetFontStyle(theFont[arial48_bold], TTF_STYLE_BOLD);
+	theFont[arial72_bold] = TTF_OpenFont(arialFile, 48);
+	if (theFont[arial72_bold] == NULL)
+	{
+		printf("SDL_TTF_ERROR loading .ttf: %s\n", TTF_GetError());
+		return false;
+	}
+	TTF_SetFontStyle(theFont[arial72_bold], TTF_STYLE_BOLD);
 	///load menu res
 	TextureLoader::Inst()->load(MainMenuPicFile, MainMenuPic);
 	TextureLoader::Inst()->load(FullscreenCheckboxFile, FullscreenCheckbox);
 	TextureLoader::Inst()->load(VolumnLButtonFile, VolumnLButton);
 	TextureLoader::Inst()->load(VolumnRButtonFile, VolumnRButton);
 	SoundLoader::Inst()->load(Music01File, Music01, SOUND_MUSIC);
-	SoundLoader::Inst()->playMusic(Music01, 2);
+	//SoundLoader::Inst()->playMusic(Music01, 2);
 	SoundLoader::Inst()->load(MenuMouseClickFile, MenuMouseClick, SOUND_SFX);
 	changeMenu(MenuMain);
 
 	_running = true;
 	inMainMenu = true;
+	inGameMenu = false;
 	return true;
 }
 
@@ -118,18 +127,16 @@ void Main::prossessing()
 
 	SDL_RenderClear(Main::Inst()->getRenderer());
 
-	if (HandleMenuEvents())
-		return;
-
-	if (inMainMenu)
-	{
-		updateMainMenu();
-		renderMainMenu();
-	}
-	else
-	{
+	if (!inMainMenu && !inGameMenu)
 		World::Inst()->updating();
+	if (!inMainMenu)
 		World::Inst()->rendering();
+	if (inMainMenu|| inGameMenu)
+	{
+		if (HandleMenuEvents())
+			return;
+		UpdateMenu();
+		RenderMenu();
 	}
 
 	SDL_RenderPresent(renderer);
@@ -138,6 +145,23 @@ void Main::prossessing()
 
 bool Main::HandleMenuEvents()
 {
+	Player* player = Camera::Inst()->getTarget_nonConst();
+	if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_ESCAPE) && keyCooldown.getTicks() > PRESSCOOLDOWN)
+	{
+		switch (currentMenu)
+		{
+		case MenuOptions:
+			changeMenu(MenuMain);
+			return true;
+			break;
+		case MenuGameMain:
+			inGameMenu = false;
+			player->keyCooldown.start();
+			return true;
+			break;
+		}
+	}
+
 	int i, len;
 	len = menuButtons.size();
 	for (i = 0; i < len; i++)
@@ -149,7 +173,7 @@ bool Main::HandleMenuEvents()
 				SoundLoader::Inst()->playSound(MenuMouseClick);
 				inMainMenu = false;
 				menuButtons.clear();
-				TextureLoader::Inst()->clearTextureMap();
+				//TextureLoader::Inst()->clearTextureMap();
 				World::Inst()->initialize();
 				return true;
 			}
@@ -226,6 +250,24 @@ bool Main::HandleMenuEvents()
 				changeMenu(MenuMain);
 				return true;
 			}
+		
+			if (menuButtons[i]->getUniqueID() == ResumeButton)
+			{
+				inGameMenu = false;
+				player->mouseCooldown.start();
+				return true;
+			}
+			if (menuButtons[i]->getUniqueID() == ExittoMainMenuButton)
+			{
+				inGameMenu = false;
+				changeMenu(MenuMain);
+				return true;
+			}
+			if (menuButtons[i]->getUniqueID() == ExittoDestopButton)
+			{
+				quit();
+				return true;
+			}
 		}
 	}
 	return false;
@@ -233,10 +275,14 @@ bool Main::HandleMenuEvents()
 
 void Main::changeMenu(int menuID)
 {
+	keyCooldown.start();
+
 	menuButtons.clear();
+	currentMenu = menuID;
 	switch (menuID)
 	{
 	case MenuMain:
+		inMainMenu = true;
 		menuButtons.push_back(new Button(NewGameButton));
 		menuButtons.push_back(new Button(ExitButton));
 		menuButtons.push_back(new Button(OptionButton));
@@ -260,10 +306,17 @@ void Main::changeMenu(int menuID)
 		menuButtons.push_back(new Button(VolumnSfxNumber));
 		menuButtons.push_back(new Button(BackButton));
 		break;
+	case MenuGameMain:
+		inGameMenu = true;
+		menuButtons.push_back(new Button(GameMenuBackground));
+		menuButtons.push_back(new Button(ResumeButton));
+		menuButtons.push_back(new Button(ExittoMainMenuButton));
+		menuButtons.push_back(new Button(ExittoDestopButton));
+		break;
 	}
 }
 
-void Main::updateMainMenu()
+void Main::UpdateMenu()
 {
 	int i, len;
 	len = menuButtons.size();
@@ -271,9 +324,12 @@ void Main::updateMainMenu()
 		menuButtons[i]->update();
 }
 
-void Main::renderMainMenu()
+void Main::RenderMenu()
 {
-	TextureLoader::Inst()->drawEx2(MainMenuPic, 0, 0, 1024, 768, windowWidth, windowHeight);
+	if(inMainMenu)
+		TextureLoader::Inst()->drawEx2(MainMenuPic, 0, 0, 1024, 768, windowWidth, windowHeight);
+	if(inGameMenu)
+		TextureLoader::Inst()->drawFrameEx(InventoryGridMask, 0, 0, 10, 10, windowWidth, windowHeight, 0, 0, 0, 255);
 
 	int i, len;
 	len = menuButtons.size();

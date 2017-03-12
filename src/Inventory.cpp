@@ -60,6 +60,7 @@ void InventoryItem::Load()
 	}
 	if (uniqueID == OrichalcumShortsword)
 	{
+		name = OrichalcumShortswordName;
 		itemClass = ItemClass_Weapon;
 
 		width = 38;
@@ -261,9 +262,13 @@ void Inventory::Load()
 void Inventory::update()
 {
 	if (closeButton.outsideUpdate())
+	{
 		active = false;
+		Camera::Inst()->getTarget_nonConst()->mouseCooldown.start();
+	}
 
 	closeButton.setPosition(position.x + 260, position.y + 2);
+	closeButton.update();
 
 	for (int i = 0; i < inventorySize; i++)
 	{
