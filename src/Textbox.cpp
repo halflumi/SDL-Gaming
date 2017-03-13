@@ -1,5 +1,6 @@
 #include "Textbox.h"
 #include "Main.h"
+#include "TextureLoader.h"
 #include "Camera.h"
 
 bool operator==(SDL_Color& color, SDL_Color& _color)
@@ -11,11 +12,12 @@ bool operator==(SDL_Color& color, SDL_Color& _color)
 
 Textbox::Textbox() : textTexture(NULL)
 {
-	maxlife = -1;
+	maxlife = -2;
 }
 
-Textbox::Textbox(Vector2D pos, string _text, int _fontID, SDL_Color _color, int lastingTime) : textTexture(NULL)
+Textbox::Textbox(Vector2D pos, string _text, int _fontID, SDL_Color _color, int lastingTime, bool _messageBox) : textTexture(NULL)
 {
+	messageBox = _messageBox;
 	position = pos;
 	text = _text;
 	fontID = _fontID;
@@ -26,6 +28,7 @@ Textbox::Textbox(Vector2D pos, string _text, int _fontID, SDL_Color _color, int 
 
 Textbox::Textbox(Vector2D pos, float velocity_x, float velocity_y, string _text, int _fontID, SDL_Color _color, int lastingTime) : textTexture(NULL)
 {
+	messageBox = false;
 	position = pos;
 	velocity.x = velocity_x;
 	velocity.y = velocity_y;
@@ -96,12 +99,12 @@ void Textbox::Load()
 
 void Textbox::update()
 {
-	if (maxlife == -1)
+	if (maxlife < 0)
 		return;
 
 	VisiableCheck();
 
-	if (maxlife != -1 && life > maxlife)
+	if (maxlife > 0 && life > maxlife)
 	{
 		active = false;
 		return;
@@ -116,7 +119,13 @@ void Textbox::update()
 void Textbox::draw()
 {
 	if (active)
+	{
+		if (messageBox)
+		{
+			TextureLoader::Inst()->drawFrameEx(MessageboxMask, position.x - Camera::Inst()->getPosition().x + Main::Inst()->getRenderWidth() / 2, position.y - Camera::Inst()->getPosition().y + Main::Inst()->getRenderHeight() / 2, 10, 10, width, height, 0, 0, 0, 255);
+		}
 		drawText();
+	}
 }
 
 void Textbox::drawText(SDL_RendererFlip flip)

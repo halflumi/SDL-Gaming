@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "Dice.h"
 #include "Camera.h"
+#include "XmlParser.h"
 
 #define PLAYERACCERLATION 0.7f
 #define AIRACCELERATION 0.3f
@@ -47,13 +48,13 @@ void Player::Load()
 	//rpg properties
 	maxSpeed = DEFAULTMAXSPEED;
 	acceleration.y = GRAVITY;
-	level = 1;
-	exp = 0;
-	expToNextLevel = 10;
-	life = 100;
+	level = XmlParser::Inst()->level;
+	exp = XmlParser::Inst()->xp;
+	expToNextLevel = ExpSheet(level);
+	life = XmlParser::Inst()->life;
 	maxlife = 100;
-	mana = 30;
-	maxmana = 100;
+	mana = XmlParser::Inst()->mana;
+	maxmana = 50;
 	baseATT = 10;
 	baseDEF = 2;
 	critChance = 10;
@@ -61,6 +62,10 @@ void Player::Load()
 	meleeProjectile = NULL;
 	attackInterval = 30;
 	attackTick = 0;
+	lifeRegenInterval = 300;
+	lifeRegenTick = 0;
+	manaRegenInterval = 180;
+	manaRegenTick = 0;
 	invulnerableInterval = 60;
 	invulnerableTick = 0;
 }
@@ -122,15 +127,9 @@ void Player::isLevelingup()
 		level++;
 		exp -= expToNextLevel;
 		SoundLoader::Inst()->playSound(LevelupSound);
-		switch (level)
-		{
-		case 2:		expToNextLevel = 25;
-			break;
-		case 3:		expToNextLevel = 50;
-			break;
-		case 4:		expToNextLevel = 100;
-			break;
-		}
+		life = maxlife;
+		mana = maxmana;
+		expToNextLevel = ExpSheet(level);
 	}
 }
 
@@ -147,13 +146,36 @@ void Player::updateAttributes()
 		maxATT = baseATT + 5 + rightHand_equ->maxATT;
 	}
 	defense = baseDEF;
-
+	///attack speed
 	if (attackTick)
 	{
 		attackTick++;
 		if (attackTick == attackInterval)
 			attackTick = 0;
 	}
+	///life regen speed
+	if (lifeRegenTick >= 0)
+	{
+		lifeRegenTick++;
+		if (lifeRegenTick == lifeRegenInterval)
+		{
+			lifeRegenTick = 0;
+			if (life < maxlife)
+				life++;
+		}
+	}
+	///mana regen speed
+	if (manaRegenTick >= 0)
+	{
+		manaRegenTick++;
+		if (manaRegenTick == manaRegenInterval)
+		{
+			manaRegenTick = 0;
+			if (mana < maxmana)
+				mana++;
+		}
+	}
+
 	if (invulnerableTick)
 	{
 		invulnerableTick++;
@@ -299,7 +321,7 @@ void Player::HandleInput()
 		direction.normalize();
 		direction.x *= 4;
 		direction.y *= 10;
-		World::Inst()->newItem(entityCenter.x, entityCenter.y,direction.x, direction.y, selectingItem->getUniqueID(), selectingItem->stack);
+		World::Inst()->newItem(selectingItem->getUniqueID(), selectingItem->stack, entityCenter.x, entityCenter.y, direction.x, direction.y);
 		selectingItem->active = false;
 		selectingItem->beingPicked = false;
 		if (selectingItem->index == -1)

@@ -11,6 +11,9 @@
 #define COLOR_BLUE {0,0,255}
 #define COLOR_CLAN {0,255,255}
 #define COLOR_ORANGE {241,145,73}
+//savedata filepath
+#define SettingsFile "save\\settings.xm"
+#define SavedataFile "save\\savedata.xm"
 ///typeID 100xxxxx
 //Object type
 #define TypeButton 10010000
@@ -53,6 +56,7 @@
 #define VolumnSfxText 10310013
 #define VolumnSfxNumber 10310014
 #define BackButton 10310015
+#define ContinueButton 10310016
 
 #define GameMenuBackground 10310100
 #define GameMenuBackgroundFile "assets\\GameMenuBackground.png"
@@ -76,7 +80,7 @@
 ///texture res 300xxxxx
 //menu res
 #define MainMenuPic 30010000
-#define MainMenuPicFile "assets\\Main_Menu.png"
+#define MainMenuPicFile "assets\\MainMenuBackground.png"
 //background 301
 #define MapBackground 30110000
 #define MapBackgroundFile "assets\\Background.png"
@@ -101,6 +105,8 @@
 #define ExpBarFile "assets\\ExpBar.png"
 #define DialogBackground 30210008
 #define DialogBackgroundFile "assets\\DialogBackground.png"
+#define MessageboxMask 30210009
+#define MessageboxMaskFile "assets\\MessageboxMask.png"
 //Hostile 303
 #define BlackBlock 30310000
 #define BlackBlockFile "assets\\BlackBlock.png"
@@ -116,8 +122,10 @@
 #define LeafNPCFile "assets\\LeafNPC.png"
 #define GhostNPC 30510001
 #define GhostNPCFile "assets\\GhostNPC.png"
-#define TestPortal 30510002
-#define TestPortalFile "assets\\TestPortal.png"
+#define MapleFlagNPC 30510003
+#define MapleFlagNPCFile "assets\\MapleFlagNPC.png"
+#define SavePointNPC 30510004
+#define SavePointNPCFile "assets\\SavePointNPC.png"
 //player 306
 #define PlayerFrame 30610000
 #define PlayerFrameFile "assets\\PlayerFrame.png"
@@ -135,6 +143,8 @@
 #define MapGateFile "assets\\MapGate.png"
 #define MapGate2 30810003
 #define MapGate2File "assets\\MapGate2.png"
+#define TestPortal 30810004
+#define TestPortalFile "assets\\TestPortal.png"
 //Tile 309
 #define Brick 30910000
 #define BrickFile "assets\\Brick.png"
@@ -176,3 +186,5 @@
 #define PlayerDamageSoundFile "sounds\\0100100.Damage.mp3"
 #define WrapGateNoise 40110014
 #define WrapGateNoiseFile "sounds\\Portal.mp3"
+
+int ExpSheet(int level);

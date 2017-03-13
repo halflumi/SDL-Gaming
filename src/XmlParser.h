@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include "tinyxml2.h"
+#include "IDSheet.h"
 
 using namespace std;
 using namespace tinyxml2;
@@ -12,8 +13,6 @@ private:
 	~XmlParser() {}
 	XmlParser(const XmlParser&);
 	static XmlParser* INSTANCE;
-
-	bool CheckXMLError(XMLError error);
 public:
 	int window_x = 100;
 	int window_y = 100;
@@ -23,6 +22,12 @@ public:
 	int volumn_master = 10;
 	int volumn_music = 10;
 	int volumn_sfx = 10;
+
+	int mapID = MapTest01;
+	int level = 1;
+	int xp = 0;
+	int life = 100;
+	int mana = 30;
 
 	static XmlParser* Inst()
 	{
@@ -37,4 +42,6 @@ public:
 
 	void load();
 	void save();
+	void loadCharacter();
+	void saveCharacter();
 };

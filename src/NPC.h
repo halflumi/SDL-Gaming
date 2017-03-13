@@ -2,11 +2,13 @@
 #include "Entity.h"
 #include "IDSheet.h"
 #include "MyTimer.h"
+#include "Textbox.h"
 
 class NPC : public Entity
 {
 private:
-	MyTimer* clickCooldown;
+	MyTimer clickCooldown;
+	Textbox* messageBox;
 
 	void Load();
 	bool CheckPlayerNearby();

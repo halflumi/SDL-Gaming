@@ -173,7 +173,15 @@ bool Main::HandleMenuEvents()
 				SoundLoader::Inst()->playSound(MenuMouseClick);
 				inMainMenu = false;
 				menuButtons.clear();
-				//TextureLoader::Inst()->clearTextureMap();
+				World::Inst()->startNewGame();
+				World::Inst()->initialize();
+				return true;
+			}
+			if (menuButtons[i]->getUniqueID() == ContinueButton)
+			{
+				SoundLoader::Inst()->playSound(MenuMouseClick);
+				inMainMenu = false;
+				menuButtons.clear();
 				World::Inst()->initialize();
 				return true;
 			}
@@ -259,12 +267,14 @@ bool Main::HandleMenuEvents()
 			}
 			if (menuButtons[i]->getUniqueID() == ExittoMainMenuButton)
 			{
+				XmlParser::Inst()->saveCharacter();
 				inGameMenu = false;
 				changeMenu(MenuMain);
 				return true;
 			}
 			if (menuButtons[i]->getUniqueID() == ExittoDestopButton)
 			{
+				XmlParser::Inst()->saveCharacter();
 				quit();
 				return true;
 			}
@@ -284,6 +294,7 @@ void Main::changeMenu(int menuID)
 	case MenuMain:
 		inMainMenu = true;
 		menuButtons.push_back(new Button(NewGameButton));
+		menuButtons.push_back(new Button(ContinueButton));
 		menuButtons.push_back(new Button(ExitButton));
 		menuButtons.push_back(new Button(OptionButton));
 		break;
@@ -327,7 +338,7 @@ void Main::UpdateMenu()
 void Main::RenderMenu()
 {
 	if(inMainMenu)
-		TextureLoader::Inst()->drawEx2(MainMenuPic, 0, 0, 1024, 768, windowWidth, windowHeight);
+		TextureLoader::Inst()->drawEx2(MainMenuPic, 0, 0, 1920, 1080, windowWidth, windowHeight);
 	if(inGameMenu)
 		TextureLoader::Inst()->drawFrameEx(InventoryGridMask, 0, 0, 10, 10, windowWidth, windowHeight, 0, 0, 0, 255);
 
