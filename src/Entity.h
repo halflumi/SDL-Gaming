@@ -1,16 +1,12 @@
 #pragma once
 #include "Object.h"
-#include "Vector2D.h"
 
-#define GRAVITY 0.10f
+#define GRAVITY 0.50f
 #define MAXFALLINGSPEED 10.0f
 
 class Entity : public Object
 {
 protected:
-	int worldID;
-	int life;
-
 	bool movingLeft, movingRight;
 	bool jumped;
 	bool midair;
@@ -18,39 +14,35 @@ protected:
 	Vector2D velocity;
 	Vector2D acceleration;
 
-	Entity() : maxSpeed(5.0f), velocity(0.0f, 0.0f), acceleration(0.0f, GRAVITY), life(0)
+	Entity() : maxSpeed(5.0f), velocity(0.0f, 0.0f), acceleration(0.0f, 0.0f), entityCenter(0.f,0.f), life(0), maxlife(0), minATT(0), maxATT(0), defense(0)
 	{
+		dead = false;
+
 		movingLeft = false; 
 		movingRight = false;
 		jumped = false;
 		midair = false;
 	}
 public:
+	int worldID;
+	bool dead;
+	Vector2D entityCenter;
 
-	virtual void update()
-	{
-		if (velocity.x == 0)
-			velocity.x += acceleration.x;
-		else if (velocity.x > 0)
-		{
-			if (velocity.x + acceleration.x > maxSpeed)
-				velocity.x = maxSpeed;
-			else
-				velocity.x += acceleration.x;
-		}
-		else
-		{
-			if (velocity.x + acceleration.x < -maxSpeed)
-				velocity.x = -maxSpeed;
-			else
-				velocity.x += acceleration.x;
-		}
-		if (velocity.y < MAXFALLINGSPEED)
-			velocity.y += acceleration.y;
+	string name;
+	int level;
+	int exp;
+	int life;
+	int maxlife;
+	int mana;
+	int maxmana;
+	int minATT;
+	int maxATT;
+	int defense;
+	int critChance;
 
-		position += velocity;
-	}
-
-	Vector2D& getPosition() { return position; }
 	Vector2D& getVelocity() { return velocity; }
+
+	virtual void update();
+	virtual void heal(int point);
+	virtual void onHit(int damage, int critChance) {};
 };

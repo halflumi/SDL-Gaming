@@ -20,6 +20,7 @@ public:
 
 	void setPosition(float x, float y) { position.x = x; position.y = y; }
 	const Player* getTarget() const { return target; }
+	Player* getTarget_nonConst() const { return target; }
 	const Vector2D getPosition() const { return position; }
 
 	void Focus(Player* _target);

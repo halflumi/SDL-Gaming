@@ -6,12 +6,12 @@
 class Sprite : public Object
 {
 private:
-	void load();
+	void Load();
 public:
-	Sprite(int x, int y, string id);
+	Sprite(int id, int x, int y);
 
-	string type() { return TypeSprite; }
-
+	int type() { return TypeSprite; }
 	void update();
 	void draw();
+	bool outsideCheckPlayerWithin();
 };

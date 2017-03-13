@@ -5,11 +5,11 @@
 class Tile : public Object
 {
 private:
-	void load();
+	void Load();
 public:
-	Tile(int x, int y, string id);
+	Tile(int id, int x, int y);
 
-	string type() { return TypeTile; }
+	int type() { return TypeTile; }
 	void update();
 	void draw();
 };

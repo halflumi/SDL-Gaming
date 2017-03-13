@@ -23,7 +23,7 @@ public:
 		int l = length();
 		if (l > 0)
 		{
-			(*this) *= 1 / l;
+			(*this) *= 1.0f / l;
 		}
 	}
 
