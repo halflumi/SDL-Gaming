@@ -23,11 +23,11 @@ class World
 	};
 private:
 	static World* INSTANCE;
-	World() {};
+	World() : newGame(false) {};
 	World(const World&);
 	World& operator=(const World&) {};
 
-	int currentMapID;
+	bool newGame;
 	int backgroundID;
 	int width;
 	int height;
@@ -47,6 +47,8 @@ private:
 	void RenderBackground();
 	void RenderUI();
 public:
+	int currentMapID;
+
 	static World* Inst()
 	{
 		if (INSTANCE == 0)
@@ -67,6 +69,7 @@ public:
 	int getWorldWidth() { return width; }
 	int getWorldHeight() { return height; }
 
+	void startNewGame(){ newGame = true; }
 	void initialize();
 	void changeMap(int mapID);
 	void updating();

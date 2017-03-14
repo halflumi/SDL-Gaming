@@ -20,6 +20,14 @@ void Sprite::Load()
 		numFrames = 14;
 		return;
 	}
+	if (uniqueID == TestPortal)
+	{
+		width = 85;
+		height = 105;
+		numFrames = 14;
+		animatedSpeed = 200;
+		return;
+	}
 	if (uniqueID == LadderSprite)
 	{
 		width = 54;

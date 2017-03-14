@@ -7,6 +7,7 @@
 #include "NPC.h"
 #include "Hostile.h"
 #include "Item.h"
+#include "XmlParser.h"
 
 #define LAYERCOUNT 7
 
@@ -30,11 +31,13 @@ void World::initialize()
 	TextureLoader::Inst()->load(CharacterPanelPicFile, CharacterPanelPic);
 	TextureLoader::Inst()->load(ExpBarFile, ExpBar);
 	TextureLoader::Inst()->load(DialogBackgroundFile, DialogBackground);
+	TextureLoader::Inst()->load(MessageboxMaskFile, MessageboxMask);
 	///Load tiles
 	TextureLoader::Inst()->load(Tile01File, Tile01);
 	TextureLoader::Inst()->load(BrickFile, Brick);
 	///Load sprites
 	TextureLoader::Inst()->load(WaterMushroomFrameFile, WaterMushroomFrame);
+	TextureLoader::Inst()->load(TestPortalFile, TestPortal);
 	TextureLoader::Inst()->load(LadderSpriteFile, LadderSprite);
 	TextureLoader::Inst()->load(MapGateFile, MapGate);
 	TextureLoader::Inst()->load(MapGate2File, MapGate2);
@@ -42,7 +45,8 @@ void World::initialize()
 	TextureLoader::Inst()->load(PlayerFrameFile, PlayerFrame);
 	TextureLoader::Inst()->load(LeafNPCFile, LeafNPC);
 	TextureLoader::Inst()->load(GhostNPCFile, GhostNPC);
-	TextureLoader::Inst()->load(TestPortalFile, TestPortal);
+	TextureLoader::Inst()->load(MapleFlagNPCFile, MapleFlagNPC);
+	TextureLoader::Inst()->load(SavePointNPCFile, SavePointNPC);
 	TextureLoader::Inst()->load(BlackBlockFile, BlackBlock);
 	///Load Projectiles
 	TextureLoader::Inst()->load(IchorKnifeProjectileFile, IchorKnifeProjectile);
@@ -65,8 +69,14 @@ void World::initialize()
 	SoundLoader::Inst()->load(JumpSoundFile, JumpSound, SOUND_SFX);
 	SoundLoader::Inst()->load(PlayerDamageSoundFile, PlayerDamageSound, SOUND_SFX);
 	SoundLoader::Inst()->load(WrapGateNoiseFile, WrapGateNoise, SOUND_SFX);
-	///defaultly load test01
-	changeMap(MapTest01);
+	///Load player data from xml
+	if (!newGame)
+	{
+		XmlParser::Inst()->loadCharacter();
+		changeMap(XmlParser::Inst()->mapID);
+	}
+	else
+		changeMap(MapTest01);
 	///load UI
 	const Player* player = Camera::Inst()->getTarget();
 	Vector2D nameTextpos(20, Main::Inst()->getRenderHeight() + 10);
@@ -113,12 +123,14 @@ void World::changeMap(int mapID)
 			getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 244));
 		///sprites
 		getLayer_background().push_back(new Sprite(WaterMushroomFrame, 1000, height - 136));
+		getLayer_foreground().push_back(new Sprite(TestPortal, 1200, height - 105));
 		getLayer_foreground().push_back(new Sprite(LadderSprite, 19 * 47, height - 244));
 		getLayer_foreground().push_back(new Sprite(MapGate, 1600, height - 154));
 		///entities
 		getLayer_entity().push_back(new NPC(LeafNPC, 2000, height - 100));
 		getLayer_entity().push_back(new NPC(GhostNPC, 1400, height - 80));
-		getLayer_entity().push_back(new NPC(TestPortal, 1200, height - 105));
+		getLayer_entity().push_back(new NPC(MapleFlagNPC, 800, height - 177));
+		getLayer_entity().push_back(new NPC(SavePointNPC, 47 * 10, height - 244 - 211));
 		getLayer_entity().push_back(new Hostile(BlackBlock, 0, 2500, height - 200));
 		return;
 	}
@@ -208,7 +220,7 @@ void World::rendering()
 	len = layer_player.size();
 	for (i = 0; i < len; i++)
 		layer_player[i]->draw();
-	//render projectiles
+	//render texts
 	len = layer_text.size();
 	for (i = 0; i < len; i++)
 		if (layer_text[i]->active)

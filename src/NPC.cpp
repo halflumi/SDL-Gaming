@@ -8,7 +8,7 @@
 
 #define INTERACTDISTENCE 100
 
-NPC::NPC(int id, int x, int y)
+NPC::NPC(int id, int x, int y) : clickCooldown(true)
 {
 	position.x = x;
 	position.y = y;
@@ -18,20 +18,12 @@ NPC::NPC(int id, int x, int y)
 
 void NPC::Load()
 {
-	clickCooldown = new MyTimer(true);
+	messageBox = NULL;
 	if (uniqueID == LeafNPC)
 	{
 		width = 114;
 		height = 80;
 		numFrames = 9;
-		return;
-	}
-	if (uniqueID == TestPortal)
-	{
-		width = 85;
-		height = 105;
-		numFrames = 14;
-		animatedSpeed = 200;
 		return;
 	}
 	if (uniqueID == GhostNPC)
@@ -42,10 +34,27 @@ void NPC::Load()
 		animatedSpeed = 150;
 		return;
 	}
+	if (uniqueID == MapleFlagNPC)
+	{
+		width = 99;
+		height = 177;
+		return;
+	}
+	if (uniqueID == SavePointNPC)
+	{
+		width = 254;
+		height = 221;
+		numFrames = 40;
+		animatedSpeed = 150;
+		return;
+	}
 }
 
 void NPC::update()
 {
+	if(messageBox!= NULL && messageBox->active)
+		messageBox->update();
+
 	VisiableCheck();
 
 	currentFrame = int(((SDL_GetTicks() / animatedSpeed) % numFrames));
@@ -54,9 +63,10 @@ void NPC::update()
 	{
 		if (checkMouseOver() && CheckPlayerNearby())
 		{
-			if (Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && clickCooldown->getTicks() > CLICKCOOLDOWN )
+			if (Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && clickCooldown.getTicks() > CLICKCOOLDOWN )
 			{
 				World::Inst()->newHostile(BlackBlock, 2000 + Dice::Inst()->rand(500), Dice::Inst()->rand(600, 800));
+				clickCooldown.start();
 			}
 			currentRow = 1;
 		}
@@ -68,9 +78,10 @@ void NPC::update()
 	{
 		if (checkMouseOver() && CheckPlayerNearby())
 		{
-			if (Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && clickCooldown->getTicks() > CLICKCOOLDOWN)
+			if (Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && clickCooldown.getTicks() > CLICKCOOLDOWN)
 			{
 				Camera::Inst()->getTarget_nonConst()->dialog = new Dialog();
+				clickCooldown.start();
 			}
 			currentRow = 1;
 		}
@@ -78,6 +89,47 @@ void NPC::update()
 			currentRow = 0;
 		return;
 	}
+	if (uniqueID == MapleFlagNPC)
+	{
+		if (checkMouseOver() && CheckPlayerNearby())
+		{
+			if (Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && clickCooldown.getTicks() > CLICKCOOLDOWN)
+			{
+				if (messageBox != NULL)
+					delete messageBox;
+				if(Dice::Inst()->rand(2))
+					messageBox = new Textbox(position, "I'm talking okay?", segoeui22, COLOR_WHITE, 60, true);
+				else
+					messageBox = new Textbox(position, "I doubt why people always think I'm a flag", segoeui22, COLOR_WHITE, 60, true);
+				clickCooldown.start();
+			}
+			currentRow = 1;
+		}
+		else
+			currentRow = 0;
+		return;
+	}
+	if (uniqueID == SavePointNPC)
+	{
+		if (checkMouseOver() && CheckPlayerNearby())
+		{
+			if (Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && clickCooldown.getTicks() > CLICKCOOLDOWN)
+			{
+				if (messageBox != NULL)
+					delete messageBox;
+				if (Dice::Inst()->rand(2))
+					messageBox = new Textbox(position, "I'm talking okay?", segoeui22, COLOR_WHITE, 60, true);
+				else
+					messageBox = new Textbox(position, "I doubt why people always think I'm a flag", segoeui22, COLOR_WHITE, 60, true);
+				clickCooldown.start();
+			}
+			currentRow = 1;
+		}
+		else
+			currentRow = 0;
+		return;
+	}
+
 }
 
 void NPC::draw()
@@ -86,6 +138,8 @@ void NPC::draw()
 	{
 		TextureLoader::Inst()->drawFrame(uniqueID, position.x - Camera::Inst()->getPosition().x + Main::Inst()->getRenderWidth() / 2, position.y - Camera::Inst()->getPosition().y + Main::Inst()->getRenderHeight() / 2, width, height, currentRow, currentFrame, angle, alpha);
 	}
+	if (messageBox != NULL && messageBox->active)
+		messageBox->draw();
 }
 
 bool NPC::checkMouseOver()
@@ -99,7 +153,7 @@ bool NPC::checkMouseOver()
 bool NPC::CheckPlayerNearby()
 {
 	Player* player = Camera::Inst()->getTarget_nonConst();
-	//if (player->entityCenter.x <= position.x + width + INTERACTDISTENCE && player->entityCenter.x >= position.x - INTERACTDISTENCE && player->entityCenter.y >= position.y - INTERACTDISTENCE && player->entityCenter.y <= position.y + height + INTERACTDISTENCE)
+	if (player->entityCenter.x <= position.x + width + INTERACTDISTENCE && player->entityCenter.x >= position.x - INTERACTDISTENCE && player->entityCenter.y >= position.y - INTERACTDISTENCE && player->entityCenter.y <= position.y + height + INTERACTDISTENCE)
 		return true;
 	return false;
 }

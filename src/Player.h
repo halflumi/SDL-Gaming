@@ -18,6 +18,10 @@ private:
 	Projectile* meleeProjectile;
 	int attackInterval;
 	int attackTick;
+	int lifeRegenInterval;
+	int lifeRegenTick;
+	int manaRegenInterval;
+	int manaRegenTick;
 	int invulnerableInterval;
 	int invulnerableTick;
 	int baseATT;

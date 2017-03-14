@@ -7,18 +7,30 @@
 #include "Vector2D.h"
 #include "XmlParser.h"
 
-#define NEWGAME_X Main::Inst()->getWindowWidth()/2 - 150
-#define NEWGAME_Y Main::Inst()->getWindowHeight()/2 - 75
-//#define NEWGAME_W 281
-//#define NEWGAME_H 36
-#define OPTION_X Main::Inst()->getWindowWidth()/2 - 150
-#define OPTION_Y Main::Inst()->getWindowHeight()/2 + 25
-//#define OPTION_W 199
-//#define OPTION_H 44
-#define EXIT_X Main::Inst()->getWindowWidth()/2 - 150
-#define EXIT_Y Main::Inst()->getWindowHeight()/2 + 125
-//#define EXIT_W 100
-//#define EXIT_H 35
+#define MAINMENU_X 100
+#define MAINMENU_Y Main::Inst()->getWindowHeight()/2
+#define NewGamePos			MAINMENU_X,MAINMENU_Y - 100
+#define ContinuePos			MAINMENU_X,MAINMENU_Y
+#define OptionsPos			MAINMENU_X,MAINMENU_Y + 100
+#define ExitPos				MAINMENU_X,MAINMENU_Y + 200
+#define ResolutionTextPos	MAINMENU_X,MAINMENU_Y - 100
+#define ResolutionListPos	MAINMENU_X + 200,MAINMENU_Y - 100
+#define FullscreenTextPos	MAINMENU_X,MAINMENU_Y - 50
+#define FullscreenBoxPos	MAINMENU_X + 200,MAINMENU_Y - 43
+#define VolumnLButton1Pos	MAINMENU_X + 225,MAINMENU_Y + 60
+#define VolumnLButton2Pos	MAINMENU_X + 225,MAINMENU_Y + 110
+#define VolumnLButton3Pos	MAINMENU_X + 225,MAINMENU_Y + 160
+#define VolumnRButton1Pos	MAINMENU_X + 290,MAINMENU_Y + 60
+#define VolumnRButton2Pos	MAINMENU_X + 290,MAINMENU_Y + 110
+#define VolumnRButton3Pos	MAINMENU_X + 290,MAINMENU_Y + 160
+#define VolumnMasterTextPos	MAINMENU_X,MAINMENU_Y + 50
+#define VolumnMasterNumPos	MAINMENU_X + 245,MAINMENU_Y + 50
+#define VolumnMusicTextPos	MAINMENU_X,MAINMENU_Y + 100
+#define VolumnMusicNumPos	MAINMENU_X + 245,MAINMENU_Y + 100
+#define VolumnSfxTextPos	MAINMENU_X,MAINMENU_Y + 150
+#define VolumnSfxNumPos		MAINMENU_X + 245,MAINMENU_Y + 150
+#define BackButtonPos		MAINMENU_X,MAINMENU_Y + 200
+
 
 Button::Button(int id) : clickCooldown(true)
 {
@@ -41,16 +53,22 @@ void Button::Load()
 	//main menu
 	if (uniqueID == NewGameButton)
 	{
-		position.x = NEWGAME_X;
-		position.y = NEWGAME_Y;
+		position.set(NewGamePos);
 		buttonText = new Textbox(position, "New Game", arial48_bold, COLOR_WHITE, -1);
 		TTF_SizeText(Main::Inst()->getFont(arial48_bold), "New Game", &width, &height);
 		return;
 	}
+	if (uniqueID == ContinueButton)
+	{
+		position.set(ContinuePos);
+		buttonText = new Textbox(position, "Continue", arial48_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial48_bold), "Continue", &width, &height);
+		return;
+
+	}
 	if (uniqueID == OptionButton)
 	{
-		position.x = OPTION_X;
-		position.y = OPTION_Y;
+		position.set(OptionsPos);
 		buttonText = new Textbox(position, "Options", arial48_bold, COLOR_WHITE, -1);
 		TTF_SizeText(Main::Inst()->getFont(arial48_bold), "Options", &width, &height);
 		numFrames = 2;
@@ -58,8 +76,7 @@ void Button::Load()
 	}
 	if (uniqueID == ExitButton)
 	{
-		position.x = EXIT_X;
-		position.y = EXIT_Y;
+		position.set(ExitPos);
 		buttonText = new Textbox(position, "Exit", arial48_bold, COLOR_WHITE, -1);
 		TTF_SizeText(Main::Inst()->getFont(arial48_bold), "Exit", &width, &height);
 		return;
@@ -67,16 +84,14 @@ void Button::Load()
 	if (uniqueID == ResolutionText)
 	{
 		buttonClass = ButtonTypeTextbox;
-		position.x = NEWGAME_X;
-		position.y = NEWGAME_Y;
+		position.set(ResolutionTextPos);
 		buttonText = new Textbox(position, "Resolution", arial28_bold, COLOR_WHITE, -1);
 		TTF_SizeText(Main::Inst()->getFont(arial28_bold), "Resolution", &width, &height);
 		return;
 	}
 	if (uniqueID == ResolutionListbox)
 	{
-		position.x = NEWGAME_X + 200;
-		position.y = NEWGAME_Y;
+		position.set(ResolutionListPos);
 		buttonText = new Textbox(position, "", arial28_bold, COLOR_WHITE, -1);
 		switch (XmlParser::Inst()->window_w)
 		{
@@ -98,16 +113,14 @@ void Button::Load()
 	if (uniqueID == FullscreenText)
 	{
 		buttonClass = ButtonTypeTextbox;
-		position.x = NEWGAME_X;
-		position.y = NEWGAME_Y + 50;
+		position.set(FullscreenTextPos);
 		buttonText = new Textbox(position, "Fullscreen", arial28_bold, COLOR_WHITE, -1);
 		TTF_SizeText(Main::Inst()->getFont(arial28_bold), "Fullscreen", &width, &height);
 		return;
 	}
 	if (uniqueID == FullscreenCheckbox)
 	{
-		position.x = NEWGAME_X + 205;
-		position.y = NEWGAME_Y + 57;
+		position.set(FullscreenBoxPos);
 		width = 20;
 		height = 20;
 		return;
@@ -117,16 +130,13 @@ void Button::Load()
 		switch (flag)
 		{
 		case 0:
-			position.x = NEWGAME_X + 225;
-			position.y = NEWGAME_Y + 110;
+			position.set(VolumnLButton1Pos);
 			break;
 		case 1:
-			position.x = NEWGAME_X + 225;
-			position.y = NEWGAME_Y + 160;
+			position.set(VolumnLButton2Pos);
 			break;
 		case 2:
-			position.x = NEWGAME_X + 225;
-			position.y = NEWGAME_Y + 210;
+			position.set(VolumnLButton3Pos);
 			break;
 		}
 		width = 15;
@@ -137,16 +147,13 @@ void Button::Load()
 		switch (flag)
 		{
 		case 0:
-			position.x = NEWGAME_X + 290;
-			position.y = NEWGAME_Y + 110;
+			position.set(VolumnRButton1Pos);
 			break;
 		case 1:
-			position.x = NEWGAME_X + 290;
-			position.y = NEWGAME_Y + 160;
+			position.set(VolumnRButton2Pos);
 			break;
 		case 2:
-			position.x = NEWGAME_X + 290;
-			position.y = NEWGAME_Y + 210;
+			position.set(VolumnRButton3Pos);
 			break;
 		}
 		width = 15;
@@ -155,8 +162,7 @@ void Button::Load()
 	if (uniqueID == VolumnMasterText)
 	{
 		buttonClass = ButtonTypeTextbox;
-		position.x = NEWGAME_X;
-		position.y = NEWGAME_Y + 100;
+		position.set(VolumnMasterTextPos);
 		buttonText = new Textbox(position, "Master Volumn", arial28_bold, COLOR_WHITE, -1);
 		TTF_SizeText(Main::Inst()->getFont(arial28_bold), "Master Volumn", &width, &height);
 		return;
@@ -164,15 +170,13 @@ void Button::Load()
 	if (uniqueID == VolumnMasterNumber)
 	{
 		buttonClass = ButtonTypeTextbox;
-		position.x = NEWGAME_X + 245;
-		position.y = NEWGAME_Y + 100;
+		position.set(VolumnMasterNumPos);
 		buttonText = new Textbox(position, to_string(XmlParser::Inst()->volumn_master), arial28_bold, COLOR_WHITE, -1);
 	}
 	if (uniqueID == VolumnMusicText)
 	{
 		buttonClass = ButtonTypeTextbox;
-		position.x = NEWGAME_X;
-		position.y = NEWGAME_Y + 150;
+		position.set(VolumnMusicTextPos);
 		buttonText = new Textbox(position, "Music Volumn", arial28_bold, COLOR_WHITE, -1);
 		TTF_SizeText(Main::Inst()->getFont(arial28_bold), "Master Volumn", &width, &height);
 		return;
@@ -180,15 +184,13 @@ void Button::Load()
 	if (uniqueID == VolumnMusicNumber)
 	{
 		buttonClass = ButtonTypeTextbox;
-		position.x = NEWGAME_X + 245;
-		position.y = NEWGAME_Y + 150;
+		position.set(VolumnMusicNumPos);
 		buttonText = new Textbox(position, to_string(XmlParser::Inst()->volumn_music), arial28_bold, COLOR_WHITE, -1);
 	}
 	if (uniqueID == VolumnSfxText)
 	{
 		buttonClass = ButtonTypeTextbox;
-		position.x = NEWGAME_X;
-		position.y = NEWGAME_Y + 200;
+		position.set(VolumnSfxTextPos);
 		buttonText = new Textbox(position, "Sfx Volumn", arial28_bold, COLOR_WHITE, -1);
 		TTF_SizeText(Main::Inst()->getFont(arial28_bold), "Master Volumn", &width, &height);
 		return;
@@ -196,14 +198,12 @@ void Button::Load()
 	if (uniqueID == VolumnSfxNumber)
 	{
 		buttonClass = ButtonTypeTextbox;
-		position.x = NEWGAME_X + 245;
-		position.y = NEWGAME_Y + 200;
+		position.set(VolumnSfxNumPos);
 		buttonText = new Textbox(position, to_string(XmlParser::Inst()->volumn_sfx), arial28_bold, COLOR_WHITE, -1);
 	}
 	if (uniqueID == BackButton)
 	{
-		position.x = EXIT_X;
-		position.y = EXIT_Y + 100;
+		position.set(BackButtonPos);
 		buttonText = new Textbox(position, "Back to the Main Menu", arial28_bold, COLOR_WHITE, -1);
 		TTF_SizeText(Main::Inst()->getFont(arial28_bold), "Back to the Main Menu", &width, &height);
 		return;
@@ -252,7 +252,7 @@ void Button::Load()
 void Button::update()
 {
 	//main menu
-	if (uniqueID == NewGameButton)
+	if (uniqueID == NewGameButton || uniqueID == ContinueButton)
 	{
 		if (CheckMouseOver())
 			buttonText->changeColor(COLOR_RED);

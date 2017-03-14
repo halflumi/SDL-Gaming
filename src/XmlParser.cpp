@@ -1,24 +1,14 @@
 #include "XmlParser.h"
 #include <SDL.h>
 #include "Main.h"
+#include "World.h"
+#include "Camera.h"
 
 XmlParser* XmlParser::INSTANCE = 0;
 
 XmlParser::XmlParser()
 {
 
-}
-
-bool XmlParser::CheckXMLError(XMLError error)
-{
-	if (error == XML_SUCCESS)
-		return false;
-	else
-	{
-		cout << "XML_ERROR when loading xml file" << endl;
-		return true;
-	}
-	return false;
 }
 
 void XmlParser::load()
@@ -28,16 +18,16 @@ void XmlParser::load()
 	XMLNode* node;
 	XMLElement * element;
 
-	error = xmlFile.LoadFile("ini\\SavedData.xm");
+	error = xmlFile.LoadFile(SettingsFile);
 	if (error != XML_SUCCESS)
 	{
-		cout << "XML_ERROR loading xml from file." << endl;
+		cout << "XML_ERROR loading settings from file." << endl;
 		return;
 	}
 	node = xmlFile.FirstChild();
 	if (node == nullptr)
 	{
-		cout << "XML_ERROR getting first node of the xml." << endl;
+		cout << "XML_ERROR getting first node of the settings xml." << endl;
 		return;
 	}
 	///window_x
@@ -149,7 +139,105 @@ void XmlParser::save()
 	element->SetText(volumn_sfx);
 	node->InsertEndChild(element);
 
-	error = xmlFile.SaveFile("ini\\SavedData.xm");
+	error = xmlFile.SaveFile(SettingsFile);
 	if (error != XML_SUCCESS)
-		cout << "XML_ERROR saving xml to the local file." << endl;
+		cout << "XML_ERROR saving settings to the local file." << endl;
+}
+
+void XmlParser::loadCharacter()
+{
+	XMLDocument xmlFile;
+	XMLError error;
+	XMLNode* node;
+	XMLElement* element;
+
+	error = xmlFile.LoadFile(SavedataFile);
+	if (error != XML_SUCCESS)
+	{
+		cout << "XML_ERROR loading character from file." << endl;
+		return;
+	}
+	node = xmlFile.FirstChild();
+	if (node == nullptr)
+	{
+		cout << "XML_ERROR getting first node of the character xml." << endl;
+		return;
+	}	
+	///mapID
+	element = node->FirstChildElement("mapID");
+	if (element == nullptr)
+		cout << "XML_ERROR getting mapID element from the node." << endl;
+	else
+		error = element->QueryIntText(&mapID);
+	if (error != XML_SUCCESS)
+		cout << "XML_ERROR passing mapID value to the variable." << endl;
+
+	///level
+	element = node->FirstChildElement("level");
+	if (element == nullptr)
+		cout << "XML_ERROR getting level element from the node." << endl;
+	else
+		error = element->QueryIntText(&level);
+	if (error != XML_SUCCESS)
+		cout << "XML_ERROR passing level value to the variable." << endl;
+	///xp
+	element = node->FirstChildElement("xp");
+	if (element == nullptr)
+		cout << "XML_ERROR getting xp element from the node." << endl;
+	else
+		error = element->QueryIntText(&xp);
+	if (error != XML_SUCCESS)
+		cout << "XML_ERROR passing xp value to the variable." << endl;
+	///life
+	element = node->FirstChildElement("life");
+	if (element == nullptr)
+		cout << "XML_ERROR getting life element from the node." << endl;
+	else
+		error = element->QueryIntText(&life);
+	if (error != XML_SUCCESS)
+		cout << "XML_ERROR passing life value to the variable." << endl;
+	///mana
+	element = node->FirstChildElement("mana");
+	if (element == nullptr)
+		cout << "XML_ERROR getting mana element from the node." << endl;
+	else
+		error = element->QueryIntText(&mana);
+	if (error != XML_SUCCESS)
+		cout << "XML_ERROR passing mana value to the variable." << endl;
+}
+
+void XmlParser::saveCharacter()
+{
+	XMLDocument xmlFile;
+	XMLError error;
+	XMLNode* node;
+	XMLElement* element;
+	node = xmlFile.NewElement("root");
+	xmlFile.InsertFirstChild(node);
+
+	const Player* player = Camera::Inst()->getTarget();
+	///mapID
+	element = xmlFile.NewElement("mapID");
+	element->SetText(World::Inst()->currentMapID);
+	node->InsertEndChild(element);
+	///level
+	element = xmlFile.NewElement("level");
+	element->SetText(player->level);
+	node->InsertEndChild(element);
+	///xp
+	element = xmlFile.NewElement("xp");
+	element->SetText(player->exp);
+	node->InsertEndChild(element);
+	///life
+	element = xmlFile.NewElement("life");
+	element->SetText(player->life);
+	node->InsertEndChild(element);
+	///mana
+	element = xmlFile.NewElement("mana");
+	element->SetText(player->mana);
+	node->InsertEndChild(element);
+
+	error = xmlFile.SaveFile(SavedataFile);
+	if (error != XML_SUCCESS)
+		cout << "XML_ERROR saving character to the local file." << endl;
 }
