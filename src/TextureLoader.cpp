@@ -3,10 +3,15 @@
 #include "TextureLoader.h"
 #include "Main.h"
 
-
 TextureLoader* TextureLoader::INSTANCE = 0;
 
-bool TextureLoader::load(string fileName, string id)
+void TextureLoader::clearFromTextureMap(int id)
+{
+	SDL_DestroyTexture(textureMap[id]);
+	textureMap[id] = NULL;
+}
+
+bool TextureLoader::load(string fileName, int id)
 {
 	//Avoid reloading the same texture
 	if (textureMap[id])
@@ -22,6 +27,9 @@ bool TextureLoader::load(string fileName, string id)
 
 	SDL_Texture* newTexture = SDL_CreateTextureFromSurface(Main::Inst()->getRenderer(), tempSurface);
 
+	if (newTexture == NULL)
+		printf("SDL_ERROR creating texture from rendered surface: %s\n", SDL_GetError());
+
 	SDL_FreeSurface(tempSurface);
 
 	if (newTexture != 0)
@@ -33,7 +41,7 @@ bool TextureLoader::load(string fileName, string id)
 	return false;
 }
 
-void TextureLoader::draw(string id, int x, int y, int width, int height, SDL_RendererFlip flip)
+void TextureLoader::draw(int id, int x, int y, int width, int height, SDL_RendererFlip flip)
 {
 	SDL_Rect srcRect;
 	SDL_Rect destRect;
@@ -45,10 +53,10 @@ void TextureLoader::draw(string id, int x, int y, int width, int height, SDL_Ren
 	destRect.x = x;
 	destRect.y = y;
 
-	SDL_RenderCopyEx(Main::Inst()->getRenderer(), textureMap[id], &srcRect, &destRect, 0, 0, flip);
+	SDL_RenderCopyEx(Main::Inst()->getRenderer(), textureMap[id], &srcRect, &destRect, 0, NULL, flip);
 }
 
-void TextureLoader::drawEx(string id, int src_x, int src_y, int dest_x, int dest_y, int width, int height, SDL_RendererFlip flip)
+void TextureLoader::drawEx(int id, int src_x, int src_y, int dest_x, int dest_y, int width, int height, SDL_RendererFlip flip)
 {
 	SDL_Rect srcRect;
 	SDL_Rect destRect;
@@ -60,10 +68,27 @@ void TextureLoader::drawEx(string id, int src_x, int src_y, int dest_x, int dest
 	destRect.x = dest_x;
 	destRect.y = dest_y;
 
-	SDL_RenderCopyEx(Main::Inst()->getRenderer(), textureMap[id], &srcRect, &destRect, 0, 0, flip);
+	SDL_RenderCopyEx(Main::Inst()->getRenderer(), textureMap[id], &srcRect, &destRect, 0, NULL, flip);
 }
 
-void TextureLoader::drawFrame(std::string id, int x, int y, int width, int height, int currentRow, int currentFrame, double angle, int alpha,  SDL_RendererFlip flip)
+void TextureLoader::drawEx2(int id, int x, int y, int src_width, int src_height, int dest_width, int dest_height, SDL_RendererFlip flip)
+{
+	SDL_Rect srcRect;
+	SDL_Rect destRect;
+
+	srcRect.x = 0;
+	srcRect.y = 0;
+	srcRect.w = src_width;
+	srcRect.h = src_height;
+	destRect.w = dest_width;
+	destRect.h = dest_height;
+	destRect.x = x;
+	destRect.y = y;
+
+	SDL_RenderCopyEx(Main::Inst()->getRenderer(), textureMap[id], &srcRect, &destRect, 0, NULL, flip);
+}
+
+void TextureLoader::drawFrame(int id, int x, int y, int width, int height, int currentRow, int currentFrame, double angle, int alpha,  SDL_RendererFlip flip)
 {
 	SDL_Rect srcRect;
 	SDL_Rect destRect;
@@ -75,5 +100,24 @@ void TextureLoader::drawFrame(std::string id, int x, int y, int width, int heigh
 	destRect.x = x;
 	destRect.y = y;
 
+	SDL_SetTextureAlphaMod(textureMap[id], alpha);
+	SDL_RenderCopyEx(Main::Inst()->getRenderer(), textureMap[id], &srcRect, &destRect, angle, NULL, flip);
+}
+
+void TextureLoader::drawFrameEx(int id, int x, int y, int src_width, int src_height, int dest_width, int dest_height, int currentRow, int currentFrame, double angle, int alpha, SDL_RendererFlip flip)
+{
+	SDL_Rect srcRect;
+	SDL_Rect destRect;
+
+	srcRect.x = src_width * currentFrame;
+	srcRect.y = src_height * currentRow;
+	srcRect.w = src_width;
+	srcRect.h = src_height;
+	destRect.w = dest_width;
+	destRect.h = dest_height;
+	destRect.x = x;
+	destRect.y = y;
+
+	SDL_SetTextureAlphaMod(textureMap[id], alpha);
 	SDL_RenderCopyEx(Main::Inst()->getRenderer(), textureMap[id], &srcRect, &destRect, angle, NULL, flip);
 }

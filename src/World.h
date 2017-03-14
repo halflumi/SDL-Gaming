@@ -2,6 +2,10 @@
 #include <vector>
 #include "Object.h"
 #include "Player.h"
+#include "Textbox.h"
+#include "Projectile.h"
+#include "Tile.h"
+#include "Sprite.h"
 
 using namespace std;
 
@@ -9,24 +13,41 @@ class World
 {
 	enum LayerType
 	{
-		LAYER_SPRITE = 0,
+		LAYER_BACKGROUND,
 		LAYER_TILE,
+		LAYER_FOREGROUND,
 		LAYER_ENTITY,
 		LAYER_PROJECTILE,
-		LAYER_PLAYER
+		LAYER_PLAYER,
+		LAYER_TEXT
 	};
 private:
 	static World* INSTANCE;
-	World();
+	World() : newGame(false) {};
 	World(const World&);
 	World& operator=(const World&) {};
 
-	int mapNum;
+	bool newGame;
+	int backgroundID;
 	int width;
 	int height;
+	Textbox nameText;
+	Textbox healthNumText;
+	Textbox manaNumText;
 
-	vector<vector<Object*>> layers;
+	vector<Sprite*> layer_background;
+	vector<Tile*> layer_tile;
+	vector<Sprite*> layer_foreground;
+	vector<Entity*> layer_entity;
+	vector<Projectile*> layer_projectile;
+	vector<Player*> layer_player;
+	vector<Textbox*> layer_text;
+
+	void RenderBackground();
+	void RenderUI();
 public:
+	int currentMapID;
+
 	static World* Inst()
 	{
 		if (INSTANCE == 0)
@@ -37,19 +58,27 @@ public:
 		return INSTANCE;
 	}
 
-	vector<Object*>& getLayer_sprite() { return layers[LAYER_SPRITE]; }
-	vector<Object*>& getLayer_tile() { return layers[LAYER_TILE]; }
-	vector<Object*>& getLayer_entity() { return layers[LAYER_ENTITY]; }
-	vector<Object*>& getLayer_projectile() { return layers[LAYER_PROJECTILE]; }
-	vector<Object*>& getLayer_player() { return layers[LAYER_PLAYER]; }
+	vector<Sprite*>& getLayer_background() { return layer_background; }
+	vector<Tile*>& getLayer_tile() { return layer_tile; }
+	vector<Sprite*>& getLayer_foreground() { return layer_foreground; }
+	vector<Entity*>& getLayer_entity() { return layer_entity; }
+	vector<Projectile*>& getLayer_projectile() { return layer_projectile; }
+	vector<Player*>& getLayer_player() { return layer_player; }
+	vector<Textbox*>& getLayer_text() { return layer_text; }
 	int getWorldWidth() { return width; }
 	int getWorldHeight() { return height; }
 
-	void load();
+	void clearWorld();
+	void startNewGame();
+	void startOldGame() { newGame = false; }
+	void initialize();
+	void changeMap(int mapID, MapChangeType form);
 	void updating();
 	void rendering();
-	void renderBackground();
 
-	void newProjectile(Vector2D* pos, string id, float velocity_x, float velocity_y, bool gravitational = true);
-	//void destroyProjectile(int worldID);
+	void newProjectile(int id, Vector2D pos, float velocity_x, float velocity_y, Entity* owner, bool gravitational = true);
+	void createText(Vector2D pos, float velocity_x, float velocity_y, string text, int fontID, SDL_Color color, int lastingTime);
+	void newHostile(int id, int x, int y);
+	void newItem(int id, int stack, int x, int y);
+	void newItem(int id, int stack, int x, int y, float velocity_x, float velocity_y);
 };

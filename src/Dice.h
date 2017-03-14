@@ -24,4 +24,6 @@ public:
 	}
 
 	int rand(int max);
+	int rand(int min, int max);
+	int randInverse(int max);
 };

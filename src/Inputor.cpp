@@ -1,5 +1,6 @@
 #include "Inputor.h"
 #include "Main.h"
+#include "Camera.h"
 
 Inputor* Inputor::INSTANCE = 0;
 
@@ -57,6 +58,8 @@ void Inputor::onKeyUp()
 
 void Inputor::onMouseMove(SDL_Event &event)
 {
+	mousePosition_old->x = mousePosition->x;
+	mousePosition_old->y = mousePosition->y;
 	mousePosition->x = event.motion.x;
 	mousePosition->y = event.motion.y;
 }
@@ -95,4 +98,14 @@ void Inputor::onMouseButtonUp(SDL_Event &event)
 	{
 		mousestates[MOUSE_RIGHT] = false;
 	}
+}
+
+Vector2D* Inputor::getMouseDefinitePosition() const
+{
+	return new Vector2D(mousePosition->x + Camera::Inst()->getPosition().x - Main::Inst()->getRenderWidth() / 2, mousePosition->y + Camera::Inst()->getPosition().y - Main::Inst()->getRenderHeight() / 2);
+}
+
+Vector2D* Inputor::getMouseMotionVector()
+{
+	return new Vector2D(mousePosition->x - mousePosition_old->x, mousePosition->y - mousePosition_old->y);
 }

@@ -4,15 +4,15 @@
 #include "TextureLoader.h"
 #include "Camera.h"
 
-Tile::Tile(int x, int y, string id)
+Tile::Tile(int id, int x, int y)
 {
 	position.x = x;
 	position.y = y;
 	uniqueID = id;
-	load();
+	Load();
 }
 
-void Tile::load()
+void Tile::Load()
 {
 	if(uniqueID == Tile01)
 	{
@@ -30,16 +30,11 @@ void Tile::load()
 
 void Tile::update()
 {
-	if (position.x - Camera::Inst()->getPosition().x < Main::Inst()->getWindowWidth() / 2)
-		visiable = true;
-	else if(Camera::Inst()->getPosition().x - (position.x + width) < Main::Inst()->getWindowWidth() / 2)
-		visiable = true;
-	else
-		visiable = false;
+	VisiableCheck();
 }
 
 void Tile::draw()
 {
 	if(visiable)
-		TextureLoader::Inst()->draw(uniqueID, position.x - Camera::Inst()->getPosition().x + Main::Inst()->getWindowWidth() / 2, position.y, width, height);
+		TextureLoader::Inst()->draw(uniqueID, position.x - Camera::Inst()->getPosition().x + Main::Inst()->getRenderWidth() / 2, position.y - Camera::Inst()->getPosition().y + Main::Inst()->getRenderHeight() / 2, width, height);
 }
