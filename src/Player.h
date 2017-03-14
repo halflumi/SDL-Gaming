@@ -26,6 +26,8 @@ private:
 	int invulnerableTick;
 	int baseATT;
 	int baseDEF;
+	int baseMaxLife;
+	int baseMaxMana;
 
 	bool focused;
 	Vector2D display_pos;

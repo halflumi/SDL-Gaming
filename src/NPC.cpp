@@ -5,6 +5,7 @@
 #include "Inputor.h"
 #include "Camera.h"
 #include "Dice.h"
+#include "XmlParser.h"
 
 #define INTERACTDISTENCE 100
 
@@ -117,10 +118,8 @@ void NPC::update()
 			{
 				if (messageBox != NULL)
 					delete messageBox;
-				if (Dice::Inst()->rand(2))
-					messageBox = new Textbox(position, "I'm talking okay?", segoeui22, COLOR_WHITE, 60, true);
-				else
-					messageBox = new Textbox(position, "I doubt why people always think I'm a flag", segoeui22, COLOR_WHITE, 60, true);
+				messageBox = new Textbox(position, "The game has been saved!", segoeui22, COLOR_WHITE, 60, true);
+				XmlParser::Inst()->saveCharacter();
 				clickCooldown.start();
 			}
 			currentRow = 1;

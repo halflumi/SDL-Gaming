@@ -14,6 +14,13 @@
 //savedata filepath
 #define SettingsFile "save\\settings.xm"
 #define SavedataFile "save\\savedata.xm"
+
+enum MapChangeType
+{
+	MAPCHANGE_LOAD,
+	MAPCHANGE_LEFT,
+	MAPCHANGE_RIGHT
+};
 ///typeID 100xxxxx
 //Object type
 #define TypeButton 10010000

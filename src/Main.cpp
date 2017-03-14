@@ -182,6 +182,7 @@ bool Main::HandleMenuEvents()
 				SoundLoader::Inst()->playSound(MenuMouseClick);
 				inMainMenu = false;
 				menuButtons.clear();
+				World::Inst()->startOldGame();
 				World::Inst()->initialize();
 				return true;
 			}
@@ -268,6 +269,8 @@ bool Main::HandleMenuEvents()
 			if (menuButtons[i]->getUniqueID() == ExittoMainMenuButton)
 			{
 				XmlParser::Inst()->saveCharacter();
+				World::Inst()->clearWorld();
+				World::Inst()->getLayer_player().clear();
 				inGameMenu = false;
 				changeMenu(MenuMain);
 				return true;

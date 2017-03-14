@@ -771,13 +771,13 @@ void Player::DoInteractive(int id)
 	if (id == MapGate)
 	{
 		SoundLoader::Inst()->playSound(WrapGateNoise);
-		World::Inst()->changeMap(MapTest02);
+		World::Inst()->changeMap(MapTest02, MAPCHANGE_RIGHT);
 		return;
 	}
 	if (id == MapGate2)
 	{
 		SoundLoader::Inst()->playSound(WrapGateNoise);
-		World::Inst()->changeMap(MapTest01);
+		World::Inst()->changeMap(MapTest01, MAPCHANGE_LEFT);
 		return;
 	}
 }

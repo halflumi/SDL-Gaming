@@ -43,7 +43,6 @@ private:
 	vector<Player*> layer_player;
 	vector<Textbox*> layer_text;
 
-	void ClearWorld();
 	void RenderBackground();
 	void RenderUI();
 public:
@@ -69,9 +68,11 @@ public:
 	int getWorldWidth() { return width; }
 	int getWorldHeight() { return height; }
 
-	void startNewGame(){ newGame = true; }
+	void clearWorld();
+	void startNewGame();
+	void startOldGame() { newGame = false; }
 	void initialize();
-	void changeMap(int mapID);
+	void changeMap(int mapID, MapChangeType form);
 	void updating();
 	void rendering();
 
