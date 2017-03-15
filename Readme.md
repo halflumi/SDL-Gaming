@@ -1,320 +1,176 @@
 # SDL-Gaming
-ok, so, yeah, this is um... a project, a game project, maybe not... well, just sorta like thtta way, a project that conducts making a game.
+这是一份项目(project)仓库，用来创作一个基于SDL2图形库的游戏。
 
-I wch of here, writing down some explanations of the most basic elements of the game itself so far, in case em... the chaotic codes of the game make u feel sick.
+下面将介绍一些游戏源代码的基本要素，使得你能够更清晰地掌握这个project的构造。
 
-NOTICE: these illstrations can be inaccurate as the game being developed. This is only how it looks like when I first upload it onto Github.
+**注意：随着代码的更新，这份README的说明可能会变得不准确。**
 
-The game has **27** source files for now:
+如有疑惑，请询问[@wch510719826](https://github.com/wch510719826)。
 
-- Camera.h
-- Dice.cpp
-- Dice.h
+## Outline
+这个游戏当前分为16个模块。
+其中，11个模块各有一份头文件.h + 源文件.cpp：
+- Camera
+- Dice
+- Inputor
+- Main
+- Player
+- Projectile
+- SoundLoader
+- Sprite
+- TextureLoader
+- Tile
+- World
+
+有4个模块仅有一份头文件：
 - Entity.h
 - IDSheet.h
-- Inputor.cpp
-- Inputor.h
-- Main.cpp
-- Main.h
-- Object.h
-- Player.cpp
-- Player.h
-- Projectile.cpp
-- Projectile.h
-- SDLGaming.cpp
-- Sound Loader.cpp
-- SoundLoader.h
-- Sprite.cpp
-- Sprite.h
-- TextureLoader.cpp
-- TextureLoader.h
-- Tile.cpp
-- Tile.h
 - Vector2D.h
-- World.cpp
-- World.h
+- Object.h
 
-S**t, that's a hell lot.
-There's gonna be more of them as the game gets close to completion.
-Note that ya'll need to download all of those to make it work, otherwise it won't compile which is gonna freak you out.
+以及main函数的入口：
+- SDLGaming.cpp
 
-Actually lots of these are self-explanatory, what it gotta take to consist of a game is clear: graphic, audio, i/o, etc.
-I'm only gonna illustrate how I implement these things, if u're having problems with SDL stuff, go searching on SDL wiki instead of holding a knife tracking me down through the network cables - it happens sometimes, right?
+一共**27**个文件。
 
-Okay, enough joking around.
+随着开发的推进，会有更多的文件加入其中。因此，你需要时刻保持内容的同步，并**正确配置好project设置，以及project相关文件夹的结构布置**，才能正常工作。  
+否则，build不过的绝望会把你逼疯的。
 
-The files consist of both .h and .cpp, where almost every .cpp has a parallel .h file. This is becasue:
+从这些模块的名称，可以明确地看到这个游戏的有机组成部分: 图像, 音频, 输入/输出, 等等。  
+这份README将只说明这些模块**实现了什么功能**，并**提供了什么样的接口**，给予**指向如何实现的Github Wiki链接**，而尽量不涉及SDL的特性（实际上，你也只需要围绕着提供好的API来写就好了）。
 
-the game is highly OOP featured
-the way how C++ implements classes
+如果你在SDL本身上有任何疑惑, 请自行查阅[SDL Wiki](http://wiki.libsdl.org/) (*就像SDL教程视频里做的那样*)。
 
-Like player.h and player.cpp, the former is the definition (assignment) of class **Player** and the latter is implementation of that.
+### Why C++?
 
-I just want to point this out since this is indispensible, especially this is the utmost difference of how OOP looks like between C++ and Java or C#
+C++既是面向对象程序语言，又继承了C的高效运行特点，十分适合用来写游戏。
 
-> -- Question: then why don't u use Java? It gotta be a lot more neat.
-> 
-> -- Answer: well, good idea, I guess I'm just gonna go ahead and delete all these and write them in... what the hell? Why it is so slow?
-> 
-> -- True Answer: I'm familiar with C++ more than Java, so...
+> -- Possible Question: 为什么不用Java？
+>
+> -- Answer: 相比Java,C#这些典型的面向对象语言，C++可以很好地使用一些它们没有（或者已经抛弃）的机制来更有效率地解决一些问题。这些机制包括指针、宏（预编译）、内存控制等等。不过，尽管如此，如果写的很烂的话，还是会比Java慢而且笨重的。
 
-I'm such a chatterbox, u guys need to be careful to avoid these non-sense parts to get what is useful, okay?
-If u're having any troubles in C++, u can ask. I may have one way or two to make things clear.
+作者原话：
 
-"which language" should not be the topic here, but compared to pure OOP language like java or c#, c++ has the ability... or let's just say at least the potential to jump out from the loop of OOP. This enables us to find the methods that OOP has abandoned to solve some problems more efficiently and effectively.<br>
-ofc, these methods , as a matter of fact, can only be found at some really limited situations. Most of time there are only organizational differences between languages. What a programming language can do is almost the same (espcially c++ and java). <br>
-All in all, the persistence in c++ leads to two major results:
+> "I'm such a chatterbox, u guys need to be careful to avoid these non-sense parts to get what is useful, okay?"  
 
-- Even lower lower limit
-- Even higher upper limit
 
-"Even lower lower limit" means the organization difficulty of c++ is higher than java. So if we don't do it gracefully, it'll mess up and ending up being even slower and heavier than java. On the contrary, "Even higher upper limit" means the visibility of programs of c++ is more than java. This includes pointers, macro (compiler), memory controls and so on. These featrues of c++ allow us to optimise our program at a larger scale.
 
-The argue of "which language" won't end long as civilizations exist, but I guess I've talked enough of it already. Without further ado, let's jump into the project itself.
+**下面对各模块分别作一个简要介绍。**
 
 ----------
 ### SDLGaming.cpp ###
-Let's start with SDLGaming.cpp
-If u have my VS project at hand, u'll notice this is also the name of the project.
-This file defines the entrance of the game program, i.e. the main(), more precisely the main() of SDL.
+这个文件定义了游戏程序的入口,换言之,整个项目的main()函数。
 
-This file doesn't do much, since almost everything is encapsulated into classed. It basically only calls **Main** class to initialize the game and organize everything into a forever running loop (ends when player wants to quit).
+更准确地来说，我们使用的是SDL的main()函数，因为我们使用了如下的宏指令：
 
-I guess there would be two questions u're gonna ask when looking at the code:
+```c++
+#define main SDL_main
+```
 
-- how is **Main** initialized
-- how is FPS controled here
+来重定向main()至SDL的main()。
 
-　1. how is **Main** initialized?
 
-Intuitively **Main** is initialized when Main::Inst() is called.
-You might freak when there is not something like
 
-    Main* mainClass;
-    mainClass = new Main();
+这个文件并没有包含很多内容，因为几乎所有功能都被封装在各种**类**里面了。它所做的仅是：
 
-We shouldn"t do this with **Main** (and many other drivers) class here, since this implicate that **Main** is a repeatable and recreatable object, which is against its common sense.
+* 调用了 **Main** 类来初始化游戏
+* 用一个无限循环来安排游戏的所有内容（当玩家退出游戏时，才退出循环）
+* 控制FPS
 
-What we want **Main** to be is:<br>
-·　only one specific unique instance through out the whole process<br>
-·　visible anywhere of the program
 
-Well, these two features are easy to implement in java or c#. To be honest, when I first starts to write this game in c++, I also have a hard time looking for a way to implement these features in c++!<br>
-Nonetheless, I finally find a magical (not entirely) technique to implement these two features at a time: **Singleton**.
 
-Now Singleton is a very important technique that has been used through the whole program. It is something looks like this:
-
-    class Main
-    {
-    private:
-    	Main() {}
-    	~Main() {}
-    	Main(const Main&);
-    	static Main* INSTANCE;
-    public:
-    	static Main* Inst()
-    	{
-    		if (INSTANCE == 0)
-    		{
-    			INSTANCE = new Main();
-    			return INSTANCE;
-    		}
-    
-    		return INSTANCE;
-    	}
-	}
-	Main* Main::INSTANCE = 0;
-
-You can see that Singleton class like **Camera**,**TextureLoader**,**SoundLoader**,**Inputor** all have the identical structures like this.<br>
-
-The implementation of Singleton in cpp mainly utilizes how "static" is treated in cpp. First we put constructor function "Main()" into "private" scale, this makes sure that the constructor cannot be called ousides the **Main**. So it ensures "one and unique" purpose.<br>
-And the design of Inst() just gives us the access to get reference to **Main** publicly anywhere of the program, on the condition of returning the specific and unique instance of **Main**.
-
-Um... I know these explanations have totally zero help with your understanding of how Singleton works. It's not a big problem if u don't know what happens on earth, since for us it is only a ready-to-use interface. but if u r interested in why to implement it like this or what happens inside these codes, u can simply go searching **Singleton** on the internet and there will be some more detailed interpretations.
-
-Back to how **Main** is initialized.<br>
-Since we implement **Main** using Singleton. The initialization process of **Main** is:<br>
-·　Initialize the local variable **INSTANCE** of **Main** as **NULL** when compiling<br>
-·　Inst() being called in main() when programs starts<br>
-·　Inside Inst(), since **INSTANCE** is **NULL**, so create a **Main** instance and return it<br>
-·　If Inst() is again called from elsewhere of the program, Inst() detects that **INSTANCE** is no longer **NULL**, so it returns the instance that was 　 created when the program starts.
-
-　2. how is FPS controled
-
-    const int FPS = 60;
-    const int DELAY_TIME = 1000.0f / FPS;
-    
-    int main(int argc, char **argv)
-    {
-    	Uint32 frameStart, frameTime;
-		...
-		...Create Main instance here
-		...
-		while (Main::Inst()->running())
-		{
-    		frameStart = SDL_GetTicks();
-    
-    		Main::Inst()->handleEvents();
-    		Main::Inst()->updating();
-    		Main::Inst()->rendering();
-    
-    		frameTime = SDL_GetTicks() - frameStart;
-    
-    		if (frameTime < DELAY_TIME)
-    			SDL_Delay((int)(DELAY_TIME - frameTime));
-		}
-		...
-		...Close the game here
-		...
-    	return 0;
-    }
-Now we all know SDL_GetTicks() return the miliseconds the program has been running from the point the program starts.<br>
-Before the next frame of the game is going to be updated, we record the tick and restore it in **frameStart**, and then let the game run its stuff. Here is where the program starts to calculate everything of the game, and there is a lot of calculations.<br>
-Anyways, we record the tick when the game has done its jobs, then get the difference bewteen it and the   **frameStart** and restore it in **frameTime**.<br>
-This **frameTime** represents how long a frame of the game has actually taken.<br>
-It is a very small value when the game is not big and the computer has a strong performance. So in order to keep the game at a fixed 60 FPS, we give it a check to see whether the game freshes faster than 60 FPS.<br>
-If FPS > 60 then its fresh time gotta be lower than 1000/FPS.<br>
-This design of implementing FPS control is actually very smart (when I say smart, I mean it is not my idea). Since the game won't argue with 60 FPS all the time, like if the FPS is not 60 the program still intends to keep it at 60. This method avoids that.<br>
-
-As u can see, when this **frametime** somehow is bigger than 1000/FPS, i.e. your computer takes longer to finish the calculation tasks, you will experience lags. It is weird to say this... but making a game lag in the right way is dramatically important in making a game. Although when we play a lagging game we are most likely crashing the keyboard and freaking out, the fact is that we just dunno the programmers also put no less efforts to make a game run right when lagging...
-
+关于其工作方式的解释，请参阅[SDLGaming.cpp - Wiki](https://github.com/Vigilans-Yea/SDL-Gaming/wiki/SDLGaming.cpp)
 
 ----------
 
-### Main and World###
+### Main/World ###
 
-I seem to write too much trivial stuff... I'll try to grab essentials from now on.
+现在来看看最为基础的**Main**类与**World**类。最初，他们是同一个模块，现在则被区分开，分别行使如下的功能：
 
-Let's foncus on **Main** itself now.<br>
-**Main** just like main(), it doesn't do much. it essentially just initalizes some SDL prerequisites, like video, the rendering suface of the video, and audio, etc. Once again if u r interested, u can refer to the SDL wiki and just type the function name u want to figure out then it'll quickly return you with the results.
+**Main**： 负责游戏的程序流程部分。比如启动、处理（*World*就是在“处理”函数中被调用的）、关闭、退出游戏。主要就是一些前置而底层，依托SDL架构的内容。
 
-What I want to say is the difference between **Main** and **World**.<br>
-Hum... it is only yesterday I split them up, they are originally one united class.<br>
-The reason why I seperate them is that I find it may be appropriate to draw a clear line between the program part (SDL hardware functions and program entrance) and the game system part.
-
-After **World** class, there will be no more mentioning of any program initializations sutff, everything is related to the gaming system.<br>
-As of **World**, I guess I'd better explain why I said the game is highly OOP featured.
-
-What it takes to consist of a game?<br>
-
-Well, I dunno how u guys  are thinking about this question.
-
-Just form my personal perspective:
-
-- A game has a world, it is a container that organizes everything of the game
-- A world has a background (for a 2d game), and many other view elements like the white cloud floats in the sky and the soil on the ground
-- A world has some other vivid views like the trees, the grass and the houses and blabla, you name it.
-- A world has many entities, i.e. players, NPCs, and monsters.
-
-If so, then the world is going to have a bunch of arrays (vectors) that store these objects respectively, hence the **World** class has (currently):
-
-	enum LayerType
-	{
-		LAYER_SPRITE,
-		LAYER_TILE,
-		LAYER_ENTITY,
-		LAYER_PROJECTILE,
-		LAYER_PLAYER
-	};
-
-	vector<vector<Object*>> layers;
-**layers** just represents five vectors, and every vector stores the responsive objects, so we can use a simple loop in the updating() of **World** to update everything in this game. There goes the most cheerful moment of OOP:
-
-    void World::updating()
-    {
-    	int k, i;
-    	int len;
-    
-    	for (k = 0; k < LAYERCOUNT; k++)
-    	{
-    		len = layers[k].size();
-    		for (i = 0; i < len; i++)
-    			layers[k][i]->update();
-    	}
-    }
+**World**：负责游戏系统与内容本身。比如初始化世界、更新世界、创造新物体等等，相当于游戏的GM。它也提供了一个不再依托于SDL的接口，也即**SDL在完成底层架构后，所有游戏的内容都将连接至*World*这个游戏系统**，我们只需要按照提供的接口实现游戏功能即可。
 
 
-And finally the **World** class should have a pile of "Creators" if I need to give it a name. For now I only add a "newProjectile" method, which is ofc used to create projectiles when necessary, like when players shooting arrows, bullets or magic missles. In the future I think there will be "newEnemy", "newNPC" or even "newTile". It depends.
 
-Hum... yeah, nearly forgot, there is a relatively important technique I used in **World** class I gotta mention. It is a little bit clumsy though... since it is something I came up with.
-
-The technique doesn't have a massive name like the **Singleton** bro does. It is used to scroll the map.
-
-You see, a game map cannot only be as big as the window goes. That would be ridiculous. Like a map will be 3000 sized, where ATM a game window may only width 800. So the background will scroll as the player moving forward.
-
-To implement this kind of effect, I calculated everything centered with the player, making the program only draw the things near the player, aka. drawing section = **(player.position.x - window.width/2, player.position.x + window.width/2)**.
-
-Down the detailed implementations there will be several things to be cautioned, but now u just need to catch the idea then it is ok.
-
+关于**World**布置了什么内容，请参阅[World & Main - Wiki](https://github.com/Vigilans-Yea/SDL-Gaming/wiki/World-&-Main)
 
 ----------
 
-#### TextureLoader　SoundLoader　Inputor　Camera####
+### TextureLoader/SoundLoader/Inputor/Camera ###
 
-These are all the Singleton classes of the game for now.
+这些是当前使用Singleton模式的类。
 
-**TextureLoader** is used to load textures (pictures) and **SoundLoader** is used to load sound files (musics or sfxes). Nothing special.
+各个类介绍如下：
 
-The way Textureloader draws pictures onto the screen and Soundloader broadcasts sounds are just like how the game is being run - first to load, second to use. Everthing u want to use needs first to be loaded, more specifically loaded from file to the memories.
+* **TextureLoader** 加载材质（图片等等）
+* **SoundLoader** 加载声音文件（音乐/特效等）
 
-So it makes sense to put some arrays in **TextureLoader** and **SoundLoader**, they are respectively:
+不管是用TextureLoader来制图，还是用SoundLoader来播放声音，它们都需要经历相同的流程，就像游戏是如何运行的一样：
 
-	map<string, SDL_Texture*> textureMap;
+1. 加载材质/音乐，即，将文件装载入*内存*中；
+2. 使用*内存*中的材质/音乐。
 
-	map<string, Mix_Chunk*> sfxs;
-	map<string, Mix_Music*> musics;
+由于它们都是单例类，只有一个对象，所以我们要在类中使用一个数组来存放各种不同的材质/音乐：
 
-Hum... they are "maps" instead of "SDL_Texture*[]" or something likewise. This also makes sense because the textures or the sounds we'll be using won't be in a perfect liner list. We'll be using IDs instead, which is a way that is way more efficient and convenient.
+```c++
+map<string, SDL_Texture*> textureMap;
+```
 
-So when we want to play a piece of music in the game, we need to call **Sound::Inst()->load("C:\\music.mp3, "examplemusic", SOUND_MUSIC)** first. The first param is the file path of the music file, the second param is the id of the particular music, and the third param is the type of the sound (is it music or sfx?). What this does is basically loading the music file from the disk and return a pointer of the music stored for the use.<br>
-After this, we can use **Sound::Inst()->playMusic("examplemusic", -1)** to play the music anytime we want, and we simply need to pass the id the music. "-1" means loop endlessly.
+```c++
+map<string, Mix_Chunk*> sfxs;
+map<string, Mix_Music*> musics;
+```
 
-I guess an indie game like our making won't be so huge that starts to lag most people's computers. A 200000-line-code and 20000-texture game still won't break a 4G-computer. So most likely we will be loading all the resources that the game is going to use or have potentials to use at the very beginning of the game.
+我们使用Map作为关联数组，用ID字符串来检索对应的单位对象，这样更为方便。
 
-Next class is the **Inputor**. Like the **TextureLoader** and **SoundLoader**, these classes are only some simple encapsulations of SDL functions that make it easier for us to call the functions.
+关于如何使用它们来加载并使用材质/音乐，请移步[Load and use a file - Wiki](https://github.com/Vigilans-Yea/SDL-Gaming/wiki/Load-and-use-a-file)。
 
-**Inputor** simply encapsulates some keyboard and mouse events. Depending on future development, we can port the game to the mobile platforms like phones, ipads and consoles by adding according controller surpports.
-
-For now I've implemented some basic functions like "iskeydown" , "getMouseButtonState" and "getMouseRelativePosition". In the future there should be more complicated controls like combination keyboard patterns and mouse wheel events.
-
-I guess I need to wrtie a fuction sheet on the wiki which gives you guys a way to get all the API functions. If I were you, I would be already freaking out with this guy writing all these. God.
-
-And we have **Camera**. This is a very simple class that records the position of player. You can regard it as a player-position recorder. Everything besides player use the position of **Camera** to calculate their drawing position (whether to draw or not). The **Camera** will be focusing on a player object and then being upadted in the **World::updating()** fuction exclusively.
-
-In a way **Camera** is verbose here, since we have  the option to make **Player** a Singleton class to solve all these references problems.
-
-The existence of class **Camera** merely refrain **Player** bring a Singleton class. I think the game in the future will definitely be a multiplayer game instead of singleplayer game. Singleplayer sucks sometimes. So **Player** class could not be Singleton. If there is 3 players then the vector of **Player** is gonna have 3 different elements.
+> 由于我们制作的是一个独立的小游戏，所以即使加载了所有音乐和材质，也不会占用过多的内存。因此，我们选择一开始就加载所有东西，暂时不考虑将它们从内存中移除的问题。
 
 
-----------
 
-### IDSheet　Vector2D　Object　 Dice###
-
-**IDSheet.h**, when our game have lots of... let's say thousands of different types of stuff, we'll need a effecient way to organize the IDs. We need to keep them easy to find, and precise to find. So we need a ID sheet like this.
-
-The way how ID sheet is implemented in c++ is exactly the characteristic of c++, because in java u'll (only can) be using static class and final variables. In c++, however, we use macros.<br>
-Hum... I guess Singleton'll do just fine here, but let's keep it thtta way.
-
-**Vector2D.h**, this is a small class represents a point or a 2D vector in the 2D space. It implements a few most basic calculations and is ready to use.
+- **Inputor** 简单地封装了一些SDL函数，主要涉及键盘/鼠标的行为(event)，比如“是否按下某个键”、“获取鼠标指针位置”等等，方便我们调用。
+- **Camera** 记录当前角色的坐标。它就像镜头一样始终对准着当前玩家所控制的角色，而除了角色外的所有东西的坐标，都将依托Camera存放的坐标来计算。它在**World::updating()**函数中被单独更新。
+> Q:其实，项目中还有一个**Player**类，它代表每个玩家，并且也记录了玩家的坐标，那为什么还需要Camera呢？
+>
+> A:Camera的出现是为了避免**Player**不得不使用Singleton模式。未来这个游戏会扩展成多人版本，所以**Player**应该是需要多个对象的。这时候，我们就用Camera作为单例类来记录每个客户端的角色坐标。
 
 
-**Object.h**, why Object exists is because everything in the game world will have ID, position, size and some other common properties. So we need to create an **Object** class to extract these abstract featrues and make everthing in our game inherit from the **Object** class. THIS IS THE POWER OF OOP!!!<br>
-Long lives OOP forever!!!
 
-(Don't tell others I'm learning Assembly recently, don't wanna be a paradox person)
-
-**Dice.h**, it's a small random number generator. A game is bound to have lots of unstable factors.
-
+以上类所提供的API，都可以在Repo的[Wiki](https://github.com/Vigilans-Yea/SDL-Gaming/wiki)中查到。
 
 ----------
 
+### IDSheet/Vector2D/Object/Dice###
 
-### 3/2/2017 22:03:20 ###
+这是几个仅包含头文件，或内容很简单的类，简单介绍如下：
 
-I guess that's all for now. There are a few files I don't cover them here, but they are only some base game classes inherit from the **Object** class, not much to explain. I have full faith in your being able to figure them out yourself.
+* **IDSheet.h** 这个头文件不包含类。它是一个ID表，预先定义了大量的符号常量，减少magic number的使用，随着游戏中的东西越来越多，它能使得我们便于检索与管理。
 
-I don't really want to write this readme since I'm a coder not a writer. Most of the time I will complicate things more than I can explain things. I hope I don't screw up your mind when trying to make things clear.
+  符号常量的定义是用宏指令实现的，简单列举如下：
 
-My code is hard to understand not because they are superior but merely due to the bad habit with my code writing. If you can understand my code naturely, you can.... well, you can do nothing and have absolutely ZERO amount of self-pround since it is useless...
+  ```c++
+  #define WoodenSword 30410000
+  #define WoodenSwordName "Wooden Sword"
+  #define WoodenSwordFile "assets\\WoodenSword.png"
+  #define PickupSound 40110010
+  #define PickupSoundFile "sounds\\PickUpItem.mp3"
+  ```
 
-**If have any question then ask.**
+  因此，几乎每个类的实现文件，都会包含这个头文件。
+
+
+* **Vector2D.h**  这个类用来表示一个平面上的点，或是一个二维向量。它预先封装好了一些简单的运算函数。如果你在某些功能如何实现上有不错的想法的话，你也可以为它写一个点乘或是叉乘的方法。
+* **Object.h** 作为一个抽象的类，它可以保存游戏中每一个单位、物品或是其他任何东西的属性，比如ID，位置，大小等等。这个类实例化出来的对象就代表了游戏中的每一个具体的东西。这展现出了面向对象编程的特点与优势。
+
+
+* **Dice.h** 随机数发生器。
+
+
+
+关于*Object*类的进一步解释，请参阅[Object & Entity - Wiki](https://github.com/Vigilans-Yea/SDL-Gaming/wiki/Object-&-Entity)
+
+----------
+
+更多内容请查阅这个Repo的[Wiki](https://github.com/Vigilans-Yea/SDL-Gaming/wiki)，它们的内容同样重要。
