@@ -5,6 +5,7 @@
 #include "Item.h"
 #include "Inventory.h"
 #include "CharacterPanel.h"
+#include "SkillPanel.h"
 #include "Dialog.h"
 #include "MyTimer.h"
 #include "Projectile.h"
@@ -55,6 +56,7 @@ public:
 
 	Dialog* dialog;
 	CharacterPanel* characterPanel;
+	SkillPanel* skillPanel;
 	Inventory* inventory;
 	InventoryItem* selectingItem;
 	InventoryItem* rightHand_equ;

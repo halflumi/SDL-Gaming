@@ -25,11 +25,11 @@ private:
 	Vector2D* mousePosition_old;
 	Vector2D* mousePosition;
 
-	void onKeyDown();
-	void onKeyUp();
-	void onMouseMove(SDL_Event & event);
-	void onMouseButtonDown(SDL_Event & event);
-	void onMouseButtonUp(SDL_Event & event);
+	void OnKeyDown();
+	void OnKeyUp();
+	void OnMouseMove(SDL_Event & event);
+	void OnMouseButtonDown(SDL_Event & event);
+	void OnMouseButtonUp(SDL_Event & event);
 public:
 	static Inputor* Inst()
 	{
@@ -45,6 +45,7 @@ public:
 	void updating();
 
 	bool isKeyDown(SDL_Scancode key) const;
+	void resetMouseState();
 	bool getMouseButtonState(int buttonNumber) const { return mousestates[buttonNumber]; }
 	Vector2D* getMouseRelativePosition() const { return mousePosition; }
 	Vector2D* getMouseDefinitePosition() const;

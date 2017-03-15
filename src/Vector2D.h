@@ -16,7 +16,7 @@ public:
 		y = _y;
 	}
 
-	int length() { return sqrt(x * x + y * y); }
+	float length() { return sqrt(x * x + y * y); }
 
 	void normalize()
 	{

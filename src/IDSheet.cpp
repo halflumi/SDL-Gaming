@@ -1,5 +1,30 @@
 #include "IDSheet.h"
 
+using namespace std;
+
+string ScancodeToString(SDL_Scancode scancode)
+{
+	string s;
+	if (scancode >= SDL_SCANCODE_A && scancode <= SDL_SCANCODE_Z)
+	{
+		s.push_back((int)scancode + 61);
+		return s;
+	}
+	else if (scancode >= SDL_SCANCODE_1 && scancode <= SDL_SCANCODE_9)
+	{
+		s.push_back((int)scancode + 19);
+		return s;
+	}
+
+	switch (scancode)
+	{
+	case SDL_SCANCODE_0:
+		s = "0";
+		break;
+	}
+	return s;
+}
+
 int ExpSheet(int level)
 {
 	switch (level)

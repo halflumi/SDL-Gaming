@@ -29,6 +29,7 @@ void World::initialize()
 	TextureLoader::Inst()->load(InventoryGridMaskFile, InventoryGridMask);
 	TextureLoader::Inst()->load(InventoryCloseButtonFile, InventoryCloseButton);
 	TextureLoader::Inst()->load(CharacterPanelPicFile, CharacterPanelPic);
+	TextureLoader::Inst()->load(SkillPanelPicFile, SkillPanelPic);
 	TextureLoader::Inst()->load(ExpBarFile, ExpBar);
 	TextureLoader::Inst()->load(DialogBackgroundFile, DialogBackground);
 	TextureLoader::Inst()->load(MessageboxMaskFile, MessageboxMask);

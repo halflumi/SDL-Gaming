@@ -1,10 +1,14 @@
 <root>
-    <window_x>112</window_x>
-    <window_y>75</window_y>
+    <window_x>272</window_x>
+    <window_y>58</window_y>
     <window_w>1600</window_w>
     <window_h>900</window_h>
     <fullscreen>false</fullscreen>
     <volumn_master>5</volumn_master>
     <volumn_music>10</volumn_music>
     <volumn_sfx>10</volumn_sfx>
+    <key_movingUp>26</key_movingUp>
+    <key_movingDown>22</key_movingDown>
+    <key_movingLeft>4</key_movingLeft>
+    <key_movingRight>7</key_movingRight>
 </root>

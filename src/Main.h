@@ -31,6 +31,8 @@ private:
 	bool HandleMenuEvents();
 	void UpdateMenu();
 	void RenderMenu();
+	void RefreshMenu();
+	SDL_Scancode ChangeControlKey();
 public:
 	int renderWidth;
 	int renderHeight;

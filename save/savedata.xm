@@ -1,7 +1,7 @@
 <root>
-    <mapID>10210002</mapID>
+    <mapID>0</mapID>
     <level>1</level>
     <xp>0</xp>
-    <life>71</life>
-    <mana>25</mana>
+    <life>100</life>
+    <mana>30</mana>
 </root>

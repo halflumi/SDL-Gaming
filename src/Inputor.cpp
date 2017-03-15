@@ -15,19 +15,19 @@ void Inputor::updating()
 			Main::Inst()->quit();
 			break;
 		case SDL_KEYDOWN:
-			onKeyDown();
+			OnKeyDown();
 			break;
 		case SDL_KEYUP:
-			onKeyUp();
+			OnKeyUp();
 			break;
 		case SDL_MOUSEBUTTONDOWN:
-			onMouseButtonDown(e);
+			OnMouseButtonDown(e);
 			break;
 		case SDL_MOUSEBUTTONUP:
-			onMouseButtonUp(e);
+			OnMouseButtonUp(e);
 			break;
 		case SDL_MOUSEMOTION:
-			onMouseMove(e);
+			OnMouseMove(e);
 			break;
 		}
 	}
@@ -46,17 +46,17 @@ bool Inputor::isKeyDown(SDL_Scancode key) const
 	return false;
 }
 
-void Inputor::onKeyDown()
+void Inputor::OnKeyDown()
 {
 	keystates = SDL_GetKeyboardState(0);
 }
 
-void Inputor::onKeyUp()
+void Inputor::OnKeyUp()
 {
 	keystates = SDL_GetKeyboardState(0);
 }
 
-void Inputor::onMouseMove(SDL_Event &event)
+void Inputor::OnMouseMove(SDL_Event &event)
 {
 	mousePosition_old->x = mousePosition->x;
 	mousePosition_old->y = mousePosition->y;
@@ -64,7 +64,7 @@ void Inputor::onMouseMove(SDL_Event &event)
 	mousePosition->y = event.motion.y;
 }
 
-void Inputor::onMouseButtonDown(SDL_Event &event)
+void Inputor::OnMouseButtonDown(SDL_Event &event)
 {
 	if (event.button.button == SDL_BUTTON_LEFT)
 	{
@@ -82,7 +82,7 @@ void Inputor::onMouseButtonDown(SDL_Event &event)
 	}
 }
 
-void Inputor::onMouseButtonUp(SDL_Event &event)
+void Inputor::OnMouseButtonUp(SDL_Event &event)
 {
 	if (event.button.button == SDL_BUTTON_LEFT)
 	{
@@ -98,6 +98,13 @@ void Inputor::onMouseButtonUp(SDL_Event &event)
 	{
 		mousestates[MOUSE_RIGHT] = false;
 	}
+}
+
+void Inputor::resetMouseState()
+{
+	mousestates[MOUSE_LEFT] = false;
+	mousestates[MOUSE_MIDDLE] = false;
+	mousestates[MOUSE_RIGHT] = false;
 }
 
 Vector2D* Inputor::getMouseDefinitePosition() const

@@ -10,12 +10,12 @@ using namespace std;
 class Button : public Object
 {
 private:
-	Textbox* buttonText;
 	MyTimer clickCooldown;
 
 	void Load();
 	bool CheckMouseOver();
 public:
+	Textbox* buttonText;
 	int buttonClass;
 	int flag;
 

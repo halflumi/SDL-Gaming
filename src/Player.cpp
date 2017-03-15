@@ -28,8 +28,10 @@ Player::Player(int id, int x, int y)
 	movingUp = false;
 	movingDown = false;
 	characterPanel = new CharacterPanel();
+	skillPanel = new SkillPanel();
 	inventory = new Inventory();
 	characterPanel->active = false;
+	skillPanel->active = false;
 	inventory->active = false;
 	dialog = NULL;
 	selectingItem = NULL;
@@ -52,9 +54,9 @@ void Player::Load()
 	exp = XmlParser::Inst()->xp;
 	expToNextLevel = ExpSheet(level);
 	life = XmlParser::Inst()->life;
-	maxlife = 100;
+	maxlife = 90 + 10 * level;
 	mana = XmlParser::Inst()->mana;
-	maxmana = 50;
+	maxmana = 20 + 10 * level;
 	baseATT = 10;
 	baseDEF = 2;
 	critChance = 10;
@@ -83,6 +85,8 @@ void Player::update()
 
 	if (characterPanel->active)
 		characterPanel->update();
+	if (skillPanel->active)
+		skillPanel->update();
 	if (inventory->active)
 		inventory->update();
 
@@ -114,6 +118,8 @@ void Player::draw()
 		dialog->draw();
 	if (characterPanel->active)
 		characterPanel->draw();
+	if (skillPanel->active)
+		skillPanel->draw();
 	if (inventory->active)
 		inventory->draw();
 	if (selectingItem != NULL)
@@ -224,7 +230,7 @@ void Player::HandleInput()
 		}
 		keyCooldown.start();
 	}
-	if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_W))
+	if (Inputor::Inst()->isKeyDown(XmlParser::Inst()->key_movingUp))
 	{
 		if(!onLadder)
 			CheckInteractive();
@@ -235,7 +241,7 @@ void Player::HandleInput()
 			currentRow = 3;
 		}
 	}
-	else if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_S))
+	else if (Inputor::Inst()->isKeyDown(XmlParser::Inst()->key_movingDown))
 	{
 		if (onLadder)
 		{
@@ -258,13 +264,18 @@ void Player::HandleInput()
 		characterPanel->active = !characterPanel->active;
 		keyCooldown.start();
 	}
+	if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_K) && keyCooldown.getTicks() > PRESSCOOLDOWN)
+	{
+		skillPanel->active = !skillPanel->active;
+		keyCooldown.start();
+	}
 	if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_I) && keyCooldown.getTicks() > PRESSCOOLDOWN)
 	{
 		inventory->active = !inventory->active;
 		keyCooldown.start();
 	}
 
-	if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_A) && !Inputor::Inst()->isKeyDown(SDL_SCANCODE_D))
+	if (Inputor::Inst()->isKeyDown(XmlParser::Inst()->key_movingLeft) && !Inputor::Inst()->isKeyDown(XmlParser::Inst()->key_movingRight))
 	{
 		movingLeft = true;
 		movingRight = false;
@@ -275,7 +286,7 @@ void Player::HandleInput()
 
 		acceleration.x = -PLAYERACCERLATION;
 	}
-	else if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_D) && !Inputor::Inst()->isKeyDown(SDL_SCANCODE_A))
+	else if (Inputor::Inst()->isKeyDown(XmlParser::Inst()->key_movingRight) && !Inputor::Inst()->isKeyDown(XmlParser::Inst()->key_movingLeft))
 	{
 		movingRight = true;
 		movingLeft = false;
@@ -300,7 +311,14 @@ void Player::HandleInput()
 		onLadder = false;
 	}
 
-	if (characterPanel->active && characterPanel->outsideCheckMouseOver())
+	if (skillPanel->active && skillPanel->outsideCheckMouseOver())
+	{
+		if (Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && skillPanel->outsideCheckMouseTitle())
+		{
+			skillPanel->addPosition(Inputor::Inst()->getMouseMotionVector()); // **********motion is too sensitive
+		}
+	}
+	else if (characterPanel->active && characterPanel->outsideCheckMouseOver())
 	{
 		if (Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && characterPanel->outsideCheckMouseTitle())
 		{
@@ -355,6 +373,11 @@ void Player::HandleInput()
 				life--;
 			}
 		}
+	}
+
+	if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_Z) && keyCooldown.getTicks() > PRESSCOOLDOWN)
+	{
+
 	}
 }
 
