@@ -1,6 +1,6 @@
 <root>
-    <window_x>272</window_x>
-    <window_y>58</window_y>
+    <window_x>-321</window_x>
+    <window_y>77</window_y>
     <window_w>1600</window_w>
     <window_h>900</window_h>
     <fullscreen>false</fullscreen>
