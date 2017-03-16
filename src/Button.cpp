@@ -9,36 +9,50 @@
 
 #define MAINMENU_X 100
 #define MAINMENU_Y Main::Inst()->getWindowHeight()/2
-#define NewGamePos				MAINMENU_X,MAINMENU_Y - 80
-#define ContinuePos				MAINMENU_X,MAINMENU_Y
-#define OptionsPos				MAINMENU_X,MAINMENU_Y + 80
-#define ControlSettingsPos		MAINMENU_X,MAINMENU_Y + 160
-#define ExitPos					MAINMENU_X,MAINMENU_Y + 240
-#define ResolutionTextPos		MAINMENU_X,MAINMENU_Y - 100
-#define ResolutionListPos		MAINMENU_X + 200,MAINMENU_Y - 100
-#define FullscreenTextPos		MAINMENU_X,MAINMENU_Y - 50
-#define FullscreenBoxPos		MAINMENU_X + 200,MAINMENU_Y - 43
-#define VolumnLButton1Pos		MAINMENU_X + 225,MAINMENU_Y + 60
-#define VolumnLButton2Pos		MAINMENU_X + 225,MAINMENU_Y + 110
-#define VolumnLButton3Pos		MAINMENU_X + 225,MAINMENU_Y + 160
-#define VolumnRButton1Pos		MAINMENU_X + 290,MAINMENU_Y + 60
-#define VolumnRButton2Pos		MAINMENU_X + 290,MAINMENU_Y + 110
-#define VolumnRButton3Pos		MAINMENU_X + 290,MAINMENU_Y + 160
-#define VolumnMasterTextPos		MAINMENU_X,MAINMENU_Y + 50
-#define VolumnMasterNumPos		MAINMENU_X + 245,MAINMENU_Y + 50
-#define VolumnMusicTextPos		MAINMENU_X,MAINMENU_Y + 100
-#define VolumnMusicNumPos		MAINMENU_X + 245,MAINMENU_Y + 100
-#define VolumnSfxTextPos		MAINMENU_X,MAINMENU_Y + 150
-#define VolumnSfxNumPos			MAINMENU_X + 245,MAINMENU_Y + 150
-#define BackButtonPos			MAINMENU_X,MAINMENU_Y + 200
-#define ControlUpTextPos		MAINMENU_X,MAINMENU_Y - 50
-#define ControlUpButtonPos		MAINMENU_X + 300,MAINMENU_Y - 50
-#define ControlDownTextPos		MAINMENU_X,MAINMENU_Y
-#define ControlDownButtonPos	MAINMENU_X + 300,MAINMENU_Y
-#define ControlLeftTextPos		MAINMENU_X,MAINMENU_Y + 50
-#define ControlLeftButtonPos	MAINMENU_X + 300,MAINMENU_Y + 50
-#define ControlRightTextPos		MAINMENU_X,MAINMENU_Y + 100
-#define ControlRightButtonPos	MAINMENU_X + 300,MAINMENU_Y + 100
+#define NewGamePos						MAINMENU_X,MAINMENU_Y - 80
+#define ContinuePos						MAINMENU_X,MAINMENU_Y
+#define OptionsPos						MAINMENU_X,MAINMENU_Y + 80
+#define ControlSettingsPos				MAINMENU_X,MAINMENU_Y + 160
+#define ExitPos							MAINMENU_X,MAINMENU_Y + 240
+#define ResolutionTextPos				MAINMENU_X,MAINMENU_Y - 100
+#define ResolutionListPos				MAINMENU_X + 200,MAINMENU_Y - 100
+#define FullscreenTextPos				MAINMENU_X,MAINMENU_Y - 50
+#define FullscreenBoxPos				MAINMENU_X + 200,MAINMENU_Y - 43
+#define VolumnLButton1Pos				MAINMENU_X + 225,MAINMENU_Y + 60
+#define VolumnLButton2Pos				MAINMENU_X + 225,MAINMENU_Y + 110
+#define VolumnLButton3Pos				MAINMENU_X + 225,MAINMENU_Y + 160
+#define VolumnRButton1Pos				MAINMENU_X + 290,MAINMENU_Y + 60
+#define VolumnRButton2Pos				MAINMENU_X + 290,MAINMENU_Y + 110
+#define VolumnRButton3Pos				MAINMENU_X + 290,MAINMENU_Y + 160
+#define VolumnMasterTextPos				MAINMENU_X,MAINMENU_Y + 50
+#define VolumnMasterNumPos				MAINMENU_X + 245,MAINMENU_Y + 50
+#define VolumnMusicTextPos				MAINMENU_X,MAINMENU_Y + 100
+#define VolumnMusicNumPos				MAINMENU_X + 245,MAINMENU_Y + 100
+#define VolumnSfxTextPos				MAINMENU_X,MAINMENU_Y + 150
+#define VolumnSfxNumPos					MAINMENU_X + 245,MAINMENU_Y + 150
+#define BackButtonPos					MAINMENU_X,MAINMENU_Y + 250
+
+#define ControlUpTextPos				MAINMENU_X,MAINMENU_Y - 150
+#define ControlUpButtonPos				MAINMENU_X + 300,MAINMENU_Y - 150
+#define ControlDownTextPos				MAINMENU_X,MAINMENU_Y - 100
+#define ControlDownButtonPos			MAINMENU_X + 300,MAINMENU_Y - 100
+#define ControlLeftTextPos				MAINMENU_X,MAINMENU_Y - 50
+#define ControlLeftButtonPos			MAINMENU_X + 300,MAINMENU_Y - 50
+#define ControlRightTextPos				MAINMENU_X,MAINMENU_Y
+#define ControlRightButtonPos			MAINMENU_X + 300,MAINMENU_Y
+#define ControlCharacterTextPos			MAINMENU_X,MAINMENU_Y + 50
+#define ControlCharacterButtonPos		MAINMENU_X + 300,MAINMENU_Y + 50
+#define ControlSkillPanelTextPos		MAINMENU_X,MAINMENU_Y + 100
+#define ControlSkillPanelButtonPos		MAINMENU_X + 300,MAINMENU_Y + 100
+#define ControlInventoryTextPos			MAINMENU_X,MAINMENU_Y + 150
+#define ControlInventoryButtonPos		MAINMENU_X + 300,MAINMENU_Y + 150
+#define ControlSkillHotkey1TestPos		MAINMENU_X + 400,MAINMENU_Y - 150
+#define ControlSkillHotkey1ButtonPos	MAINMENU_X + 650,MAINMENU_Y - 150
+#define ControlSkillHotkey2TestPos		MAINMENU_X + 400,MAINMENU_Y - 100
+#define ControlSkillHotkey2ButtonPos	MAINMENU_X + 650,MAINMENU_Y - 100
+#define ControlSkillHotkey3TestPos		MAINMENU_X + 400,MAINMENU_Y - 50
+#define ControlSkillHotkey3ButtonPos	MAINMENU_X + 650,MAINMENU_Y - 50
+
 
 Button::Button(int id) : clickCooldown(true)
 {
@@ -300,6 +314,96 @@ void Button::Load()
 		TTF_SizeText(Main::Inst()->getFont(arial28_bold), ScancodeToString(XmlParser::Inst()->key_movingRight).c_str(), &width, &height);
 		return;
 	}
+	if (uniqueID == ControlCharacterPanelText)
+	{
+		buttonClass = ButtonTypeTextbox;
+		position.set(ControlCharacterTextPos);
+		buttonText = new Textbox(position, "Character Panel", arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), "Character Panel", &width, &height);
+		return;
+	}
+	if (uniqueID == ControlCharacterPanelButton)
+	{
+		position.set(ControlCharacterButtonPos);
+		buttonText = new Textbox(position, ScancodeToString(XmlParser::Inst()->key_openCharacter), arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), ScancodeToString(XmlParser::Inst()->key_openCharacter).c_str(), &width, &height);
+		return;
+	}
+	if (uniqueID == ControlSkillPanelText)
+	{
+		buttonClass = ButtonTypeTextbox;
+		position.set(ControlSkillPanelTextPos);
+		buttonText = new Textbox(position, "Skill Panel", arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), "Skill Panel", &width, &height);
+		return;
+	}
+	if (uniqueID == ControlSkillPanelButton)
+	{
+		position.set(ControlSkillPanelButtonPos);
+		buttonText = new Textbox(position, ScancodeToString(XmlParser::Inst()->key_openSkill), arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), ScancodeToString(XmlParser::Inst()->key_openSkill).c_str(), &width, &height);
+		return;
+	}
+	if (uniqueID == ControlInventoryText)
+	{
+		buttonClass = ButtonTypeTextbox;
+		position.set(ControlInventoryTextPos);
+		buttonText = new Textbox(position, "Inventory", arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), "Inventory", &width, &height);
+		return;
+	}
+	if (uniqueID == ControlInventoryButton)
+	{
+		position.set(ControlInventoryButtonPos);
+		buttonText = new Textbox(position, ScancodeToString(XmlParser::Inst()->key_openInventory), arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), ScancodeToString(XmlParser::Inst()->key_openInventory).c_str(), &width, &height);
+		return;
+	}
+	if (uniqueID == ControlSkillHotkey1Text)
+	{
+		buttonClass = ButtonTypeTextbox;
+		position.set(ControlSkillHotkey1TestPos);
+		buttonText = new Textbox(position, "Skill Hotkey1", arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), "Skill Hotkey1", &width, &height);
+		return;
+	}
+	if (uniqueID == ControlSkillHotkey1Button)
+	{
+		position.set(ControlSkillHotkey1ButtonPos);
+		buttonText = new Textbox(position, ScancodeToString(XmlParser::Inst()->key_skillHotkey1), arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), ScancodeToString(XmlParser::Inst()->key_skillHotkey1).c_str(), &width, &height);
+		return;
+	}
+	if (uniqueID == ControlSkillHotkey2Text)
+	{
+		buttonClass = ButtonTypeTextbox;
+		position.set(ControlSkillHotkey2TestPos);
+		buttonText = new Textbox(position, "Skill Hotkey2", arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), "Skill Hotkey2", &width, &height);
+		return;
+	}
+	if (uniqueID == ControlSkillHotkey2Button)
+	{
+		position.set(ControlSkillHotkey2ButtonPos);
+		buttonText = new Textbox(position, ScancodeToString(XmlParser::Inst()->key_skillHotkey2), arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), ScancodeToString(XmlParser::Inst()->key_skillHotkey2).c_str(), &width, &height);
+		return;
+	}
+	if (uniqueID == ControlSkillHotkey3Text)
+	{
+		buttonClass = ButtonTypeTextbox;
+		position.set(ControlSkillHotkey3TestPos);
+		buttonText = new Textbox(position, "Skill Hotkey3", arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), "Skill Hotkey3", &width, &height);
+		return;
+	}
+	if (uniqueID == ControlSkillHotkey3Button)
+	{
+		position.set(ControlSkillHotkey3ButtonPos);
+		buttonText = new Textbox(position, ScancodeToString(XmlParser::Inst()->key_skillHotkey3), arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), ScancodeToString(XmlParser::Inst()->key_skillHotkey3).c_str(), &width, &height);
+		return;
+	}
 	//game menu
 	if (uniqueID == GameMenuBackground)
 	{
@@ -337,6 +441,12 @@ void Button::Load()
 	if (uniqueID == InventoryCloseButton)
 	{
 		width = height = 42;
+		return;
+	}
+	if (uniqueID == InventoryArrangeButton)
+	{
+		width = 38;
+		height = 33;
 		return;
 	}
 }
@@ -446,7 +556,7 @@ void Button::update()
 		buttonText->changeText(to_string(XmlParser::Inst()->volumn_sfx));
 	}
 	//control menu
-	if (uniqueID == ControlMovingUpButton || uniqueID == ControlMovingDownButton || uniqueID == ControlMovingLeftButton || uniqueID == ControlMovingRightButton)
+	if (uniqueID == ControlMovingUpButton || uniqueID == ControlMovingDownButton || uniqueID == ControlMovingLeftButton || uniqueID == ControlMovingRightButton || uniqueID == ControlCharacterPanelButton || uniqueID == ControlSkillPanelButton || uniqueID == ControlInventoryButton)
 	{
 		if (CheckMouseOver())
 			buttonText->changeColor(COLOR_PURPLE);
@@ -465,7 +575,7 @@ void Button::update()
 		return;
 	}
 	//ui
-	if (uniqueID == InventoryCloseButton)
+	if (uniqueID == InventoryCloseButton || uniqueID == InventoryArrangeButton)
 	{
 		if (CheckMouseOver())
 			currentRow = 1;

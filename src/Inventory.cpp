@@ -10,16 +10,10 @@
 #define GRIDNUM 6
 #define TITLEHEIGHT 53
 
-InventoryItem::InventoryItem(int _index) : slotpos(0, 0), stack(1)
-{
-	selectCooldown = NULL;
-	active = false;
-	index = _index;
-	Load();
-}
-
 InventoryItem::InventoryItem(int id, int _index, int _stack) : slotpos(0, 0), stack(_stack)
 {
+	if (id == NULL)
+		active = false;
 	selectCooldown = NULL;
 	uniqueID = id;
 	index = _index;
@@ -242,7 +236,7 @@ InventoryItem* InventoryItem::getSplit(int stack)
 }
 
 //--------------------------------------------------------
-Inventory::Inventory() : closeButton(InventoryCloseButton)
+Inventory::Inventory() : closeButton(InventoryCloseButton), rearrangeButton(InventoryArrangeButton)
 {
 	uniqueID = InventoryGrid;
 	Load();
@@ -251,12 +245,12 @@ Inventory::Inventory() : closeButton(InventoryCloseButton)
 void Inventory::Load()
 {
 	width = 304;
-	height = 354;
+	height = 394;
 	position.x = Main::Inst()->getRenderWidth() - 100 - width;
 	position.y = 100;
-	inventorySize = 36;
-	for (int i = 0; i < inventorySize; i++)
-		items.push_back(new InventoryItem(i));
+
+	for (int i = 0; i < INVENTORYSIZE; i++)
+		items.push_back(new InventoryItem(NULL, i, NULL));
 }
 
 void Inventory::update()
@@ -266,11 +260,14 @@ void Inventory::update()
 		active = false;
 		Camera::Inst()->getTarget_nonConst()->mouseCooldown.start();
 	}
-
 	closeButton.setPosition(position.x + 260, position.y + 2);
 	closeButton.update();
+	if (rearrangeButton.outsideUpdate())
+		rearrangeItems();
+	rearrangeButton.setPosition(position.x + 251, position.y + 355);
+	rearrangeButton.update();
 
-	for (int i = 0; i < inventorySize; i++)
+	for (int i = 0; i < INVENTORYSIZE; i++)
 	{
 		if (!items[i]->beingPicked)
 		{
@@ -285,6 +282,7 @@ void Inventory::draw()
 {
 	TextureLoader::Inst()->draw(uniqueID, position.x, position.y, width, height);
 	closeButton.draw();
+	rearrangeButton.draw();
 
 	int i, len = items.size();
 	for (i = 0; i < len; i++)
@@ -312,7 +310,7 @@ bool Inventory::addItem(int itemID, int width, int height, int stack, int maxSta
 	bool availSlots[36] = { 0 };
 	int itemsArrayIndex[36] = { 0 };
 	int i;
-	for (i = 0; i < inventorySize; i++)
+	for (i = 0; i < INVENTORYSIZE; i++)
 	{
 		if (!items[i]->active)
 		{
@@ -334,7 +332,7 @@ bool Inventory::addItem(int itemID, int width, int height, int stack, int maxSta
 			}
 		}
 	}
-	for (i = 0; i < inventorySize; i++)
+	for (i = 0; i < INVENTORYSIZE; i++)
 	{
 		if (availSlots[i])
 		{
@@ -352,7 +350,7 @@ bool Inventory::addItem(Item* item)
 	bool availSlots[36] = { 0 };
 	int itemsArrayIndex[36] = { 0 };
 	int i;
-	for (i = 0; i < inventorySize; i++)
+	for (i = 0; i < INVENTORYSIZE; i++)
 	{
 		if (!items[i]->active) // if the slot is empty
 		{
@@ -375,7 +373,7 @@ bool Inventory::addItem(Item* item)
 			}
 		}
 	}
-	for (i = 0; i < inventorySize; i++)
+	for (i = 0; i < INVENTORYSIZE; i++)
 	{
 		if (availSlots[i])
 		{
@@ -386,4 +384,9 @@ bool Inventory::addItem(Item* item)
 	}
 
 	return false;
+}
+
+void Inventory::rearrangeItems()
+{
+
 }

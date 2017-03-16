@@ -126,6 +126,55 @@ void XmlParser::load()
 		error = element->QueryIntText((SDL_Keycode*)&key_movingRight);
 	if (error != XML_SUCCESS)
 		cout << "XML_ERROR passing key_movingRight value to the variable." << endl;
+	///key_openCharacter
+	element = node->FirstChildElement("key_openCharacter");
+	if (element == nullptr)
+		cout << "XML_ERROR getting key_openCharacter element from the node." << endl;
+	else
+		error = element->QueryIntText((SDL_Keycode*)&key_openCharacter);
+	if (error != XML_SUCCESS)
+		cout << "XML_ERROR passing key_openCharacter value to the variable." << endl;
+	///key_openSkill
+	element = node->FirstChildElement("key_openSkill");
+	if (element == nullptr)
+		cout << "XML_ERROR getting key_openSkill element from the node." << endl;
+	else
+		error = element->QueryIntText((SDL_Keycode*)&key_openSkill);
+	if (error != XML_SUCCESS)
+		cout << "XML_ERROR passing key_openSkill value to the variable." << endl;
+	///key_openInventory
+	element = node->FirstChildElement("key_openInventory");
+	if (element == nullptr)
+		cout << "XML_ERROR getting key_openInventory element from the node." << endl;
+	else
+		error = element->QueryIntText((SDL_Keycode*)&key_openInventory);
+	if (error != XML_SUCCESS)
+		cout << "XML_ERROR passing key_openInventory value to the variable." << endl;
+	///key_skillHotkey1
+	element = node->FirstChildElement("key_skillHotkey1");
+	if (element == nullptr)
+		cout << "XML_ERROR getting key_skillHotkey1 element from the node." << endl;
+	else
+		error = element->QueryIntText((SDL_Keycode*)&key_skillHotkey1);
+	if (error != XML_SUCCESS)
+		cout << "XML_ERROR passing key_skillHotkey1 value to the variable." << endl;
+	///key_skillHotkey2
+	element = node->FirstChildElement("key_skillHotkey2");
+	if (element == nullptr)
+		cout << "XML_ERROR getting key_skillHotkey2 element from the node." << endl;
+	else
+		error = element->QueryIntText((SDL_Keycode*)&key_skillHotkey2);
+	if (error != XML_SUCCESS)
+		cout << "XML_ERROR passing key_skillHotkey2 value to the variable." << endl;
+	///key_skillHotkey3
+	element = node->FirstChildElement("key_skillHotkey3");
+	if (element == nullptr)
+		cout << "XML_ERROR getting key_skillHotkey3 element from the node." << endl;
+	else
+		error = element->QueryIntText((SDL_Keycode*)&key_skillHotkey3);
+	if (error != XML_SUCCESS)
+		cout << "XML_ERROR passing key_skillHotkey3 value to the variable." << endl;
+
 }
 
 void XmlParser::save()
@@ -184,6 +233,30 @@ void XmlParser::save()
 	///key_movingRight
 	element = xmlFile.NewElement("key_movingRight");
 	element->SetText(key_movingRight);
+	node->InsertEndChild(element);
+	///key_openCharacter
+	element = xmlFile.NewElement("key_openCharacter");
+	element->SetText(key_openCharacter);
+	node->InsertEndChild(element);
+	///key_openSkill
+	element = xmlFile.NewElement("key_openSkill");
+	element->SetText(key_openSkill);
+	node->InsertEndChild(element);
+	///key_openInventory
+	element = xmlFile.NewElement("key_openInventory");
+	element->SetText(key_openInventory);
+	node->InsertEndChild(element);
+	///key_skillHotkey1
+	element = xmlFile.NewElement("key_skillHotkey1");
+	element->SetText(key_skillHotkey1);
+	node->InsertEndChild(element);
+	///key_skillHotkey2
+	element = xmlFile.NewElement("key_skillHotkey2");
+	element->SetText(key_skillHotkey2);
+	node->InsertEndChild(element);
+	///key_skillHotkey3
+	element = xmlFile.NewElement("key_skillHotkey3");
+	element->SetText(key_skillHotkey3);
 	node->InsertEndChild(element);
 
 	error = xmlFile.SaveFile(SettingsFile);
