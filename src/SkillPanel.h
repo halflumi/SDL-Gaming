@@ -3,7 +3,7 @@
 #include "Button.h"
 #include "Textbox.h"
 
-//class InventoryItem : public Object
+//class SkillSlot : public Object
 //{
 //private:
 //	bool mouseAbove;
@@ -29,12 +29,12 @@
 //	int maxATT;
 //	int defense;
 //
-//	InventoryItem(int index);
-//	InventoryItem(int id, int index, int stack);
-//	~InventoryItem() { delete selectCooldown; }
+//	SkillSlot(int index);
+//	SkillSlot(int id, int index, int stack);
+//	~SkillSlot() { delete selectCooldown; }
 //	void init(int id, int _index, int stack);
 //
-//	int type() { return TypeInventoryItem; }
+//	int type() { return TypeSkillSlot; }
 //	void update();
 //	void draw();
 //};
@@ -42,9 +42,6 @@
 class SkillPanel : public Object
 {
 private:
-	Textbox* levelText;
-	Textbox* expText;
-	Textbox* expNextText;
 	Button closeButton;
 
 	void Load();

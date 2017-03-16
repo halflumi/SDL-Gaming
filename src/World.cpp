@@ -33,6 +33,7 @@ void World::initialize()
 	TextureLoader::Inst()->load(ExpBarFile, ExpBar);
 	TextureLoader::Inst()->load(DialogBackgroundFile, DialogBackground);
 	TextureLoader::Inst()->load(MessageboxMaskFile, MessageboxMask);
+	TextureLoader::Inst()->load(InventoryArrangeButtonFile, InventoryArrangeButton);
 	///Load tiles
 	TextureLoader::Inst()->load(Tile01File, Tile01);
 	TextureLoader::Inst()->load(BrickFile, Brick);
@@ -70,6 +71,7 @@ void World::initialize()
 	SoundLoader::Inst()->load(JumpSoundFile, JumpSound, SOUND_SFX);
 	SoundLoader::Inst()->load(PlayerDamageSoundFile, PlayerDamageSound, SOUND_SFX);
 	SoundLoader::Inst()->load(WrapGateNoiseFile, WrapGateNoise, SOUND_SFX);
+	SoundLoader::Inst()->load(HealingMagicSoundFile, HealingMagicSound, SOUND_SFX);
 	///Load player data from xml
 	if (!newGame)
 	{
