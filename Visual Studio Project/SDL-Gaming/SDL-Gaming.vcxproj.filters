@@ -1,0 +1,395 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Resource Files\Assets">
+      <UniqueIdentifier>{29fc8acc-2d74-4d40-a307-31d92035316c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Fonts">
+      <UniqueIdentifier>{03075bb8-e504-42ba-91ce-287dfc734df0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Sounds">
+      <UniqueIdentifier>{bf6a366a-ac67-40e5-bb76-82f98151f643}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\Save">
+      <UniqueIdentifier>{f0fbac6d-6b6f-4b44-b596-cdbfc7357ccd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\src\Button.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\CharacterPanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Dialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Dice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Entity.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Hostile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\IDSheet.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Inputor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Inventory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Item.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\MyTimer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\NPC.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Object.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Player.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Projectile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\SDLGaming.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\SkillPanel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\SoundLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Sprite.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Textbox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\TextureLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\Tile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\tinyxml2.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\World.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\XmlParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\src\Button.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Camera.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\CharacterPanel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Dialog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Dice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Entity.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Hostile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\IDSheet.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Inputor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Inventory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Item.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Main.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\MyTimer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\NPC.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Object.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Player.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Projectile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\SkillPanel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\SoundLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Sprite.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Textbox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\TextureLoader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Tile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\tinyxml2.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\Vector2D.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\World.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\src\XmlParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\..\fonts\arial.ttf">
+      <Filter>Resource Files\Fonts</Filter>
+    </Font>
+    <Font Include="..\..\fonts\segoeui.ttf">
+      <Filter>Resource Files\Fonts</Filter>
+    </Font>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\..\assets\Background.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\Background_piece.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\Background2.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\Background2_piece.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\BlackBlock.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\brick.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\CharacterPanel.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\DialogBackground.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\ExpBar.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\FullscreenCheckbox.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\GameMenuBackground.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\GhostNPC.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\HealthBar.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\IchorKnifeProjectile.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\InventoryCloseButton.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\InventoryGrid.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\InventoryGridMask.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\LadderSprite.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\LeafNPC.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\MainMenuBackground.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\MainMenuBackgroundView.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\ManaBar.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\MapGate.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\MapGate2.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\MapleFlagNPC.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\MessageboxMask.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\OptionsMenuView.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\OrichalcumShortsword.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\PlayerFrame.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\SavePointNPC.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\SkillPanelPic.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\TestPortal.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\Tile01.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\UIpic.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\UpSign.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\VolumnLButton.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\VolumnRButton.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\WaterMushroomFrame.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+    <Image Include="..\..\assets\WoodenSword.png">
+      <Filter>Resource Files\Assets</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\save\savedata.xm">
+      <Filter>Resource Files\Save</Filter>
+    </None>
+    <None Include="..\..\save\settings.xm">
+      <Filter>Resource Files\Save</Filter>
+    </None>
+    <None Include="..\..\sounds\snow1.ogg">
+      <Filter>Resource Files\Sounds</Filter>
+    </None>
+    <None Include="..\..\sounds\snow2.ogg">
+      <Filter>Resource Files\Sounds</Filter>
+    </None>
+    <None Include="..\..\sounds\snow3.ogg">
+      <Filter>Resource Files\Sounds</Filter>
+    </None>
+    <None Include="..\..\sounds\snow4.ogg">
+      <Filter>Resource Files\Sounds</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Media Include="..\..\sounds\0100100.Damage.mp3">
+      <Filter>Resource Files\Sounds</Filter>
+    </Media>
+    <Media Include="..\..\sounds\0100131.Damage.mp3">
+      <Filter>Resource Files\Sounds</Filter>
+    </Media>
+    <Media Include="..\..\sounds\0100131.Die.mp3">
+      <Filter>Resource Files\Sounds</Filter>
+    </Media>
+    <Media Include="..\..\sounds\barehands.Attack.mp3">
+      <Filter>Resource Files\Sounds</Filter>
+    </Media>
+    <Media Include="..\..\sounds\dualBow.Attack2.mp3">
+      <Filter>Resource Files\Sounds</Filter>
+    </Media>
+    <Media Include="..\..\sounds\GoPicnic.mp3">
+      <Filter>Resource Files\Sounds</Filter>
+    </Media>
+    <Media Include="..\..\sounds\Jump.mp3">
+      <Filter>Resource Files\Sounds</Filter>
+    </Media>
+    <Media Include="..\..\sounds\LevelupSound.wav">
+      <Filter>Resource Files\Sounds</Filter>
+    </Media>
+    <Media Include="..\..\sounds\MechanicalKey1.wav">
+      <Filter>Resource Files\Sounds</Filter>
+    </Media>
+    <Media Include="..\..\sounds\MechanicalKey2.wav">
+      <Filter>Resource Files\Sounds</Filter>
+    </Media>
+    <Media Include="..\..\sounds\MechanicalKey3.wav">
+      <Filter>Resource Files\Sounds</Filter>
+    </Media>
+    <Media Include="..\..\sounds\MechanicalKey4.wav">
+      <Filter>Resource Files\Sounds</Filter>
+    </Media>
+    <Media Include="..\..\sounds\MechanicalKey5.wav">
+      <Filter>Resource Files\Sounds</Filter>
+    </Media>
+    <Media Include="..\..\sounds\MenuMouseClick.mp3">
+      <Filter>Resource Files\Sounds</Filter>
+    </Media>
+    <Media Include="..\..\sounds\PickUpItem.mp3">
+      <Filter>Resource Files\Sounds</Filter>
+    </Media>
+    <Media Include="..\..\sounds\Portal.mp3">
+      <Filter>Resource Files\Sounds</Filter>
+    </Media>
+    <Media Include="..\..\sounds\PortalNoise.wav">
+      <Filter>Resource Files\Sounds</Filter>
+    </Media>
+  </ItemGroup>
+</Project>

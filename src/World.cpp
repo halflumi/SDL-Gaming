@@ -29,6 +29,7 @@ void World::initialize()
 	TextureLoader::Inst()->load(InventoryGridMaskFile, InventoryGridMask);
 	TextureLoader::Inst()->load(InventoryCloseButtonFile, InventoryCloseButton);
 	TextureLoader::Inst()->load(CharacterPanelPicFile, CharacterPanelPic);
+	TextureLoader::Inst()->load(SkillPanelPicFile, SkillPanelPic);
 	TextureLoader::Inst()->load(ExpBarFile, ExpBar);
 	TextureLoader::Inst()->load(DialogBackgroundFile, DialogBackground);
 	TextureLoader::Inst()->load(MessageboxMaskFile, MessageboxMask);
@@ -73,10 +74,10 @@ void World::initialize()
 	if (!newGame)
 	{
 		XmlParser::Inst()->loadCharacter();
-		changeMap(XmlParser::Inst()->mapID);
+		changeMap(XmlParser::Inst()->mapID, MAPCHANGE_LOAD);
 	}
 	else
-		changeMap(MapTest01);
+		changeMap(MapTest01, MAPCHANGE_LOAD);
 	///load UI
 	const Player* player = Camera::Inst()->getTarget();
 	Vector2D nameTextpos(20, Main::Inst()->getRenderHeight() + 10);
@@ -88,7 +89,7 @@ void World::initialize()
 
 }
 
-void World::ClearWorld()
+void World::clearWorld()
 {
 	layer_background.clear();
 	layer_tile.clear();
@@ -98,7 +99,17 @@ void World::ClearWorld()
 	layer_text.clear();
 }
 
-void World::changeMap(int mapID)
+void World::startNewGame()
+{
+	newGame = true;
+	XmlParser::Inst()->mapID = MapTest01;
+	XmlParser::Inst()->level = 1;
+	XmlParser::Inst()->xp = 0;
+	XmlParser::Inst()->life = 100;
+	XmlParser::Inst()->mana = 30;
+}
+
+void World::changeMap(int mapID, MapChangeType form)
 {
 	if (layer_player.empty())
 	{
@@ -107,44 +118,60 @@ void World::changeMap(int mapID)
 		Camera::Inst()->Focus(player);
 	}
 
-	ClearWorld();
-	currentMapID = mapID;
+	clearWorld();
+	
 	if (mapID == MapTest01)
 	{
 		width = 3072;
 		height = 1000;
 		backgroundID = MapBackground;
 		///Spawn point
-		Camera::Inst()->getTarget_nonConst()->setPosition(1000, height - 100);
+		switch (form)
+		{
+		case MAPCHANGE_LOAD:
+			Camera::Inst()->getTarget_nonConst()->setPosition(1000, height - 100);
+			break;
+		case MAPCHANGE_LEFT:
+			Camera::Inst()->getTarget_nonConst()->setPosition(0, height - 100);
+			break;
+		}
 		///tiles
-		for (int i = 0; i < 10; i++)
-			getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 37));
 		for (int i = 10; i < 20; i++)
 			getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 244));
 		///sprites
 		getLayer_background().push_back(new Sprite(WaterMushroomFrame, 1000, height - 136));
 		getLayer_foreground().push_back(new Sprite(TestPortal, 1200, height - 105));
 		getLayer_foreground().push_back(new Sprite(LadderSprite, 19 * 47, height - 244));
-		getLayer_foreground().push_back(new Sprite(MapGate, 1600, height - 154));
+		getLayer_foreground().push_back(new Sprite(MapGate, 0, height - 154));
 		///entities
 		getLayer_entity().push_back(new NPC(LeafNPC, 2000, height - 100));
 		getLayer_entity().push_back(new NPC(GhostNPC, 1400, height - 80));
 		getLayer_entity().push_back(new NPC(MapleFlagNPC, 800, height - 177));
-		getLayer_entity().push_back(new NPC(SavePointNPC, 47 * 10, height - 244 - 211));
 		getLayer_entity().push_back(new Hostile(BlackBlock, 0, 2500, height - 200));
 		return;
 	}
 	if (mapID == MapTest02)
 	{
+		currentMapID = mapID; ///contain savepoint
 		width = 2048;
 		height = 700;
 		backgroundID = MapBackground2;
 		///Spawn point
-		Camera::Inst()->getTarget_nonConst()->setPosition(0, height - 100);
+		switch (form)
+		{
+		case MAPCHANGE_LOAD:
+			Camera::Inst()->getTarget_nonConst()->setPosition(1600, height - 100);
+			break;
+		case MAPCHANGE_RIGHT:
+			Camera::Inst()->getTarget_nonConst()->setPosition(width - 50, height - 100);
+			break;
+		}
 		///sprites
-		getLayer_foreground().push_back(new Sprite(MapGate2, 100, height - 154));
+		getLayer_foreground().push_back(new Sprite(MapGate2, width - 108, height - 154));
+		///entities
+		getLayer_entity().push_back(new NPC(SavePointNPC, 1600, height - 211));
 		///items
-		getLayer_entity().push_back(new Item(OrichalcumShortsword, 1, 800, 0));
+		getLayer_entity().push_back(new Item(OrichalcumShortsword, 1, 1200, 0));
 	}
 }
 

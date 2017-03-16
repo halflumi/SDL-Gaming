@@ -9,6 +9,7 @@
 #include "Player.h"
 #include "XmlParser.h"
 #include "Camera.h"
+#include "Dice.h"
 
 using namespace tinyxml2;
 
@@ -104,12 +105,20 @@ bool Main::initialize(const char* title, int xpos, int ypos, int width, int heig
 	TTF_SetFontStyle(theFont[arial72_bold], TTF_STYLE_BOLD);
 	///load menu res
 	TextureLoader::Inst()->load(MainMenuPicFile, MainMenuPic);
+	TextureLoader::Inst()->load(MainMenuBackgroundViewFile, MainMenuBackgroundView);
+	TextureLoader::Inst()->load(OptionsMenuViewFile, OptionsMenuView);
 	TextureLoader::Inst()->load(FullscreenCheckboxFile, FullscreenCheckbox);
 	TextureLoader::Inst()->load(VolumnLButtonFile, VolumnLButton);
 	TextureLoader::Inst()->load(VolumnRButtonFile, VolumnRButton);
-	SoundLoader::Inst()->load(Music01File, Music01, SOUND_MUSIC);
+	///load menu music and sounds
+	//SoundLoader::Inst()->load(Music01File, Music01, SOUND_MUSIC);
 	//SoundLoader::Inst()->playMusic(Music01, 2);
 	SoundLoader::Inst()->load(MenuMouseClickFile, MenuMouseClick, SOUND_SFX);
+	SoundLoader::Inst()->load(ControlKeyChangeSound1File, ControlKeyChangeSound1, SOUND_SFX);
+	SoundLoader::Inst()->load(ControlKeyChangeSound2File, ControlKeyChangeSound2, SOUND_SFX);
+	SoundLoader::Inst()->load(ControlKeyChangeSound3File, ControlKeyChangeSound3, SOUND_SFX);
+	SoundLoader::Inst()->load(ControlKeyChangeSound4File, ControlKeyChangeSound4, SOUND_SFX);
+	SoundLoader::Inst()->load(ControlKeyChangeSound5File, ControlKeyChangeSound5, SOUND_SFX);
 	changeMenu(MenuMain);
 
 	_running = true;
@@ -168,6 +177,7 @@ bool Main::HandleMenuEvents()
 	{
 		if (menuButtons[i]->outsideUpdate())
 		{
+			///main menu
 			if (menuButtons[i]->getUniqueID() == NewGameButton)
 			{
 				SoundLoader::Inst()->playSound(MenuMouseClick);
@@ -182,6 +192,7 @@ bool Main::HandleMenuEvents()
 				SoundLoader::Inst()->playSound(MenuMouseClick);
 				inMainMenu = false;
 				menuButtons.clear();
+				World::Inst()->startOldGame();
 				World::Inst()->initialize();
 				return true;
 			}
@@ -191,6 +202,12 @@ bool Main::HandleMenuEvents()
 				changeMenu(MenuOptions);
 				return true;
 			}
+			if (menuButtons[i]->getUniqueID() == ControlSettingsButton)
+			{
+				SoundLoader::Inst()->playSound(MenuMouseClick);
+				changeMenu(MenuControlSettings);
+				return true;
+			}
 			if (menuButtons[i]->getUniqueID() == ExitButton)
 			{
 				SoundLoader::Inst()->playSound(MenuMouseClick);
@@ -198,6 +215,7 @@ bool Main::HandleMenuEvents()
 				quit();
 				return true;
 			}
+			///options menu
 			if (menuButtons[i]->getUniqueID() == ResolutionListbox)
 			{
 				SoundLoader::Inst()->playSound(MenuMouseClick);
@@ -258,7 +276,52 @@ bool Main::HandleMenuEvents()
 				changeMenu(MenuMain);
 				return true;
 			}
-		
+			///control menu
+			if (menuButtons[i]->getUniqueID() == ControlMovingUpButton)
+			{
+				SDL_Scancode key;
+				menuButtons[i]->buttonText->changeText("_");
+				RefreshMenu();
+				key = ChangeControlKey();
+				if (key != SDL_SCANCODE_ESCAPE)
+					XmlParser::Inst()->key_movingUp = key;
+				menuButtons[i]->buttonText->changeText(ScancodeToString(XmlParser::Inst()->key_movingUp));
+				return false;
+			}
+			if (menuButtons[i]->getUniqueID() == ControlMovingDownButton)
+			{
+				SDL_Scancode key;
+				menuButtons[i]->buttonText->changeText("_");
+				RefreshMenu();
+				key = ChangeControlKey();
+				if (key != SDL_SCANCODE_ESCAPE)
+					XmlParser::Inst()->key_movingDown = key;
+				menuButtons[i]->buttonText->changeText(ScancodeToString(XmlParser::Inst()->key_movingDown));
+				return false;
+			}
+			if (menuButtons[i]->getUniqueID() == ControlMovingLeftButton)
+			{
+				SDL_Scancode key;
+				menuButtons[i]->buttonText->changeText("_");
+				RefreshMenu();
+				key = ChangeControlKey();
+				if (key != SDL_SCANCODE_ESCAPE)
+					XmlParser::Inst()->key_movingLeft = key;
+				menuButtons[i]->buttonText->changeText(ScancodeToString(XmlParser::Inst()->key_movingLeft));
+				return false;
+			}
+			if (menuButtons[i]->getUniqueID() == ControlMovingRightButton)
+			{
+				SDL_Scancode key;
+				menuButtons[i]->buttonText->changeText("_");
+				RefreshMenu();
+				key = ChangeControlKey();
+				if (key != SDL_SCANCODE_ESCAPE)
+					XmlParser::Inst()->key_movingRight = key;
+				menuButtons[i]->buttonText->changeText(ScancodeToString(XmlParser::Inst()->key_movingRight));
+				return false;
+			}
+			///game menu
 			if (menuButtons[i]->getUniqueID() == ResumeButton)
 			{
 				inGameMenu = false;
@@ -268,6 +331,8 @@ bool Main::HandleMenuEvents()
 			if (menuButtons[i]->getUniqueID() == ExittoMainMenuButton)
 			{
 				XmlParser::Inst()->saveCharacter();
+				World::Inst()->clearWorld();
+				World::Inst()->getLayer_player().clear();
 				inGameMenu = false;
 				changeMenu(MenuMain);
 				return true;
@@ -293,12 +358,15 @@ void Main::changeMenu(int menuID)
 	{
 	case MenuMain:
 		inMainMenu = true;
+		menuButtons.push_back(new Button(MainMenuBackgroundView));
 		menuButtons.push_back(new Button(NewGameButton));
 		menuButtons.push_back(new Button(ContinueButton));
 		menuButtons.push_back(new Button(ExitButton));
 		menuButtons.push_back(new Button(OptionButton));
+		menuButtons.push_back(new Button(ControlSettingsButton));
 		break;
 	case MenuOptions:
+		menuButtons.push_back(new Button(OptionsMenuView));
 		menuButtons.push_back(new Button(ResolutionText));
 		menuButtons.push_back(new Button(ResolutionListbox));
 		menuButtons.push_back(new Button(FullscreenCheckbox));
@@ -324,6 +392,17 @@ void Main::changeMenu(int menuID)
 		menuButtons.push_back(new Button(ExittoMainMenuButton));
 		menuButtons.push_back(new Button(ExittoDestopButton));
 		break;
+	case MenuControlSettings:
+		menuButtons.push_back(new Button(ControlMovingUpText));
+		menuButtons.push_back(new Button(ControlMovingUpButton));
+		menuButtons.push_back(new Button(ControlMovingDownText));
+		menuButtons.push_back(new Button(ControlMovingDownButton));
+		menuButtons.push_back(new Button(ControlMovingLeftText));
+		menuButtons.push_back(new Button(ControlMovingLeftButton));
+		menuButtons.push_back(new Button(ControlMovingRightText));
+		menuButtons.push_back(new Button(ControlMovingRightButton));
+		menuButtons.push_back(new Button(BackButton));
+		break;
 	}
 }
 
@@ -348,6 +427,53 @@ void Main::RenderMenu()
 		menuButtons[i]->draw();
 }
 
+void Main::RefreshMenu()
+{
+	SDL_RenderClear(Main::Inst()->getRenderer());
+	RenderMenu();
+	SDL_RenderPresent(renderer);
+}
+
+SDL_Scancode Main::ChangeControlKey()
+{
+	SDL_Event e;
+	while (true)
+	{
+		while (SDL_PollEvent(&e))
+		{
+			if(e.type == SDL_KEYDOWN)
+				switch (e.key.keysym.sym)
+				{
+				case SDLK_ESCAPE:
+					switch (Dice::Inst()->rand(5))
+					{
+					case 0:	SoundLoader::Inst()->playSound(ControlKeyChangeSound1); break;
+					case 1:	SoundLoader::Inst()->playSound(ControlKeyChangeSound2); break;
+					case 2:	SoundLoader::Inst()->playSound(ControlKeyChangeSound3); break;
+					case 3:	SoundLoader::Inst()->playSound(ControlKeyChangeSound4); break;
+					case 4:	SoundLoader::Inst()->playSound(ControlKeyChangeSound5); break;
+					}
+					Inputor::Inst()->resetMouseState();
+					return SDL_SCANCODE_ESCAPE;
+					break;
+				default:
+					switch (Dice::Inst()->rand(5))
+					{
+					case 0:	SoundLoader::Inst()->playSound(ControlKeyChangeSound1); break;
+					case 1:	SoundLoader::Inst()->playSound(ControlKeyChangeSound2); break;
+					case 2:	SoundLoader::Inst()->playSound(ControlKeyChangeSound3); break;
+					case 3:	SoundLoader::Inst()->playSound(ControlKeyChangeSound4); break;
+					case 4:	SoundLoader::Inst()->playSound(ControlKeyChangeSound5); break;
+					}
+					Inputor::Inst()->resetMouseState();
+					return e.key.keysym.scancode;
+					break;
+				}
+		}
+	}
+	return SDL_SCANCODE_ESCAPE;
+}
+
 void Main::close()
 {
 	cout << "Saving settings to xml..." << endl;
@@ -357,4 +483,4 @@ void Main::close()
 	SDL_DestroyRenderer(renderer);
 
 	SDL_Quit();
-}
+} 

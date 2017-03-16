@@ -34,7 +34,7 @@ public:
 	int getWidth() { return width; }
 	int getHeight() { return height; }
 	void setUniqueID(int id) { uniqueID = id; }
-	void setPosition(int x, int y) { position.set(x, y); }
+	void setPosition(float x, float y) { position.set(x, y); }
 	void setPosition(Vector2D pos) { position = pos; }
 	void setPosition(Vector2D* pos) { position = *pos; }
 	void addPosition(Vector2D* shift) { position += *shift; }

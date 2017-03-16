@@ -9,28 +9,36 @@
 
 #define MAINMENU_X 100
 #define MAINMENU_Y Main::Inst()->getWindowHeight()/2
-#define NewGamePos			MAINMENU_X,MAINMENU_Y - 100
-#define ContinuePos			MAINMENU_X,MAINMENU_Y
-#define OptionsPos			MAINMENU_X,MAINMENU_Y + 100
-#define ExitPos				MAINMENU_X,MAINMENU_Y + 200
-#define ResolutionTextPos	MAINMENU_X,MAINMENU_Y - 100
-#define ResolutionListPos	MAINMENU_X + 200,MAINMENU_Y - 100
-#define FullscreenTextPos	MAINMENU_X,MAINMENU_Y - 50
-#define FullscreenBoxPos	MAINMENU_X + 200,MAINMENU_Y - 43
-#define VolumnLButton1Pos	MAINMENU_X + 225,MAINMENU_Y + 60
-#define VolumnLButton2Pos	MAINMENU_X + 225,MAINMENU_Y + 110
-#define VolumnLButton3Pos	MAINMENU_X + 225,MAINMENU_Y + 160
-#define VolumnRButton1Pos	MAINMENU_X + 290,MAINMENU_Y + 60
-#define VolumnRButton2Pos	MAINMENU_X + 290,MAINMENU_Y + 110
-#define VolumnRButton3Pos	MAINMENU_X + 290,MAINMENU_Y + 160
-#define VolumnMasterTextPos	MAINMENU_X,MAINMENU_Y + 50
-#define VolumnMasterNumPos	MAINMENU_X + 245,MAINMENU_Y + 50
-#define VolumnMusicTextPos	MAINMENU_X,MAINMENU_Y + 100
-#define VolumnMusicNumPos	MAINMENU_X + 245,MAINMENU_Y + 100
-#define VolumnSfxTextPos	MAINMENU_X,MAINMENU_Y + 150
-#define VolumnSfxNumPos		MAINMENU_X + 245,MAINMENU_Y + 150
-#define BackButtonPos		MAINMENU_X,MAINMENU_Y + 200
-
+#define NewGamePos				MAINMENU_X,MAINMENU_Y - 80
+#define ContinuePos				MAINMENU_X,MAINMENU_Y
+#define OptionsPos				MAINMENU_X,MAINMENU_Y + 80
+#define ControlSettingsPos		MAINMENU_X,MAINMENU_Y + 160
+#define ExitPos					MAINMENU_X,MAINMENU_Y + 240
+#define ResolutionTextPos		MAINMENU_X,MAINMENU_Y - 100
+#define ResolutionListPos		MAINMENU_X + 200,MAINMENU_Y - 100
+#define FullscreenTextPos		MAINMENU_X,MAINMENU_Y - 50
+#define FullscreenBoxPos		MAINMENU_X + 200,MAINMENU_Y - 43
+#define VolumnLButton1Pos		MAINMENU_X + 225,MAINMENU_Y + 60
+#define VolumnLButton2Pos		MAINMENU_X + 225,MAINMENU_Y + 110
+#define VolumnLButton3Pos		MAINMENU_X + 225,MAINMENU_Y + 160
+#define VolumnRButton1Pos		MAINMENU_X + 290,MAINMENU_Y + 60
+#define VolumnRButton2Pos		MAINMENU_X + 290,MAINMENU_Y + 110
+#define VolumnRButton3Pos		MAINMENU_X + 290,MAINMENU_Y + 160
+#define VolumnMasterTextPos		MAINMENU_X,MAINMENU_Y + 50
+#define VolumnMasterNumPos		MAINMENU_X + 245,MAINMENU_Y + 50
+#define VolumnMusicTextPos		MAINMENU_X,MAINMENU_Y + 100
+#define VolumnMusicNumPos		MAINMENU_X + 245,MAINMENU_Y + 100
+#define VolumnSfxTextPos		MAINMENU_X,MAINMENU_Y + 150
+#define VolumnSfxNumPos			MAINMENU_X + 245,MAINMENU_Y + 150
+#define BackButtonPos			MAINMENU_X,MAINMENU_Y + 200
+#define ControlUpTextPos		MAINMENU_X,MAINMENU_Y - 50
+#define ControlUpButtonPos		MAINMENU_X + 300,MAINMENU_Y - 50
+#define ControlDownTextPos		MAINMENU_X,MAINMENU_Y
+#define ControlDownButtonPos	MAINMENU_X + 300,MAINMENU_Y
+#define ControlLeftTextPos		MAINMENU_X,MAINMENU_Y + 50
+#define ControlLeftButtonPos	MAINMENU_X + 300,MAINMENU_Y + 50
+#define ControlRightTextPos		MAINMENU_X,MAINMENU_Y + 100
+#define ControlRightButtonPos	MAINMENU_X + 300,MAINMENU_Y + 100
 
 Button::Button(int id) : clickCooldown(true)
 {
@@ -51,6 +59,13 @@ void Button::Load()
 	buttonText = NULL;
 	buttonClass = ButtonTypeButton;
 	//main menu
+	if (uniqueID == MainMenuBackgroundView)
+	{
+		buttonClass = ButtonTypeBackground;
+		position.set(0, 0);
+		width = 1920;
+		height = 1080;
+	}
 	if (uniqueID == NewGameButton)
 	{
 		position.set(NewGamePos);
@@ -74,12 +89,28 @@ void Button::Load()
 		numFrames = 2;
 		return;
 	}
+	if (uniqueID == ControlSettingsButton)
+	{
+		position.set(ControlSettingsPos);
+		buttonText = new Textbox(position, "Contorl Settings", arial48_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial48_bold), "Contorl Settings", &width, &height);
+		numFrames = 2;
+		return;
+	}
 	if (uniqueID == ExitButton)
 	{
 		position.set(ExitPos);
 		buttonText = new Textbox(position, "Exit", arial48_bold, COLOR_WHITE, -1);
 		TTF_SizeText(Main::Inst()->getFont(arial48_bold), "Exit", &width, &height);
 		return;
+	}
+	//options menu
+	if (uniqueID == OptionsMenuView)
+	{
+		buttonClass = ButtonTypeBackground;
+		position.set(0, 0);
+		width = 1920;
+		height = 1080;
 	}
 	if (uniqueID == ResolutionText)
 	{
@@ -208,6 +239,67 @@ void Button::Load()
 		TTF_SizeText(Main::Inst()->getFont(arial28_bold), "Back to the Main Menu", &width, &height);
 		return;
 	}
+	//control menu
+	if (uniqueID == ControlMovingUpText)
+	{
+		buttonClass = ButtonTypeTextbox;
+		position.set(ControlUpTextPos);
+		buttonText = new Textbox(position, "Moving up&interact", arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), "Moving up&interact", &width, &height);
+		return;
+	}
+	if (uniqueID == ControlMovingUpButton)
+	{
+		position.set(ControlUpButtonPos);
+		buttonText = new Textbox(position, ScancodeToString(XmlParser::Inst()->key_movingUp), arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), ScancodeToString(XmlParser::Inst()->key_movingUp).c_str(), &width, &height);
+		return;
+	}
+	if (uniqueID == ControlMovingDownText)
+	{
+		buttonClass = ButtonTypeTextbox;
+		position.set(ControlDownTextPos);
+		buttonText = new Textbox(position, "Moving Down", arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), "Moving Down", &width, &height);
+		return;
+	}
+	if (uniqueID == ControlMovingDownButton)
+	{
+		position.set(ControlDownButtonPos);
+		buttonText = new Textbox(position, ScancodeToString(XmlParser::Inst()->key_movingDown), arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), ScancodeToString(XmlParser::Inst()->key_movingDown).c_str(), &width, &height);
+		return;
+	}
+	if (uniqueID == ControlMovingLeftText)
+	{
+		buttonClass = ButtonTypeTextbox;
+		position.set(ControlLeftTextPos);
+		buttonText = new Textbox(position, "Moving Left", arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), "Moving Left", &width, &height);
+		return;
+	}
+	if (uniqueID == ControlMovingLeftButton)
+	{
+		position.set(ControlLeftButtonPos);
+		buttonText = new Textbox(position, ScancodeToString(XmlParser::Inst()->key_movingLeft), arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), ScancodeToString(XmlParser::Inst()->key_movingLeft).c_str(), &width, &height);
+		return;
+	}
+	if (uniqueID == ControlMovingRightText)
+	{
+		buttonClass = ButtonTypeTextbox;
+		position.set(ControlRightTextPos);
+		buttonText = new Textbox(position, "Moving Right", arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), "Moving Right", &width, &height);
+		return;
+	}
+	if (uniqueID == ControlMovingRightButton)
+	{
+		position.set(ControlRightButtonPos);
+		buttonText = new Textbox(position, ScancodeToString(XmlParser::Inst()->key_movingRight), arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), ScancodeToString(XmlParser::Inst()->key_movingRight).c_str(), &width, &height);
+		return;
+	}
 	//game menu
 	if (uniqueID == GameMenuBackground)
 	{
@@ -260,7 +352,7 @@ void Button::update()
 			buttonText->changeColor(COLOR_WHITE);
 		return;
 	}
-	if (uniqueID == OptionButton || uniqueID == BackButton)
+	if (uniqueID == OptionButton || uniqueID == BackButton || uniqueID == ControlSettingsButton)
 	{
 		if (CheckMouseOver())
 			buttonText->changeColor(COLOR_ORANGE);
@@ -353,6 +445,16 @@ void Button::update()
 	{
 		buttonText->changeText(to_string(XmlParser::Inst()->volumn_sfx));
 	}
+	//control menu
+	if (uniqueID == ControlMovingUpButton || uniqueID == ControlMovingDownButton || uniqueID == ControlMovingLeftButton || uniqueID == ControlMovingRightButton)
+	{
+		if (CheckMouseOver())
+			buttonText->changeColor(COLOR_PURPLE);
+		else
+			buttonText->changeColor(COLOR_WHITE);
+		return;
+
+	}
 	//game menu
 	if (uniqueID == ResumeButton || uniqueID == ExittoMainMenuButton || uniqueID == ExittoDestopButton)
 	{
@@ -375,7 +477,9 @@ void Button::update()
 
 void Button::draw()
 {
-	if(buttonText == NULL)
+	if (buttonClass == ButtonTypeBackground)
+		TextureLoader::Inst()->drawEx2(uniqueID, 0, 0, width, height, Main::Inst()->getWindowWidth(), Main::Inst()->getWindowHeight());
+	else if(buttonText == NULL)
 		TextureLoader::Inst()->drawFrame(uniqueID, position.x, position.y, width, height, currentRow, currentFrame, angle, alpha);
 	else
 		buttonText->draw();
@@ -391,7 +495,7 @@ bool Button::CheckMouseOver()
 
 bool Button::outsideUpdate()
 {
-	if (buttonClass == ButtonTypeTextbox)
+	if (buttonClass != ButtonTypeButton)
 		return false;
 
 	if (CheckMouseOver() && Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && clickCooldown.getTicks() > CLICKCOOLDOWN)

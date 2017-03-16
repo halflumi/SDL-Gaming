@@ -94,7 +94,38 @@ void XmlParser::load()
 		error = element->QueryIntText(&volumn_sfx);
 	if (error != XML_SUCCESS)
 		cout << "XML_ERROR passing volumn_sfx value to the variable." << endl;
-
+	///key_movingUp
+	element = node->FirstChildElement("key_movingUp");
+	if (element == nullptr)
+		cout << "XML_ERROR getting key_movingUp element from the node." << endl;
+	else
+		error = element->QueryIntText((SDL_Keycode*)&key_movingUp);
+	if (error != XML_SUCCESS)
+		cout << "XML_ERROR passing key_movingUp value to the variable." << endl;
+	///key_movingDown
+	element = node->FirstChildElement("key_movingDown");
+	if (element == nullptr)
+		cout << "XML_ERROR getting key_movingDown element from the node." << endl;
+	else
+		error = element->QueryIntText((SDL_Keycode*)&key_movingDown);
+	if (error != XML_SUCCESS)
+		cout << "XML_ERROR passing key_movingDown value to the variable." << endl;
+	///key_movingLeft
+	element = node->FirstChildElement("key_movingLeft");
+	if (element == nullptr)
+		cout << "XML_ERROR getting key_movingLeft element from the node." << endl;
+	else
+		error = element->QueryIntText((SDL_Keycode*)&key_movingLeft);
+	if (error != XML_SUCCESS)
+		cout << "XML_ERROR passing key_movingLeft value to the variable." << endl;
+	///key_movingRight
+	element = node->FirstChildElement("key_movingRight");
+	if (element == nullptr)
+		cout << "XML_ERROR getting key_movingRight element from the node." << endl;
+	else
+		error = element->QueryIntText((SDL_Keycode*)&key_movingRight);
+	if (error != XML_SUCCESS)
+		cout << "XML_ERROR passing key_movingRight value to the variable." << endl;
 }
 
 void XmlParser::save()
@@ -137,6 +168,22 @@ void XmlParser::save()
 	///volumn_sfx
 	element = xmlFile.NewElement("volumn_sfx");
 	element->SetText(volumn_sfx);
+	node->InsertEndChild(element);
+	///key_movingUp
+	element = xmlFile.NewElement("key_movingUp");
+	element->SetText(key_movingUp);
+	node->InsertEndChild(element);
+	///key_movingDown
+	element = xmlFile.NewElement("key_movingDown");
+	element->SetText(key_movingDown);
+	node->InsertEndChild(element);
+	///key_movingLeft
+	element = xmlFile.NewElement("key_movingLeft");
+	element->SetText(key_movingLeft);
+	node->InsertEndChild(element);
+	///key_movingRight
+	element = xmlFile.NewElement("key_movingRight");
+	element->SetText(key_movingRight);
 	node->InsertEndChild(element);
 
 	error = xmlFile.SaveFile(SettingsFile);

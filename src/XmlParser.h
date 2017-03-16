@@ -1,4 +1,5 @@
 #pragma once
+#include <SDL.h>
 #include <iostream>
 #include "tinyxml2.h"
 #include "IDSheet.h"
@@ -22,6 +23,10 @@ public:
 	int volumn_master = 10;
 	int volumn_music = 10;
 	int volumn_sfx = 10;
+	SDL_Scancode key_movingUp = SDL_SCANCODE_W;
+	SDL_Scancode key_movingDown = SDL_SCANCODE_S;
+	SDL_Scancode key_movingLeft = SDL_SCANCODE_A;
+	SDL_Scancode key_movingRight = SDL_SCANCODE_D;
 
 	int mapID = MapTest01;
 	int level = 1;
