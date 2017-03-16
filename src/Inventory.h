@@ -35,7 +35,6 @@ public:
 	int maxATT;
 	int defense;
 
-	InventoryItem(int index);
 	InventoryItem(int id, int index, int stack);
 	~InventoryItem() { delete selectCooldown; }
 	void init(int id, int _index, int stack);
@@ -54,6 +53,7 @@ private:
 	int inventorySize;
 
 	Button closeButton;
+	Button rearrangeButton;
 
 	void Load();
 public:
@@ -70,4 +70,5 @@ public:
 	bool outsideCheckMouseTitle();
 	bool addItem(int itemID, int stack, int maxStack, int width, int height);
 	bool addItem(Item* item);
+	void rearrangeItems();
 };

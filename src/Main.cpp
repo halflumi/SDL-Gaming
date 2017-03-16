@@ -401,6 +401,19 @@ void Main::changeMenu(int menuID)
 		menuButtons.push_back(new Button(ControlMovingLeftButton));
 		menuButtons.push_back(new Button(ControlMovingRightText));
 		menuButtons.push_back(new Button(ControlMovingRightButton));
+		menuButtons.push_back(new Button(ControlCharacterPanelText));
+		menuButtons.push_back(new Button(ControlCharacterPanelButton));
+		menuButtons.push_back(new Button(ControlSkillPanelText));
+		menuButtons.push_back(new Button(ControlSkillPanelButton));
+		menuButtons.push_back(new Button(ControlInventoryText));
+		menuButtons.push_back(new Button(ControlInventoryButton));
+		menuButtons.push_back(new Button(ControlSkillHotkey1Text));
+		menuButtons.push_back(new Button(ControlSkillHotkey1Button));
+		menuButtons.push_back(new Button(ControlSkillHotkey2Text));
+		menuButtons.push_back(new Button(ControlSkillHotkey2Button));
+		menuButtons.push_back(new Button(ControlSkillHotkey3Text));
+		menuButtons.push_back(new Button(ControlSkillHotkey3Button));
+
 		menuButtons.push_back(new Button(BackButton));
 		break;
 	}
