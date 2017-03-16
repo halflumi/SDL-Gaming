@@ -1,8 +1,6 @@
 #pragma once
 #include <math.h>
 
-int sgn(double x) { return x < 0 ? -1 : x > 0; }
-
 class Vector2D
 {
 public:
