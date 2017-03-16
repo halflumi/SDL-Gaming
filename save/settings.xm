@@ -1,8 +1,8 @@
 <root>
-    <window_x>-321</window_x>
-    <window_y>77</window_y>
-    <window_w>1600</window_w>
-    <window_h>900</window_h>
+    <window_x>-42</window_x>
+    <window_y>31</window_y>
+    <window_w>1280</window_w>
+    <window_h>720</window_h>
     <fullscreen>false</fullscreen>
     <volumn_master>5</volumn_master>
     <volumn_music>10</volumn_music>
@@ -11,4 +11,10 @@
     <key_movingDown>22</key_movingDown>
     <key_movingLeft>4</key_movingLeft>
     <key_movingRight>7</key_movingRight>
+    <key_openCharacter>6</key_openCharacter>
+    <key_openSkill>14</key_openSkill>
+    <key_openInventory>12</key_openInventory>
+    <key_skillHotkey1>9</key_skillHotkey1>
+    <key_skillHotkey2>10</key_skillHotkey2>
+    <key_skillHotkey3>11</key_skillHotkey3>
 </root>

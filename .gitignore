@@ -267,6 +267,7 @@ paket-files/
 __pycache__/
 *.pyc
 save/settings.xm
+save/savedata.xm
 [Dd]ebug/SDL-Gaming.exe
 [Rr]elease/SDL-Gaming.exe
 *.xm
