@@ -27,6 +27,14 @@ public:
 	SDL_Scancode key_movingDown = SDL_SCANCODE_S;
 	SDL_Scancode key_movingLeft = SDL_SCANCODE_A;
 	SDL_Scancode key_movingRight = SDL_SCANCODE_D;
+	SDL_Scancode key_openCharacter = SDL_SCANCODE_C;
+	SDL_Scancode key_openSkill = SDL_SCANCODE_K;
+	SDL_Scancode key_openInventory = SDL_SCANCODE_I;
+	SDL_Scancode key_skillHotkey1 = SDL_SCANCODE_F;
+	SDL_Scancode key_skillHotkey2 = SDL_SCANCODE_G;
+	SDL_Scancode key_skillHotkey3 = SDL_SCANCODE_H;
+
+
 
 	int mapID = MapTest01;
 	int level = 1;
