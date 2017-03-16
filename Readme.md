@@ -142,7 +142,7 @@ map<string, Mix_Music*> musics;
 
 ----------
 
-### IDSheet/Vector2D/Object/Dice###
+### IDSheet/Vector2D/Object/Dice ###
 
 这是几个仅包含头文件，或内容很简单的类，简单介绍如下：
 
