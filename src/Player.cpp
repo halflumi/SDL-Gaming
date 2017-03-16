@@ -375,9 +375,10 @@ void Player::HandleInput()
 		}
 	}
 
-	if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_Z) && keyCooldown.getTicks() > PRESSCOOLDOWN)
+	if (Inputor::Inst()->isKeyDown(XmlParser::Inst()->key_skillHotkey1) && keyCooldown.getTicks() > PRESSCOOLDOWN)
 	{
-
+		heal(10);
+		SoundLoader::Inst()->playSound(HealingMagicSound);
 	}
 }
 
@@ -519,7 +520,7 @@ void Player::HandleMovement()
 
 void Player::HandleDisplay()
 {
-	int x, y;
+	float x, y;
 	//x centeralized view
 	if (position.x - Main::Inst()->getRenderWidth() / 2 < 0)
 	{
