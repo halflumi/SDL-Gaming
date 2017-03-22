@@ -14,9 +14,12 @@
 #define AIRACCELERATION 0.3f
 #define MIDAIRACCERLATION 0.05f
 #define DEFAULTMAXSPEED 5.0f
-#define JUMPSPEED -10.f
-#define LADDERSPEED 1.0f
-#define LADDERJUMPSPEED -7.f
+#define JUMPSPEED -15.f
+#define LADDERSPEED 2.0f
+#define LADDERJUMPSPEED -12.f
+#define MIDAIR 1
+#define MIDAIR_LADDER 2
+#define MIDAIR_LADDER_JUMP 3
 
 Player::Player(int id, int x, int y)
 {
@@ -45,8 +48,8 @@ Player::Player(int id, int x, int y)
 
 void Player::Load()
 {
-	width = 50;
-	height = 100;
+	width = PLAYERWIDTH;
+	height = PLAYERHEIGHT;
 	//rpg properties
 	maxSpeed = DEFAULTMAXSPEED;
 	acceleration.y = GRAVITY;
@@ -437,10 +440,21 @@ void Player::Attacking()
 	}
 }
 
+void Player::HandlePlayerPhysics( ) 
+{
+	/* 
+		water judge
+	*/
+//	int status = CheckCollision_tileX( );
+
+}
+
 void Player::HandleMovement()
 {
 	if (onLadder)
 	{
+		velocity.x = 0;
+		acceleration.x = 0;
 		if (movingUp)
 		{
 			velocity.y = -LADDERSPEED;
@@ -453,9 +467,20 @@ void Player::HandleMovement()
 		{
 			velocity.y = 0;
 		}
-		position.y += velocity.y;
-		entityCenter.set(position.x + width / 2, position.y + height / 2);
-		return;
+		float newposition_y = position.y + velocity.y;
+		if (CheckCollision_tileY(newposition_y)) {
+			position.y = newposition_y;
+			//HitGround( );
+			onLadder = false;
+			//velocity.y = LADDERSPEED;
+			//cout << "here";
+			midair = MIDAIR;
+
+		} else {
+			position.y += velocity.y;
+			entityCenter.set(position.x + width / 2, position.y + height / 2);
+			return;
+		}
 	}
 	////calculate acc and direction
 	if (!midair)
@@ -493,10 +518,13 @@ void Player::HandleMovement()
 	if (jumped && !midair)
 	{
 		midair = true;
-		if (!onLadder)
-			velocity.y = JUMPSPEED;
-		else
-			velocity.y = LADDERJUMPSPEED;
+		velocity.y = JUMPSPEED;
+	}
+	if (jumped && (midair == MIDAIR_LADDER))
+	{
+		onLadder = false;
+		midair = MIDAIR_LADDER_JUMP;
+		velocity.y = LADDERJUMPSPEED;
 	}
 	if (midair)
 	{
@@ -510,10 +538,12 @@ void Player::HandleMovement()
 	//calculate position
 	Vector2D newposition = position + velocity;
 
-	if (!CheckCollision_tileX(newposition.x))
-		position.x = newposition.x;
-	if (!CheckCollision_tileY(newposition.y))
+	if (midair == MIDAIR_LADDER_JUMP || !CheckCollision_tileX(newposition.x)) {
+		position.x = newposition.x; 
+	}
+	if (!CheckCollision_tileY(newposition.y)) {
 		position.y = newposition.y;
+	}
 	
 	CheckCollision_hostile(newposition);
 }
@@ -533,6 +563,9 @@ void Player::HandleDisplay()
 		display_pos.x = Main::Inst()->getRenderWidth() - (World::Inst()->getWorldWidth() - position.x);
 		if (focused)
 			x = World::Inst()->getWorldWidth() - Main::Inst()->getRenderWidth() / 2;
+	}
+	else if (Camera::Inst( ) && (abs(position.x - Camera::Inst( )->getPosition( ).x) < PLAYERWIDTH)) {
+		x = position.x;
 	}
 	else
 	{
@@ -559,6 +592,8 @@ void Player::HandleDisplay()
 		if (focused)
 			y = position.y;
 	}
+
+
 	if (focused)
 		Camera::Inst()->setPosition(x, y);
 	//cout << Camera::Inst()->getPosition().x << ' ' << Camera::Inst()->getPosition().y << endl;
@@ -590,7 +625,7 @@ void Player::HandleDisplay()
 		currentFrame = 0;
 }
 
-bool Player::CheckCollision_tileX(float x)
+bool Player::CheckCollision_tileX(float& x)
 {
 	//touch world border
 	if (x < 0)
@@ -623,12 +658,16 @@ bool Player::CheckCollision_tileX(float x)
 		{
 			if (x + width <= objectLeft || x >= objectRight)
 				continue;
-			else
+			else if (x + width >= objectLeft && position.x + width <= objectLeft)
 			{
-				if (movingRight)
-					position.x = objectLeft;
-				else
-					position.x = objectRight;
+				position.x = objectLeft - width;
+				velocity.x = 0;
+				return true;
+			} 
+			else if (x <= objectRight && position.x >= objectRight)
+			{
+				position.x = objectRight;
+				velocity.x = 0;
 				return true;
 			}
 		}
@@ -637,7 +676,7 @@ bool Player::CheckCollision_tileX(float x)
 	return false;
 }
 
-bool Player::CheckCollision_tileY(float y)
+bool Player::CheckCollision_tileY(float& y)
 {
 	if (y < 0)
 	{
@@ -667,15 +706,37 @@ bool Player::CheckCollision_tileY(float y)
 
 		if (!(position.x + width <= objectLeft || position.x >= objectRight))
 		{
-			if (y >= objectBottom || y + height <= objectTop)
-				continue;
-			else
+			if (onLadder)
 			{
-				HitGround();
-				return true;
+				//cout << "onladder";
+				if (y + height <= objectTop && position.y + height >= objectTop)
+				{
+				//	cout << "true";
+					return true;
+				}
 			}
-		}
+			else if (y >= objectBottom || y + height <= objectTop) 
+			{
+				continue;
+			} else {
+					if (y + height >= objectTop && position.y + height <= objectTop)
+					{
+						position.y = objectTop - height;
+						HitGround( );
+						return true;
+					} else if (midair != MIDAIR_LADDER_JUMP && y <= objectBottom && position.y >= objectBottom) {
+						position.y = objectBottom + 1;
+						velocity.y = -velocity.y * 0.6;
+						return true;
+					}
+				}
+			}
+		
 	}
+	if (onLadder)
+		midair = MIDAIR_LADDER;
+	else if(midair != MIDAIR_LADDER_JUMP)
+		midair = MIDAIR;
 	return false;
 }
 
@@ -723,6 +784,7 @@ void Player::CheckCollision_hostile(Vector2D newpos)
 
 void Player::HitGround()
 {
+	onLadder = false;
 	midair = false;
 	jumped = false;
 	velocity.y = 0;
@@ -758,7 +820,7 @@ void Player::CheckInteractive()
 		{
 			if (entityCenter.x <= oRight && entityCenter.x >= oLeft && entityCenter.y >= oTop && entityCenter.y <= oBottom)
 			{
-				DoInteractive(entities[i]->getUniqueID());
+				DoInteractive(entities[i]);
 				return;
 			}
 		}
@@ -770,38 +832,43 @@ void Player::CheckInteractive()
 	{
 		if (objects[i]->outsideCheckPlayerWithin()) // player in range
 		{
-			DoInteractive(objects[i]->getUniqueID());
+			DoInteractive(objects[i]);
 			return;
 		}
 	}
 }
+void Player::DoInteractive(Object * obj) {
+	int id = obj->getUniqueID();
 
-void Player::DoInteractive(int id)
-{
 	if (id == TestPortal)
 	{
-		SoundLoader::Inst()->playSound(PortalNoise);
+		SoundLoader::Inst( )->playSound(PortalNoise);
 		position.x = 2500;
-		position.y = World::Inst()->getWorldHeight() - height;
+		position.y = World::Inst( )->getWorldHeight( ) - height;
 	}
 	if (id == LadderSprite)
 	{
+		position.x = obj->getPosition( ).x +obj->getWidth( ) / 20;
 		onLadder = true;
 		jumped = false;
-		midair = false;
+		midair = MIDAIR_LADDER;
 		currentRow = 3;
 		return;
+	} else {
+		cout << "get here";
+		onLadder = false;
+		midair = MIDAIR;
 	}
 	if (id == MapGate)
 	{
-		SoundLoader::Inst()->playSound(WrapGateNoise);
-		World::Inst()->changeMap(MapTest02, MAPCHANGE_RIGHT);
+		SoundLoader::Inst( )->playSound(WrapGateNoise);
+		World::Inst( )->changeMap(MapTest02, MAPCHANGE_RIGHT);
 		return;
 	}
 	if (id == MapGate2)
 	{
-		SoundLoader::Inst()->playSound(WrapGateNoise);
-		World::Inst()->changeMap(MapTest01, MAPCHANGE_LEFT);
+		SoundLoader::Inst( )->playSound(WrapGateNoise);
+		World::Inst( )->changeMap(MapTest01, MAPCHANGE_LEFT);
 		return;
 	}
 }
