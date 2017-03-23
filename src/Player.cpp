@@ -17,6 +17,7 @@
 #define JUMPSPEED -15.f
 #define LADDERSPEED 2.0f
 #define LADDERJUMPSPEED -12.f
+#define SEARCH_LADDER 1
 #define MIDAIR 1
 #define MIDAIR_LADDER 2
 #define MIDAIR_LADDER_JUMP 3
@@ -261,6 +262,9 @@ void Player::HandleInput()
 			movingUp = false;
 			currentRow = 3;
 		}
+		else {
+			CheckInteractive(SEARCH_LADDER);
+		}
 	}
 	else
 	{
@@ -291,10 +295,8 @@ void Player::HandleInput()
 	{
 		movingLeft = true;
 		movingRight = false;
-		if (!midair)
-			currentRow = 1;
-		else
-			currentRow = 0;
+		currentRow = 1;
+
 
 		acceleration.x = -PLAYERACCERLATION;
 	}
@@ -302,10 +304,7 @@ void Player::HandleInput()
 	{
 		movingRight = true;
 		movingLeft = false;
-		if (!midair)
-			currentRow = 2;
-		else
-			currentRow = 0;
+		currentRow = 2;
 
 		acceleration.x = -MIDAIRACCERLATION;
 	}
@@ -441,6 +440,7 @@ void Player::HandleMovement()
 	{
 		velocity.x = 0;
 		acceleration.x = 0;
+		currentRow = 3;
 		if (movingUp)
 		{
 			velocity.y = -LADDERSPEED;
@@ -458,6 +458,7 @@ void Player::HandleMovement()
 			position.y = newposition_y;
 			//HitGround( );
 			onLadder = false;
+			currentRow = 2;
 			//velocity.y = LADDERSPEED;
 			//cout << "here";
 			midair = MIDAIR;
@@ -648,12 +649,14 @@ bool Player::CheckCollision_tileX(float& x)
 			{
 				position.x = objectLeft - width;
 				velocity.x = 0;
+				acceleration.x = 0;
 				return true;
 			} 
 			else if (x <= objectRight && position.x >= objectRight)
 			{
 				position.x = objectRight;
 				velocity.x = 0;
+				acceleration.x = 0;
 				return true;
 			}
 		}
@@ -758,11 +761,16 @@ void Player::CheckCollision_hostile(Vector2D newpos)
 		life -= damage;
 		Vector2D textShift(entityCenter.x + Dice::Inst()->randInverse(20), position.y + Dice::Inst()->randInverse(20));
 		World::Inst()->createText(textShift, 0, -0.1f, to_string(damage), segoeui22, COLOR_RED, 60);
-		velocity.y = -1.f;
-		if (entities[i]->getPosition().x > position.x)
+		velocity.y = -10.f;
+		//acceleration.y = -GRAVITY;
+		if (entities[i]->getPosition( ).x > position.x) {
 			velocity.x = -5.f;
-		else
+			acceleration.x = 0;
+		}
+		else {
 			velocity.x = 5.f;
+			acceleration.x = 0;
+		}
 		invulnerableTick = 1;
 		return;
 	}
@@ -778,7 +786,7 @@ void Player::HitGround()
 	maxSpeed = DEFAULTMAXSPEED;
 }
 
-void Player::CheckInteractive()
+void Player::CheckInteractive(short flag)
 {
 	vector<Entity*>& entities = World::Inst()->getLayer_entity();
 	int i;
@@ -802,13 +810,18 @@ void Player::CheckInteractive()
 		if (pTop > oBottom)
 			continue;
 
+
+
 		if (entities[i]->getUniqueID() == TestPortal)
 		{
+
+			
 			if (entityCenter.x <= oRight && entityCenter.x >= oLeft && entityCenter.y >= oTop && entityCenter.y <= oBottom)
 			{
 				DoInteractive(entities[i]);
 				return;
 			}
+
 		}
 	}
 
@@ -816,7 +829,19 @@ void Player::CheckInteractive()
 	len = objects.size();
 	for (i = 0; i < len; i++)
 	{
-		if (objects[i]->outsideCheckPlayerWithin()) // player in range
+		if (flag == SEARCH_LADDER && objects[i]->getUniqueID() == LadderSprite) {
+			Player* player = Camera::Inst( )->getTarget_nonConst( );
+			if (player->entityCenter.x <= objects[i]->getPosition( ).x + objects[i]->getWidth( ) &&
+				player->entityCenter.x >= objects[i]->getPosition( ).x &&
+				player->entityCenter.y <= objects[i]->getPosition( ).y &&
+				player->entityCenter.y >= objects[i]->getPosition( ).y - player->getHeight( ) / 2
+				) {
+				DoInteractive(objects[i]);
+				position.y -= LADDERSPEED;
+			}
+			return;
+		}
+		else if (objects[i]->outsideCheckPlayerWithin()) // player in range
 		{
 			DoInteractive(objects[i]);
 			return;
@@ -834,16 +859,12 @@ void Player::DoInteractive(Object * obj) {
 	}
 	if (id == LadderSprite)
 	{
-		position.x = obj->getPosition( ).x +obj->getWidth( ) / 20;
+		position.x = obj->getPosition( ).x + obj->getWidth( ) / 14;
 		onLadder = true;
 		jumped = false;
 		midair = MIDAIR_LADDER;
-		currentRow = 3;
+		currentRow = 3;	
 		return;
-	} else {
-		cout << "get here";
-		onLadder = false;
-		midair = MIDAIR;
 	}
 	if (id == MapGate)
 	{
