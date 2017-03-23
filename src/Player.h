@@ -19,7 +19,6 @@ private:
 	bool onLadder;
 	bool movingUp;
 	bool movingDown;
-	Projectile* meleeProjectile;
 	int attackInterval;
 	int attackTick;
 	int lifeRegenInterval;
@@ -38,15 +37,14 @@ private:
 
 	void Load();
 	
-	void isLevelingup();
-	void updateAttributes();
-
+	void IsDead();
+	void IsLevelingup();
+	void UpdateAttributes();
 	void HandleInput();
 	void HandlePlayerPhysics( );
 	void HandleMovement();
 	void HandleDisplay();
 	void Attacking();
-
 
 	bool CheckCollision_tileX(float& x);
 	bool CheckCollision_tileY(float& y);
@@ -71,7 +69,7 @@ public:
 	int expToNextLevel;
 
 	Player(int id, int x, int y);
-	~Player() { delete inventory; }
+	~Player();
 
 	void setFocused() { focused = true; }
 	void removeFocused() { focused = false; }

@@ -23,13 +23,13 @@
     <ProjectGuid>{0265C34C-9938-4D9D-A27A-DE98C4816E66}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>SDLGaming</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v140</PlatformToolset>
+    <PlatformToolset>v141</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\src\Buff.cpp" />
     <ClCompile Include="..\..\src\Button.cpp" />
     <ClCompile Include="..\..\src\Camera.cpp" />
     <ClCompile Include="..\..\src\CharacterPanel.cpp" />
@@ -166,6 +167,7 @@
     <ClCompile Include="..\..\src\Player.cpp" />
     <ClCompile Include="..\..\src\Projectile.cpp" />
     <ClCompile Include="..\..\src\SDLGaming.cpp" />
+    <ClCompile Include="..\..\src\Skill.cpp" />
     <ClCompile Include="..\..\src\SkillPanel.cpp" />
     <ClCompile Include="..\..\src\SoundLoader.cpp" />
     <ClCompile Include="..\..\src\Sprite.cpp" />
@@ -177,6 +179,7 @@
     <ClCompile Include="..\..\src\XmlParser.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\src\Buff.h" />
     <ClInclude Include="..\..\src\Button.h" />
     <ClInclude Include="..\..\src\Camera.h" />
     <ClInclude Include="..\..\src\CharacterPanel.h" />
@@ -194,6 +197,7 @@
     <ClInclude Include="..\..\src\Object.h" />
     <ClInclude Include="..\..\src\Player.h" />
     <ClInclude Include="..\..\src\Projectile.h" />
+    <ClInclude Include="..\..\src\Skill.h" />
     <ClInclude Include="..\..\src\SkillPanel.h" />
     <ClInclude Include="..\..\src\SoundLoader.h" />
     <ClInclude Include="..\..\src\Sprite.h" />

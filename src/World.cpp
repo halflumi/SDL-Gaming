@@ -10,6 +10,15 @@
 #include "XmlParser.h"
 
 #define LAYERCOUNT 7
+#define HealthTextPos		191, Main::Inst()->getRenderHeight() + 1
+#define ManaTextPos			191, Main::Inst()->getRenderHeight() + 22
+#define xpTextPos			941, Main::Inst()->getRenderHeight() + 42 
+#define HealthBarPos		39, Main::Inst()->getRenderHeight() + 9
+#define ManaBarPos			39, Main::Inst()->getRenderHeight() + 30
+#define HealthBarLength		148.f
+#define HealthBarHeight		9
+#define xpBarPos			39, Main::Inst()->getRenderHeight() + 50
+#define xpBarLength			898.f
 
 World* World::INSTANCE = 0;
 
@@ -25,6 +34,7 @@ void World::initialize()
 	TextureLoader::Inst()->load(UIpicFile, UIpic);
 	TextureLoader::Inst()->load(HealthBarFile, HealthBar);
 	TextureLoader::Inst()->load(ManaBarFile, ManaBar);
+	TextureLoader::Inst()->load(xpBarFile, xpBar);
 	TextureLoader::Inst()->load(InventoryGridFile, InventoryGrid);
 	TextureLoader::Inst()->load(InventoryGridMaskFile, InventoryGridMask);
 	TextureLoader::Inst()->load(InventoryCloseButtonFile, InventoryCloseButton);
@@ -42,6 +52,7 @@ void World::initialize()
 	///Load tiles
 	TextureLoader::Inst()->load(Tile01File, Tile01);
 	TextureLoader::Inst()->load(BrickFile, Brick);
+    TextureLoader::Inst()->load(HealingMagicSkillFile,HealingMagicSkill);
 	///Load sprites
 	TextureLoader::Inst()->load(WaterMushroomFrameFile, WaterMushroomFrame);
 	TextureLoader::Inst()->load(TestPortalFile, TestPortal);
@@ -91,13 +102,12 @@ void World::initialize()
 		changeMap(MapTest01, MAPCHANGE_LOAD);
 	///load UI
 	const Player* player = Camera::Inst()->getTarget();
-	Vector2D nameTextpos(20, Main::Inst()->getRenderHeight() + 10);
-	Vector2D healthNumTextpos(406, Main::Inst()->getRenderHeight() + 65);
-	Vector2D manaNumTextpos(406, Main::Inst()->getRenderHeight() + 117);
-	nameText = Textbox(nameTextpos, "", arial28_bold, { 255,255,255 }, -1);
-	healthNumText = Textbox(healthNumTextpos, "", arial28_bold, { 255,255,255 }, -1);
-	manaNumText = Textbox(manaNumTextpos, "", arial28_bold, { 255,255,255 }, -1);
-
+	Vector2D healthNumTextpos(HealthTextPos);
+	Vector2D manaNumTextpos(ManaTextPos);
+	Vector2D xpTextpos(xpTextPos);
+	healthNumText = Textbox(healthNumTextpos, "", segoeui18, COLOR_WHITE, -1);
+	manaNumText = Textbox(manaNumTextpos, "", segoeui18, COLOR_WHITE, -1);
+	xpNumText = Textbox(xpTextpos, "", segoeui18, COLOR_WHITE, -1);
 }
 
 void World::clearWorld()
@@ -149,17 +159,35 @@ void World::changeMap(int mapID, MapChangeType form)
 		///tiles
 		for (int i = 10; i < 20; i++)
 			getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 244));
+        
+        for (int i = 5; i < 20; i++)
+            getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 488));
+        
+        for (int i = 40; i < 50; i++)
+            getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 200));
+        
+        for (int i = 45; i < 52; i++)
+            getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 450));
+        
+        for (int i = 35; i < 42; i++)
+            getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 600));
+        
+        getLayer_tile().push_back(new Tile (HealingMagicSkill, 500, height - 500));
+
 		///sprites
 		getLayer_background().push_back(new Sprite(WaterMushroomFrame, 1000, height - 136));
 		getLayer_foreground().push_back(new Sprite(TestPortal, 1200, height - 105));
 		getLayer_foreground().push_back(new Sprite(LadderSprite, 19 * 47, height - 244));
+        getLayer_foreground().push_back(new Sprite(LadderSprite, 19 * 30, height - 488));
+        getLayer_foreground().push_back(new Sprite(LadderSprite, 19 * 120, height - 440));
+      
 		getLayer_foreground().push_back(new Sprite(MapGate, 0, height - 154));
-        getLayer_foreground().push_back(new Sprite(MapGate, 1000, height - 154));
 		///entities
 		getLayer_entity().push_back(new NPC(LeafNPC, 2000, height - 100));
 		getLayer_entity().push_back(new NPC(ShopNPC, 1600, height - 215));
 		getLayer_entity().push_back(new NPC(GhostNPC, 1400, height - 80));
 		getLayer_entity().push_back(new NPC(MapleFlagNPC, 800, height - 177));
+        getLayer_entity().push_back(new NPC(MapleFlagNPC, 300, height - 300));
 		getLayer_entity().push_back(new Hostile(BlackBlock, 0, 2500, height - 200));
 		///items
 		getLayer_entity().push_back(new Item(BowItem, 1, 1200, 0));
@@ -181,8 +209,16 @@ void World::changeMap(int mapID, MapChangeType form)
 			Camera::Inst()->getTarget_nonConst()->setPosition(width - 50, height - 100);
 			break;
 		}
+        ///tiles
+        for (int i = 10; i < 20; i++)
+            getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 244));
+        for (int i = 15; i < 30; i++)
+            getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 488));
+
 		///sprites
 		getLayer_foreground().push_back(new Sprite(MapGate2, width - 108, height - 154));
+        getLayer_foreground().push_back(new Sprite(LadderSprite, 19 * 47, height - 244));
+        getLayer_foreground().push_back(new Sprite(LadderSprite, 29 * 47, height - 488));
 		///entities
 		getLayer_entity().push_back(new NPC(SavePointNPC, 1600, height - 211));
 		///items
@@ -298,15 +334,16 @@ void World::RenderUI()
 	TextureLoader::Inst()->draw(UIpic, 0, Main::Inst()->getRenderHeight(), Main::Inst()->getRenderWidth(), UIHEIGHT);
 
 	const Player* player = Camera::Inst()->getTarget();
-	TextureLoader::Inst()->draw(HealthBar, 105, Main::Inst()->getRenderHeight() + 67, player->life * 292.0f / player->maxlife, 26);
-	TextureLoader::Inst()->draw(ManaBar, 105, Main::Inst()->getRenderHeight() + 117, player->mana * 292.0f / player->maxmana, 26);
+	TextureLoader::Inst()->drawEx2(HealthBar, HealthBarPos, 10, 10, player->life * HealthBarLength / player->maxlife, HealthBarHeight);
+	TextureLoader::Inst()->drawEx2(ManaBar, ManaBarPos, 10, 10, player->mana * HealthBarLength / player->maxmana, HealthBarHeight);
+	TextureLoader::Inst()->drawEx2(xpBar, xpBarPos, 10, 10, player->exp * xpBarLength / player->expToNextLevel, HealthBarHeight);
 
-	nameText.changeText(player->name);
-	nameText.draw();
 	healthNumText.changeText(to_string(player->life) + " / " + to_string(player->maxlife));
 	healthNumText.draw();
 	manaNumText.changeText(to_string(player->mana) + " / " + to_string(player->maxmana));
 	manaNumText.draw();
+	xpNumText.changeText(to_string(player->exp) + " / " + to_string(player->expToNextLevel));
+	xpNumText.draw();
 }
 
 void World::newProjectile(int id, Vector2D pos, float velocity_x, float velocity_y, Entity* owner, bool gravitational)

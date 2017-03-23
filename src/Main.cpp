@@ -417,6 +417,13 @@ void Main::changeMenu(int menuID)
 
 		menuButtons.push_back(new Button(BackButton));
 		break;
+	case MenuGameOver:
+		inGameMenu = true;
+		menuButtons.push_back(new Button(GameMenuBackground));
+		menuButtons.push_back(new Button(ExittoMainMenuButton));
+		menuButtons.push_back(new Button(ExittoDesktopButton));
+		menuButtons.push_back(new Button(GameOverText));
+		break;
 	}
 }
 

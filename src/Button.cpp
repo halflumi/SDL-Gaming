@@ -58,7 +58,7 @@
 #define GameResumeButtonPos				GAMEMENU_X,GAMEMENU_Y - 175
 #define GameExittoMenuButtonPos			GAMEMENU_X,GAMEMENU_Y - 125
 #define GameExittoDesktopButtonPos		GAMEMENU_X,GAMEMENU_Y - 75
-
+#define GameOverTextPos					(Main::Inst()->getWindowWidth() - width)/2, (Main::Inst()->getWindowHeight() - height)/2
 
 Button::Button(int id) : clickCooldown(true)
 {
@@ -146,17 +146,14 @@ void Button::Load()
 		buttonText = new Textbox(position, "", arial28_bold, COLOR_WHITE, -1);
 		switch (XmlParser::Inst()->window_w)
 		{
-		case 800:
+		case 1024:
 			flag = 0;
 			break;
-		case 1024:
+		case 1280:
 			flag = 1;
 			break;
-		case 1280:
-			flag = 2;
-			break;
 		case 1600:
-			flag = 3;
+			flag = 2;
 			break;
 		}
 		return;
@@ -437,6 +434,14 @@ void Button::Load()
 		buttonText = new Textbox(position, "Exit to Desktop", arial28_bold, COLOR_WHITE, -1);
 		return;
 	}
+	if (uniqueID == GameOverText)
+	{
+		buttonClass = ButtonTypeTextbox;
+		TTF_SizeText(Main::Inst()->getFont(arial72_bold), "GAME OVER", &width, &height);
+		position.set(GameOverTextPos);
+		buttonText = new Textbox(position, "GAME OVER", arial72_bold, COLOR_WHITE, -1);
+		return;
+	}
 	//ui
 	if (uniqueID == InventoryCloseButton)
 	{
@@ -490,17 +495,9 @@ void Button::update()
 		else
 			buttonText->changeColor(COLOR_WHITE);
 
-		switch (flag % 4)
+		switch (flag % 3)
 		{
 		case 0:
-			if (buttonText->changeText("800x600"))
-			{
-				TTF_SizeText(Main::Inst()->getFont(arial28_bold), "800x600", &width, &height);
-				XmlParser::Inst()->window_w = 800;
-				XmlParser::Inst()->window_h = 600;
-			}
-			break;
-		case 1:
 			if (buttonText->changeText("1024x768"))
 			{
 				TTF_SizeText(Main::Inst()->getFont(arial28_bold), "1024x768", &width, &height);
@@ -508,7 +505,7 @@ void Button::update()
 				XmlParser::Inst()->window_h = 768;
 			}
 			break;
-		case 2:
+		case 1:
 			if (buttonText->changeText("1280x720"))
 			{
 				TTF_SizeText(Main::Inst()->getFont(arial28_bold), "1280x720", &width, &height);
@@ -516,7 +513,7 @@ void Button::update()
 				XmlParser::Inst()->window_h = 720;
 			}
 			break;
-		case 3:
+		case 2:
 			if (buttonText->changeText("1600x900"))
 			{
 				TTF_SizeText(Main::Inst()->getFont(arial28_bold), "1600x900", &width, &height);
