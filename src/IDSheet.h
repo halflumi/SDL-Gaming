@@ -188,16 +188,12 @@ enum MapChangeType
 //Hostile 303
 #define BlackBlock						30310000
 #define BlackBlockFile					"..\\assets\\BlackBlock.png"
+#define DemonHostile					30310001
+#define DemonHostileFile				"..\\assets\\Demon.png"
 //Item 304
-#define WoodenSword						30410000
-#define WoodenSwordName					"Wooden Sword"
-#define WoodenSwordFile					"..\\assets\\WoodenSword.png"
-#define OrichalcumShortsword			30410001
-#define OrichalcumShortswordName		"Orichalcum Shortsword"
-#define OrichalcumShortswordFile		"..\\assets\\OrichalcumShortsword.png"
-#define BowItem							30410002
-#define BowItemName						"Bow"
-#define BowItemFile						"..\\assets\\bow_standby_item.png"
+#define IronDartItem					30410000
+#define IronDartItemName				"Iron Dart"
+#define IronDartItemFile				"..\\assets\\items\\IronDartItem.png"
 //NPC 305
 #define LeafNPC							30510000
 #define LeafNPCFile						"..\\assets\\LeafNPC.png"
@@ -288,3 +284,7 @@ enum MapChangeType
 #define HealingMagicSoundFile		"..\\sounds\\0001004.Use.mp3"
 #define SpeedBuffSound				40210016
 #define SpeedBuffSoundFile			"..\\sounds\\0001004.Use.mp3"
+#define DemonDamageSound			40210017
+#define DemonDamageSoundFile		"..\\sounds\\DemonDamage.wav"
+#define DemonDeathSound				40210018
+#define DemonDeathSoundFile			"..\\sounds\\DemonDie.wav"

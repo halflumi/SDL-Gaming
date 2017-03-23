@@ -121,3 +121,20 @@ void TextureLoader::drawFrameEx(int id, int x, int y, int src_width, int src_hei
 	SDL_SetTextureAlphaMod(textureMap[id], alpha);
 	SDL_RenderCopyEx(Main::Inst()->getRenderer(), textureMap[id], &srcRect, &destRect, angle, NULL, flip);
 }
+
+void TextureLoader::drawFrameSp(int id, int x, int y, int width, int height, int currentRow, int currentFrame, double angle, int alpha, SDL_Color color, SDL_RendererFlip flip)
+{
+	SDL_Rect srcRect;
+	SDL_Rect destRect;
+
+	srcRect.x = width * currentFrame;
+	srcRect.y = height * currentRow;
+	srcRect.w = destRect.w = width;
+	srcRect.h = destRect.h = height;
+	destRect.x = x;
+	destRect.y = y;
+
+	SDL_SetTextureColorMod(textureMap[id], color.r, color.g, color.b);
+	SDL_SetTextureAlphaMod(textureMap[id], alpha);
+	SDL_RenderCopyEx(Main::Inst()->getRenderer(), textureMap[id], &srcRect, &destRect, angle, NULL, flip);
+}

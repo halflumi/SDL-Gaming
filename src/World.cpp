@@ -66,15 +66,14 @@ void World::initialize()
 	TextureLoader::Inst()->load(SavePointNPCFile, SavePointNPC);
 	TextureLoader::Inst()->load(ShopNPCFile, ShopNPC);
 	TextureLoader::Inst()->load(BlackBlockFile, BlackBlock);
+	TextureLoader::Inst()->load(DemonHostileFile, DemonHostile);
 	///Load Projectiles
 	TextureLoader::Inst()->load(IchorKnifeProjectileFile, IchorKnifeProjectile);
 	TextureLoader::Inst()->load(OrichalcumShortswordProjectileFile, OrichalcumShortswordProjectile);
 	TextureLoader::Inst()->load(PurificationBulletProjectileFile, PurificationBulletProjectile);
 	TextureLoader::Inst()->load(ChlorophyteTrackerProjectileFile, ChlorophyteTrackerProjectile);
 	///Load Items
-	TextureLoader::Inst()->load(WoodenSwordFile, WoodenSword);
-	TextureLoader::Inst()->load(OrichalcumShortswordFile, OrichalcumShortsword);
-	TextureLoader::Inst()->load(BowItemFile, BowItem);
+	TextureLoader::Inst()->load(IronDartItemFile, IronDartItem);
 	///Load sounds
 	SoundLoader::Inst()->load(WalkOnSnow1File, WalkOnSnow1, SOUND_SFX);
 	SoundLoader::Inst()->load(WalkOnSnow2File, WalkOnSnow2, SOUND_SFX);
@@ -84,6 +83,8 @@ void World::initialize()
 	SoundLoader::Inst()->load(CollisionSouldFile, CollisionSound, SOUND_SFX);
 	SoundLoader::Inst()->load(DamageSoundFile, DamageSound, SOUND_SFX);
 	SoundLoader::Inst()->load(DeathSoundFile, DeathSound, SOUND_SFX);
+	SoundLoader::Inst()->load(DemonDamageSoundFile, DemonDamageSound, SOUND_SFX);
+	SoundLoader::Inst()->load(DemonDeathSoundFile, DemonDeathSound, SOUND_SFX);
 	SoundLoader::Inst()->load(PortalNoiseFile, PortalNoise, SOUND_SFX);
 	SoundLoader::Inst()->load(PickupSoundFile, PickupSound, SOUND_SFX);
 	SoundLoader::Inst()->load(LevelupSoundFile, LevelupSound, SOUND_SFX);
@@ -169,8 +170,8 @@ void World::changeMap(int mapID, MapChangeType form)
 		getLayer_entity().push_back(new NPC(GhostNPC, 1400, height - 80));
 		getLayer_entity().push_back(new NPC(MapleFlagNPC, 800, height - 177));
 		getLayer_entity().push_back(new Hostile(BlackBlock, 0, 2500, height - 200));
+		getLayer_entity().push_back(new Hostile(DemonHostile, 0, 2700, height - 200));
 		///items
-		getLayer_entity().push_back(new Item(BowItem, 1, 1200, 0));
 		return;
 	}
 	if (mapID == MapTest02)
@@ -194,7 +195,6 @@ void World::changeMap(int mapID, MapChangeType form)
 		///entities
 		getLayer_entity().push_back(new NPC(SavePointNPC, 1600, height - 211));
 		///items
-		getLayer_entity().push_back(new Item(OrichalcumShortsword, 1, 1200, 0));
 	}
 }
 

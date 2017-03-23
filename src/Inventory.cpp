@@ -46,35 +46,15 @@ void InventoryItem::Load()
 	minATT = 0;
 	maxATT = 0;
 	defense = 0;
-	if (uniqueID == WoodenSword)
+	if (uniqueID == IronDartItem)
 	{
-		name = WoodenSwordName;
+		name = IronDartItemName;
 		itemClass = ItemClassWeapon;
 
-		width = 40;
-		height = 40;
-		minATT = -10;
+		width = 276;
+		height = 276;
+		minATT = 1;
 		maxATT = 10;
-	}
-	if (uniqueID == OrichalcumShortsword)
-	{
-		name = OrichalcumShortswordName;
-		itemClass = ItemClassWeapon;
-
-		width = 38;
-		height = 38;
-		minATT = 10;
-		maxATT = 20;
-	}
-	if (uniqueID == BowItem)
-	{
-		name = BowItemName;
-		itemClass = ItemClassWeapon;
-
-		width = 33;
-		height = 33;
-		minATT = 10;
-		maxATT = 20;
 	}
 
 	InitItemInfo();
