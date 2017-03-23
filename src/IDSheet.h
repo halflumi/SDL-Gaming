@@ -194,6 +194,10 @@ enum MapChangeType
 #define MapGate2File "../assets/MapGate2.png"
 #define TestPortal 30810004
 #define TestPortalFile "../assets/TestPortal.png"
+#define Flock 30810005
+#define FlockFile "../assets/Flock.png"
+#define HalfLadder 30810006
+#define HalfLadderFile "../assets/LadderSprite.png"
 //Tile 309
 #define Brick 30910000
 #define BrickFile "../assets/Brick.png"

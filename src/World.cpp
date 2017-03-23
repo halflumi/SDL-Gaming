@@ -38,9 +38,11 @@ void World::initialize()
 	TextureLoader::Inst()->load(Tile01File, Tile01);
 	TextureLoader::Inst()->load(BrickFile, Brick);
 	///Load sprites
+	TextureLoader::Inst()->load(FlockFile, Flock);
 	TextureLoader::Inst()->load(WaterMushroomFrameFile, WaterMushroomFrame);
 	TextureLoader::Inst()->load(TestPortalFile, TestPortal);
 	TextureLoader::Inst()->load(LadderSpriteFile, LadderSprite);
+	TextureLoader::Inst()->load(LadderSpriteFile, HalfLadder);
 	TextureLoader::Inst()->load(MapGateFile, MapGate);
 	TextureLoader::Inst()->load(MapGate2File, MapGate2);
 	///Load entities
@@ -140,11 +142,26 @@ void World::changeMap(int mapID, MapChangeType form)
 		///tiles
 		for (int i = 10; i < 20; i++)
 			getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 244));
+		for (int i = 10; i < 14; i++)
+			getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 244 * 2));
+		for (int i = 17; i < 19; i++)
+			getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 244 * 2.3));
+		for (int i = 22; i < 28; i++)
+			getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 244 * 2));
+		for (int i = 30; i < 60; i += rand() % 7)
+			getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 244 * 2));
+		for (int i = 60; i < 65; i++)
+			getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 244 * 2.2));
+		for (int i = 63; i < 65; i++)
+			getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 244 * 3.2));
 		///sprites
 		getLayer_background().push_back(new Sprite(WaterMushroomFrame, 1000, height - 136));
 		getLayer_foreground().push_back(new Sprite(TestPortal, 1200, height - 105));
 		getLayer_foreground().push_back(new Sprite(LadderSprite, 19 * 47, height - 244));
+		getLayer_foreground().push_back(new Sprite(LadderSprite, 10 * 47, height - 244 * 2));
+		getLayer_foreground().push_back(new Sprite(LadderSprite, 64 * 47, height - 244 * 3.2));
 		getLayer_foreground().push_back(new Sprite(MapGate, 0, height - 154));
+		//getLayer_foreground().push_back(new Sprite(Flock, 500, height - 154));
 		///entities
 		getLayer_entity().push_back(new NPC(LeafNPC, 2000, height - 100));
 		getLayer_entity().push_back(new NPC(GhostNPC, 1400, height - 80));
