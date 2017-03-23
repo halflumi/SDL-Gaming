@@ -10,6 +10,9 @@
 #include "MyTimer.h"
 #include "Projectile.h"
 
+#define PLAYERWIDTH 50
+#define PLAYERHEIGHT 100
+
 class Player : public Entity
 {
 private:
@@ -39,15 +42,18 @@ private:
 	void updateAttributes();
 
 	void HandleInput();
+	void HandlePlayerPhysics( );
 	void HandleMovement();
 	void HandleDisplay();
 	void Attacking();
 
-	bool CheckCollision_tileX(float x);
-	bool CheckCollision_tileY(float y);
+
+	bool CheckCollision_tileX(float& x);
+	bool CheckCollision_tileY(float& y);
 	void CheckCollision_hostile(Vector2D newpos);
 	void CheckInteractive();
-	void DoInteractive(int id);
+
+	void DoInteractive(Object*);
 	void CheckPickup();
 	void HitGround();
 public:
