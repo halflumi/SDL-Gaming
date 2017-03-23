@@ -154,6 +154,7 @@ void World::changeMap(int mapID, MapChangeType form)
 		getLayer_foreground().push_back(new Sprite(TestPortal, 1200, height - 105));
 		getLayer_foreground().push_back(new Sprite(LadderSprite, 19 * 47, height - 244));
 		getLayer_foreground().push_back(new Sprite(MapGate, 0, height - 154));
+        getLayer_foreground().push_back(new Sprite(MapGate, 1000, height - 154));
 		///entities
 		getLayer_entity().push_back(new NPC(LeafNPC, 2000, height - 100));
 		getLayer_entity().push_back(new NPC(ShopNPC, 1600, height - 215));

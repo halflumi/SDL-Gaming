@@ -25,7 +25,6 @@ private:
 	static World* INSTANCE;
 	World() : newGame(false) {};
 	World(const World&);
-	World& operator=(const World&) {};
 
 	bool newGame;
 	int backgroundID;
