@@ -7,9 +7,8 @@
 #include "Inputor.h"
 #include "Dice.h"
 
-Hostile::Hostile(int id, int _worldID, int x, int y)
+Hostile::Hostile(int id, int _worldID, int x, int y) : timer(true)
 {
-	timer = new MyTimer();
 	position.x = x;
 	position.y = y;
 	uniqueID = id;
@@ -44,7 +43,16 @@ void Hostile::update()
 	{
 		if (life <= 0)
 			kill();
-		currentFrame = int(((SDL_GetTicks() / animatedSpeed) % numFrames));
+		if (damageTick)
+		{
+			damageTick--;
+			currentFrame = 0;
+		}
+		else
+		{
+			currentRow = 0;
+			currentFrame = int((timer.getTicks() / animatedSpeed) % numFrames);
+		}
 	}
 	else
 	{
@@ -53,7 +61,7 @@ void Hostile::update()
 			dead = true;
 			return;
 		}
-		currentFrame = int(((timer->getTicks() / animatedSpeed) % numFrames));
+		currentFrame = int((timer.getTicks() / animatedSpeed) % numFrames);
 	}
 }
 
@@ -68,12 +76,12 @@ void Hostile::draw()
 void Hostile::kill()
 {
 	active = false;
-	timer->start();
+	timer.start();
 	if (uniqueID == BlackBlock)
 	{
 		SoundLoader::Inst()->playSound(DeathSound);
 		currentFrame = 0;
-		currentRow = 1;
+		currentRow = 2;
 		numFrames = 11;
 
 		Camera::Inst()->getTarget_nonConst()->exp += exp; //************xp should not be distributed globally
@@ -88,24 +96,26 @@ void Hostile::onHit(int damage, int critChance)
 	if (Dice::Inst()->rand(100) < critChance)
 	{
 		actualDamage = 2 * (damage - defense);
+		//minimum damage protect
 		if (actualDamage < 2)
 			actualDamage = 2;
 		life -= actualDamage;
 
-		angle += 45;
 		Vector2D textShift(entityCenter.x + Dice::Inst()->randInverse(20), position.y + Dice::Inst()->randInverse(20));
 		World::Inst()->createText(textShift, 0, -0.1f, to_string(actualDamage) + "!", segoeui28, COLOR_RED, 60);
 	}
 	else
 	{
 		actualDamage = damage - defense;
+		//minimum damage protect
 		if (actualDamage < 1)
 			actualDamage = 1;
 		life -= actualDamage;
 
-		angle += 45;
 		Vector2D textShift(entityCenter.x + Dice::Inst()->randInverse(20), position.y + Dice::Inst()->randInverse(20));
 		World::Inst()->createText(textShift, 0, -0.1f, to_string(actualDamage), segoeui22, COLOR_GREEN, 60);
 	}
 	SoundLoader::Inst()->playSound(DamageSound);
+	currentRow = 1;
+	damageTick = 30;
 }

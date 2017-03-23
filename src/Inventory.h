@@ -21,13 +21,13 @@ private:
 	void RenderItemInfo();
 	bool CheckMouseOver_slot();
 public:
-	Textbox stackNumText;
+	Textbox* stackNumText;
 	vector<Textbox*> itemInfoTexts;
+	bool stackable;
 	int stack;
 	int maxStack;
 
 	int itemClass;
-	int index;
 	bool beingPicked;
 	Vector2D slotpos;
 
@@ -35,9 +35,9 @@ public:
 	int maxATT;
 	int defense;
 
-	InventoryItem(int id, int index, int stack);
-	~InventoryItem() { delete selectCooldown; }
-	void init(int id, int _index, int stack);
+	InventoryItem(int id, int stack);
+	~InventoryItem() { delete selectCooldown; delete stackNumText; }
+	void init(int id, int stack);
 
 	int type() { return TypeInventoryItem; }
 	void update();
@@ -49,7 +49,6 @@ public:
 class Inventory : public Object
 {
 private:
-	vector<InventoryItem*> items;
 	int inventorySize;
 
 	Button closeButton;
@@ -57,10 +56,10 @@ private:
 
 	void Load();
 public:
+	vector<InventoryItem*> items;
+
 	Inventory();
 	~Inventory() { items.clear(); }
-	
-	const InventoryItem* getItem(int i) const { return items[i]; };
 
 	int type() { return TypeInventory; }
 	void update();
@@ -68,7 +67,7 @@ public:
 
 	bool outsideCheckMouseOver();
 	bool outsideCheckMouseTitle();
-	bool addItem(int itemID, int stack, int maxStack, int width, int height);
+	bool addItem(int itemID, int stack);
 	bool addItem(Item* item);
 	void rearrangeItems();
 };

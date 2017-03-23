@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include <iostream>
+#include <vector>
 #include "tinyxml2.h"
 #include "IDSheet.h"
 
@@ -33,7 +34,9 @@ public:
 	SDL_Scancode key_skillHotkey1 = SDL_SCANCODE_F;
 	SDL_Scancode key_skillHotkey2 = SDL_SCANCODE_G;
 	SDL_Scancode key_skillHotkey3 = SDL_SCANCODE_H;
-
+	SDL_Scancode key_skillHotkey4 = SDL_SCANCODE_F;
+	SDL_Scancode key_skillHotkey5 = SDL_SCANCODE_G;
+	SDL_Scancode key_skillHotkey6 = SDL_SCANCODE_H;
 
 
 	int mapID = MapTest01;
@@ -41,6 +44,7 @@ public:
 	int xp = 0;
 	int life = 100;
 	int mana = 30;
+	vector<int> inventory;
 
 	static XmlParser* Inst()
 	{

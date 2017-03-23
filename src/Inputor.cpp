@@ -58,10 +58,10 @@ void Inputor::OnKeyUp()
 
 void Inputor::OnMouseMove(SDL_Event &event)
 {
-	mousePosition_old->x = mousePosition->x;
-	mousePosition_old->y = mousePosition->y;
-	mousePosition->x = event.motion.x;
-	mousePosition->y = event.motion.y;
+	mousePosition_old.x = mousePosition.x;
+	mousePosition_old.y = mousePosition.y;
+	mousePosition.x = event.motion.x;
+	mousePosition.y = event.motion.y;
 }
 
 void Inputor::OnMouseButtonDown(SDL_Event &event)
@@ -107,12 +107,12 @@ void Inputor::resetMouseState()
 	mousestates[MOUSE_RIGHT] = false;
 }
 
-Vector2D* Inputor::getMouseDefinitePosition() const
+Vector2D Inputor::getMouseDefinitePosition() const
 {
-	return new Vector2D(mousePosition->x + Camera::Inst()->getPosition().x - Main::Inst()->getRenderWidth() / 2, mousePosition->y + Camera::Inst()->getPosition().y - Main::Inst()->getRenderHeight() / 2);
+	return Vector2D(mousePosition.x + Camera::Inst()->getPosition().x - Main::Inst()->getRenderWidth() / 2, mousePosition.y + Camera::Inst()->getPosition().y - Main::Inst()->getRenderHeight() / 2);
 }
 
-Vector2D* Inputor::getMouseMotionVector()
+Vector2D Inputor::getMouseMotionVector()
 {
-	return new Vector2D(mousePosition->x - mousePosition_old->x, mousePosition->y - mousePosition_old->y);
+	return Vector2D(mousePosition.x - mousePosition_old.x, mousePosition.y - mousePosition_old.y);
 }

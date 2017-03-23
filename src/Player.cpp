@@ -98,8 +98,8 @@ void Player::update()
 		if (!inventory->active)
 		{
 			selectingItem->beingPicked = false;
-			if (selectingItem->index == -1)
-				inventory->addItem(selectingItem->getUniqueID(), selectingItem->getWidth(), selectingItem->getHeight(), selectingItem->stack, selectingItem->maxStack);
+			if (selectingItem->itemClass == -1)
+				inventory->addItem(selectingItem->getUniqueID(), selectingItem->stack);
 			selectingItem = NULL;
 		}
 		else
@@ -112,19 +112,26 @@ void Player::update()
 
 void Player::draw()
 {
+	///draw player
 	TextureLoader::Inst()->drawFrame(uniqueID, display_pos.x, display_pos.y, width, height, currentRow, currentFrame, angle, alpha);
-
+	
+	///draw melee
 	if (meleeProjectile != NULL && meleeProjectile->active)
 		meleeProjectile->draw();
-
+	///draw dialog
 	if (dialog != NULL)
 		dialog->draw();
+	///draw character panel
 	if (characterPanel->active)
 		characterPanel->draw();
+	///draw skill panel and skill hotkeys
 	if (skillPanel->active)
 		skillPanel->draw();
+	skillPanel->outsideDrawHotkeys();
+	///draw inventory
 	if (inventory->active)
 		inventory->draw();
+	///draw selecting item
 	if (selectingItem != NULL)
 		selectingItem->draw();
 }
@@ -155,6 +162,8 @@ void Player::updateAttributes()
 		maxATT = baseATT + 5 + rightHand_equ->maxATT;
 	}
 	defense = baseDEF;
+	///skill cooldown
+	skillPanel->outsideUpdateSkills();
 	///attack speed
 	if (attackTick)
 	{
@@ -318,7 +327,9 @@ void Player::HandleInput()
 	{
 		if (Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && skillPanel->outsideCheckMouseTitle())
 		{
-			skillPanel->addPosition(Inputor::Inst()->getMouseMotionVector()); // **********motion is too sensitive
+			Vector2D motion = Inputor::Inst()->getMouseMotionVector();
+			if(motion.length() > 1.5)
+				skillPanel->addPosition(Inputor::Inst()->getMouseMotionVector()); // **********motion is too sensitive
 		}
 	}
 	else if (characterPanel->active && characterPanel->outsideCheckMouseOver())
@@ -337,15 +348,15 @@ void Player::HandleInput()
 	}
 	else if (selectingItem != NULL && Inputor::Inst()->getMouseButtonState(MOUSE_LEFT))
 	{
-		Vector2D* mousepos = Inputor::Inst()->getMouseDefinitePosition();
-		Vector2D direction = *mousepos - entityCenter;
+		Vector2D mousepos = Inputor::Inst()->getMouseDefinitePosition();
+		Vector2D direction = mousepos - entityCenter;
 		direction.normalize();
 		direction.x *= 4;
 		direction.y *= 10;
 		World::Inst()->newItem(selectingItem->getUniqueID(), selectingItem->stack, entityCenter.x, entityCenter.y, direction.x, direction.y);
 		selectingItem->active = false;
 		selectingItem->beingPicked = false;
-		if (selectingItem->index == -1)
+		if (selectingItem->itemClass == -1)
 			delete selectingItem;
 
 		selectingItem = NULL;
@@ -360,29 +371,19 @@ void Player::HandleInput()
 		}
 		if (!attackTick && mana > 0 && Inputor::Inst()->getMouseButtonState(MOUSE_RIGHT))
 		{
-			attackTick = 1;
-			mana -= 3;
-			Vector2D* mousepos = Inputor::Inst()->getMouseDefinitePosition();
-			Vector2D direction = *mousepos - entityCenter;
-			direction.normalize();
-			direction.x *= 10;
-			direction.y *= 5;
-			for (int i = 0; i < 10; i++)
-			{
-				Vector2D randpos(entityCenter.x + Dice::Inst()->rand(80), entityCenter.y + Dice::Inst()->randInverse(80));
-				World::Inst()->newProjectile(IchorKnifeProjectile, randpos, direction.x, direction.y, this);
-				SoundLoader::Inst()->playSound(AttackSound);
-
-				life--;
-			}
+			//right mouse function remains empty for now----------------------------------------------------
 		}
 	}
 
 	if (Inputor::Inst()->isKeyDown(XmlParser::Inst()->key_skillHotkey1) && keyCooldown.getTicks() > PRESSCOOLDOWN)
-	{
-		heal(10);
-		SoundLoader::Inst()->playSound(HealingMagicSound);
-	}
+		if(skillPanel->hotkeySkillIndexes[0] != -1)
+			skillPanel->skills[skillPanel->hotkeySkillIndexes[0]]->castSkill();
+	if (Inputor::Inst()->isKeyDown(XmlParser::Inst()->key_skillHotkey2) && keyCooldown.getTicks() > PRESSCOOLDOWN)
+		if (skillPanel->hotkeySkillIndexes[1] != -1)
+			skillPanel->skills[skillPanel->hotkeySkillIndexes[1]]->castSkill();
+	if (Inputor::Inst()->isKeyDown(XmlParser::Inst()->key_skillHotkey3) && keyCooldown.getTicks() > PRESSCOOLDOWN)
+		if (skillPanel->hotkeySkillIndexes[2] != -1)
+			skillPanel->skills[skillPanel->hotkeySkillIndexes[2]]->castSkill();
 }
 
 void Player::Attacking()
@@ -390,12 +391,12 @@ void Player::Attacking()
 	if (rightHand_equ == NULL || !rightHand_equ->active)
 	{
 		attackTick = 1;
-		Vector2D* mousepos = Inputor::Inst()->getMouseDefinitePosition();
-		Vector2D direction = *mousepos - entityCenter;
+		Vector2D mousepos = Inputor::Inst()->getMouseDefinitePosition();
+		Vector2D direction = mousepos - entityCenter;
 		direction.normalize();
 		direction.x *= 10;
 		direction.y *= 5;
-		World::Inst()->newProjectile(IchorKnifeProjectile, entityCenter, direction.x, direction.y, this);
+		World::Inst()->newProjectile(ChlorophyteTrackerProjectile, entityCenter, direction.x, direction.y, this);
 		SoundLoader::Inst()->playSound(AttackSound);
 
 		life--;
@@ -405,8 +406,8 @@ void Player::Attacking()
 	else if (rightHand_equ->getUniqueID() == OrichalcumShortsword)
 	{
 		attackTick = 1;
-		Vector2D* mousepos = Inputor::Inst()->getMouseDefinitePosition();
-		Vector2D direction = *mousepos - entityCenter;
+		Vector2D mousepos = Inputor::Inst()->getMouseDefinitePosition();
+		Vector2D direction = mousepos - entityCenter;
 		
 		if (meleeProjectile != NULL)
 			delete meleeProjectile;
@@ -422,21 +423,6 @@ void Player::Attacking()
 		}
 			
 		SoundLoader::Inst()->playSound(AttackSound);
-	}
-	else
-	{
-		attackTick = 1;
-		Vector2D* mousepos = Inputor::Inst()->getMouseDefinitePosition();
-		Vector2D direction = *mousepos - entityCenter;
-		direction.normalize();
-		direction.x *= 10;
-		direction.y *= 5;
-		World::Inst()->newProjectile(IchorKnifeProjectile, entityCenter, direction.x, direction.y, this);
-		SoundLoader::Inst()->playSound(AttackSound);
-
-		life--;
-		Vector2D textShift(position.x + width / 2 + Dice::Inst()->randInverse(20), position.y + Dice::Inst()->randInverse(20));
-		World::Inst()->createText(textShift, 0.f, -0.5f, "-1s", segoeui22, COLOR_RED, 120);
 	}
 }
 

@@ -1,51 +1,66 @@
 #pragma once
+#include <vector>
 #include "Object.h"
 #include "Button.h"
 #include "Textbox.h"
+#include "Skill.h"
 
-//class SkillSlot : public Object
-//{
-//private:
-//	bool mouseAbove;
-//	MyTimer* selectCooldown;
-//
-//	void Load();
-//	void InitItemInfo();
-//	void UpdateItemInfo();
-//	void RenderItemInfo();
-//	bool CheckMouseOver_slot();
-//public:
-//	Textbox stackNumText;
-//	vector<Textbox*> itemInfoTexts;
-//	int stack;
-//	int maxStack;
-//
-//	int itemClass;
-//	int index;
-//	bool beingPicked;
-//	Vector2D slotpos;
-//
-//	int minATT;
-//	int maxATT;
-//	int defense;
-//
-//	SkillSlot(int index);
-//	SkillSlot(int id, int index, int stack);
-//	~SkillSlot() { delete selectCooldown; }
-//	void init(int id, int _index, int stack);
-//
-//	int type() { return TypeSkillSlot; }
-//	void update();
-//	void draw();
-//};
+using namespace std;
+
+class SkillSlot : public Object
+{
+private:
+	vector<Textbox*> skillInfoTexts;
+	Textbox* levelNumText;
+	bool mouseAbove;
+
+	void Load();
+	void InitSkillInfo();
+public:
+	Skill* skill;
+
+	int skillIndex;
+
+	SkillSlot(int skillID, Skill* skill);
+	~SkillSlot() { delete levelNumText; }
+	void refresh();
+
+	int type() { return TypeSkillSlot; }
+	void update();
+	void draw();
+
+	bool checkMouseOver();
+	void updateSkillInfo(Vector2D pos);
+	void renderSkillInfo();
+};
 
 class SkillPanel : public Object
 {
+	enum HotkeyIndex
+	{
+		hotkey1,
+		hotkey2,
+		hotkey3,
+		hotkey4,
+		hotkey5,
+		hotkey6,
+	};
 private:
+	MyTimer selectCooldown;
+	int selectedSkillIndex;
 	Button closeButton;
+	Textbox* skillPointsText;
 
 	void Load();
+
+	void UpdateSkillButtons();
+	void UpdateSkillSlots();
 public:
+	vector<Skill*> skills;
+	vector<Button*> skillButtons;
+	vector<SkillSlot*> skillslots;
+	vector<int>	hotkeySkillIndexes;
+	int skillPoints;
 	SkillPanel();
 
 	int type() { return TypeSkillPanel; }
@@ -54,4 +69,7 @@ public:
 
 	bool outsideCheckMouseOver();
 	bool outsideCheckMouseTitle();
+
+	void outsideUpdateSkills();
+	void outsideDrawHotkeys();
 };

@@ -15,15 +15,15 @@ enum mouse_buttons
 class Inputor
 {
 private:
-	Inputor() : keystates(0), mousestates(3), mousePosition_old(new Vector2D(0, 0)),mousePosition(new Vector2D(0,0)) {}
-	~Inputor() { delete mousePosition_old; delete mousePosition; }
+	Inputor() : keystates(0), mousestates(3), mousePosition_old(0, 0),mousePosition(0,0) {}
+	~Inputor() { }
 	Inputor(const Inputor&);
 	static Inputor* INSTANCE;
 
 	const Uint8* keystates;
     vector<bool> mousestates;
-	Vector2D* mousePosition_old;
-	Vector2D* mousePosition;
+	Vector2D mousePosition_old;
+	Vector2D mousePosition;
 
 	void OnKeyDown();
 	void OnKeyUp();
@@ -47,7 +47,7 @@ public:
 	bool isKeyDown(SDL_Scancode key) const;
 	void resetMouseState();
 	bool getMouseButtonState(int buttonNumber) const { return mousestates[buttonNumber]; }
-	Vector2D* getMouseRelativePosition() const { return mousePosition; }
-	Vector2D* getMouseDefinitePosition() const;
-	Vector2D* getMouseMotionVector();
+	Vector2D getMouseRelativePosition() const { return mousePosition; }
+	Vector2D getMouseDefinitePosition() const;
+	Vector2D getMouseMotionVector();
 };
