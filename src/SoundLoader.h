@@ -20,6 +20,7 @@ private:
 	SoundLoader() {};
 	~SoundLoader();
 	SoundLoader(const SoundLoader&);
+	SoundLoader& operator=(const SoundLoader&) {};
 
 	unordered_map<int, Mix_Chunk*> sfxs;
 	unordered_map<int, Mix_Music*> musics;

@@ -34,6 +34,11 @@ void World::initialize()
 	TextureLoader::Inst()->load(DialogBackgroundFile, DialogBackground);
 	TextureLoader::Inst()->load(MessageboxMaskFile, MessageboxMask);
 	TextureLoader::Inst()->load(InventoryArrangeButtonFile, InventoryArrangeButton);
+	TextureLoader::Inst()->load(SkillPanelAddSkillButtonFile, SkillPanelAddSkillButton);
+	TextureLoader::Inst()->load(SkillPanelMinusSkillButtonFile, SkillPanelMinusSkillButton);
+	///Load skill icons
+	TextureLoader::Inst()->load(HealingMagicSkillIconFile, HealingMagicSkillIcon);
+	TextureLoader::Inst()->load(IchorKnifeSkillIconFile, IchorKnifeSkillIcon);
 	///Load tiles
 	TextureLoader::Inst()->load(Tile01File, Tile01);
 	TextureLoader::Inst()->load(BrickFile, Brick);
@@ -49,13 +54,17 @@ void World::initialize()
 	TextureLoader::Inst()->load(GhostNPCFile, GhostNPC);
 	TextureLoader::Inst()->load(MapleFlagNPCFile, MapleFlagNPC);
 	TextureLoader::Inst()->load(SavePointNPCFile, SavePointNPC);
+	TextureLoader::Inst()->load(ShopNPCFile, ShopNPC);
 	TextureLoader::Inst()->load(BlackBlockFile, BlackBlock);
 	///Load Projectiles
 	TextureLoader::Inst()->load(IchorKnifeProjectileFile, IchorKnifeProjectile);
 	TextureLoader::Inst()->load(OrichalcumShortswordProjectileFile, OrichalcumShortswordProjectile);
+	TextureLoader::Inst()->load(PurificationBulletProjectileFile, PurificationBulletProjectile);
+	TextureLoader::Inst()->load(ChlorophyteTrackerProjectileFile, ChlorophyteTrackerProjectile);
 	///Load Items
 	TextureLoader::Inst()->load(WoodenSwordFile, WoodenSword);
 	TextureLoader::Inst()->load(OrichalcumShortswordFile, OrichalcumShortsword);
+	TextureLoader::Inst()->load(BowItemFile, BowItem);
 	///Load sounds
 	SoundLoader::Inst()->load(WalkOnSnow1File, WalkOnSnow1, SOUND_SFX);
 	SoundLoader::Inst()->load(WalkOnSnow2File, WalkOnSnow2, SOUND_SFX);
@@ -147,9 +156,12 @@ void World::changeMap(int mapID, MapChangeType form)
 		getLayer_foreground().push_back(new Sprite(MapGate, 0, height - 154));
 		///entities
 		getLayer_entity().push_back(new NPC(LeafNPC, 2000, height - 100));
+		getLayer_entity().push_back(new NPC(ShopNPC, 1600, height - 215));
 		getLayer_entity().push_back(new NPC(GhostNPC, 1400, height - 80));
 		getLayer_entity().push_back(new NPC(MapleFlagNPC, 800, height - 177));
 		getLayer_entity().push_back(new Hostile(BlackBlock, 0, 2500, height - 200));
+		///items
+		getLayer_entity().push_back(new Item(BowItem, 1, 1200, 0));
 		return;
 	}
 	if (mapID == MapTest02)

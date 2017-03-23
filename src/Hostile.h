@@ -6,12 +6,13 @@
 class Hostile : public Entity
 {
 private:
-	MyTimer* timer;
+	MyTimer timer;
+	bool beingHit;
+	int damageTick;
 
 	void Load();
 public:
 	Hostile(int id, int worldID, int x, int y);
-	~Hostile() { delete timer; }
 
 	int type() { return TypeHostile; }
 	void update();

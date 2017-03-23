@@ -6,7 +6,7 @@
 
 XmlParser* XmlParser::INSTANCE = 0;
 
-XmlParser::XmlParser()
+XmlParser::XmlParser() : inventory(INVENTORYSIZE * 2, NULL)
 {
 
 }
@@ -174,7 +174,6 @@ void XmlParser::load()
 		error = element->QueryIntText((SDL_Keycode*)&key_skillHotkey3);
 	if (error != XML_SUCCESS)
 		cout << "XML_ERROR passing key_skillHotkey3 value to the variable." << endl;
-
 }
 
 void XmlParser::save()
@@ -270,6 +269,8 @@ void XmlParser::loadCharacter()
 	XMLError error;
 	XMLNode* node;
 	XMLElement* element;
+	XMLElement* listElement;
+	int i;
 
 	error = xmlFile.LoadFile(SavedataFile);
 	if (error != XML_SUCCESS)
@@ -324,6 +325,21 @@ void XmlParser::loadCharacter()
 		error = element->QueryIntText(&mana);
 	if (error != XML_SUCCESS)
 		cout << "XML_ERROR passing mana value to the variable." << endl;
+	///inventory
+	element = node->FirstChildElement("inventory");
+	if (element == nullptr)
+		cout << "XML_ERROR getting inventory element from the node." << endl;
+	listElement = element->FirstChildElement("item");
+	cout << inventory.size() << endl;
+	for (i = 0; i < INVENTORYSIZE * 2; i++)
+	{
+		int temp;
+		error = listElement->QueryIntText(&temp);
+		if (error != XML_SUCCESS)
+			cout << "XML_ERROR passing inventory item value to the variable." << endl;
+		inventory[i] = temp;
+		listElement = listElement->NextSiblingElement("item");
+	}
 }
 
 void XmlParser::saveCharacter()
@@ -338,7 +354,7 @@ void XmlParser::saveCharacter()
 	const Player* player = Camera::Inst()->getTarget();
 	///mapID
 	element = xmlFile.NewElement("mapID");
-	element->SetText(World::Inst()->currentMapID);
+	element->SetText(mapID);
 	node->InsertEndChild(element);
 	///level
 	element = xmlFile.NewElement("level");
@@ -355,6 +371,18 @@ void XmlParser::saveCharacter()
 	///mana
 	element = xmlFile.NewElement("mana");
 	element->SetText(player->mana);
+	node->InsertEndChild(element);
+	///inventory
+	element = xmlFile.NewElement("inventory");
+	for (const auto & item : Camera::Inst()->getTarget_nonConst()->inventory->items)
+	{
+		XMLElement* listElement = xmlFile.NewElement("item");
+		listElement->SetText(item->getUniqueID());
+		element->InsertEndChild(listElement);
+		listElement = xmlFile.NewElement("item");
+		listElement->SetText(item->stack);
+		element->InsertEndChild(listElement);
+	}
 	node->InsertEndChild(element);
 
 	error = xmlFile.SaveFile(SavedataFile);

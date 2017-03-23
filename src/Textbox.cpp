@@ -39,10 +39,9 @@ Textbox::Textbox(Vector2D pos, float velocity_x, float velocity_y, string _text,
 	Load();
 }
 
-void Textbox::init(Vector2D* pos, string _text, int _fontID, SDL_Color _color) 
+void Textbox::init(Vector2D pos, string _text, int _fontID, SDL_Color _color) 
 {
-	position.x = pos->x;
-	position.y = pos->y;
+	position = pos;
 	text = _text;
 	fontID = _fontID;
 	color = _color;

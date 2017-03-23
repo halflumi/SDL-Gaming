@@ -26,7 +26,7 @@ bool TextureLoader::load(string fileName, int id)
 	}
 
 	SDL_Texture* newTexture = SDL_CreateTextureFromSurface(Main::Inst()->getRenderer(), tempSurface);
-
+	
 	if (newTexture == NULL)
 		printf("SDL_ERROR creating texture from rendered surface: %s\n", SDL_GetError());
 

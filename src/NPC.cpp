@@ -49,6 +49,12 @@ void NPC::Load()
 		animatedSpeed = 150;
 		return;
 	}
+	if (uniqueID == ShopNPC)
+	{
+		width = 216;
+		height = 215;
+		return;
+	}
 }
 
 void NPC::update()
@@ -119,6 +125,7 @@ void NPC::update()
 				if (messageBox != NULL)
 					delete messageBox;
 				messageBox = new Textbox(position, "The game has been saved!", segoeui22, COLOR_WHITE, 60, true);
+				XmlParser::Inst()->mapID = World::Inst()->currentMapID;
 				XmlParser::Inst()->saveCharacter();
 				clickCooldown.start();
 			}
@@ -128,7 +135,21 @@ void NPC::update()
 			currentRow = 0;
 		return;
 	}
+	if (uniqueID == ShopNPC)
+	{
+		if (checkMouseOver() && CheckPlayerNearby())
+		{
+			if (Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && clickCooldown.getTicks() > CLICKCOOLDOWN)
+			{
 
+				clickCooldown.start();
+			}
+			currentRow = 1;
+		}
+		else
+			currentRow = 0;
+		return;
+	}
 }
 
 void NPC::draw()
@@ -143,8 +164,8 @@ void NPC::draw()
 
 bool NPC::checkMouseOver()
 {
-	Vector2D* mousepos = Inputor::Inst()->getMouseDefinitePosition();
-	if (mousepos->x <= position.x + width && mousepos->x >= position.x && mousepos->y >= position.y && mousepos->y <= position.y + height)
+	Vector2D mousepos = Inputor::Inst()->getMouseDefinitePosition();
+	if (mousepos.x <= position.x + width && mousepos.x >= position.x && mousepos.y >= position.y && mousepos.y <= position.y + height)
 		return true;
 	return false;
 }

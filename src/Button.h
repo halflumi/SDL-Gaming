@@ -13,7 +13,6 @@ private:
 	MyTimer clickCooldown;
 
 	void Load();
-	bool CheckMouseOver();
 public:
 	Textbox* buttonText;
 	int buttonClass;
@@ -27,5 +26,6 @@ public:
 	void update();
 	void draw();
 
+	bool checkMouseOver();
 	bool outsideUpdate();
 };

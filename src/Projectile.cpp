@@ -36,6 +36,20 @@ void Projectile::Load()
 
 		penetrate = -1;
 	}
+	if (uniqueID == PurificationBulletProjectile)
+	{
+		width = 2;
+		height = 20;
+
+		penetrate = -1;
+	}
+	if (uniqueID == ChlorophyteTrackerProjectile)
+	{
+		width = 32;
+		height = 32;
+
+		penetrate = 1;
+	}
 }
 
 void Projectile::update()
@@ -72,6 +86,7 @@ void Projectile::update()
 		if (life > 300)
 			Kill();
 		life++;
+		return;
 	}
 	if (uniqueID == OrichalcumShortswordProjectile)
 	{
@@ -82,6 +97,25 @@ void Projectile::update()
 		if (life > 120)
 			Kill();
 		life++;
+		return;
+	}
+	if (uniqueID == PurificationBulletProjectile)
+	{
+		angle = atan2(velocity.y, velocity.x) * 180.F / PI + 90.F;
+		if (life > 300)
+			Kill();
+		life++;
+		return;
+	}
+	if (uniqueID == ChlorophyteTrackerProjectile)
+	{
+		angle = atan2(velocity.y, velocity.x) * 180.F / PI + 45.F;
+		if (life > 60)
+			acceleration.y = GRAVITY;
+		if (life > 300)
+			Kill();
+		life++;
+		return;
 	}
 }
 

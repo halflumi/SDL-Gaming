@@ -75,6 +75,7 @@ bool Main::initialize(const char* title, int xpos, int ypos, int width, int heig
 		printf("SDL_TTF_ERROR loading .ttf: %s\n", TTF_GetError());
 		return false;
 	}
+	//TTF_SetFontOutline(theFont[segoeui22], 1);
 	theFont[segoeui28] = TTF_OpenFont(segoeuiFile, 28);
 	if (theFont[segoeui28] == NULL)
 	{
@@ -337,7 +338,7 @@ bool Main::HandleMenuEvents()
 				changeMenu(MenuMain);
 				return true;
 			}
-			if (menuButtons[i]->getUniqueID() == ExittoDestopButton)
+			if (menuButtons[i]->getUniqueID() == ExittoDesktopButton)
 			{
 				XmlParser::Inst()->saveCharacter();
 				quit();
@@ -390,7 +391,7 @@ void Main::changeMenu(int menuID)
 		menuButtons.push_back(new Button(GameMenuBackground));
 		menuButtons.push_back(new Button(ResumeButton));
 		menuButtons.push_back(new Button(ExittoMainMenuButton));
-		menuButtons.push_back(new Button(ExittoDestopButton));
+		menuButtons.push_back(new Button(ExittoDesktopButton));
 		break;
 	case MenuControlSettings:
 		menuButtons.push_back(new Button(ControlMovingUpText));
@@ -431,8 +432,6 @@ void Main::RenderMenu()
 {
 	if(inMainMenu)
 		TextureLoader::Inst()->drawEx2(MainMenuPic, 0, 0, 1920, 1080, windowWidth, windowHeight);
-	if(inGameMenu)
-		TextureLoader::Inst()->drawFrameEx(InventoryGridMask, 0, 0, 10, 10, windowWidth, windowHeight, 0, 0, 0, 255);
 
 	int i, len;
 	len = menuButtons.size();

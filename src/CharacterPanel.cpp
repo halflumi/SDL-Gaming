@@ -34,9 +34,9 @@ void CharacterPanel::Load()
 	height = 354;
 	position.x = 100;
 	position.y = 100;
-	rightHandSlot = new InventoryItem(NULL, -2, NULL);
-	leftHandSlot = new InventoryItem(NULL, -2, NULL);
-	helmetSlot = new InventoryItem(NULL, -2, NULL);
+	rightHandSlot = new InventoryItem(NULL, NULL);
+	leftHandSlot = new InventoryItem(NULL, NULL);
+	helmetSlot = new InventoryItem(NULL, NULL);
 }
 
 void CharacterPanel::update()
@@ -93,16 +93,16 @@ void CharacterPanel::draw()
 
 bool CharacterPanel::outsideCheckMouseTitle()
 {
-	Vector2D* mousepos = Inputor::Inst()->getMouseRelativePosition();
-	if (mousepos->y <= position.y + TITLEHEIGHT)
+	Vector2D mousepos = Inputor::Inst()->getMouseRelativePosition();
+	if (mousepos.y <= position.y + TITLEHEIGHT)
 		return true;
 	return false;
 }
 
 bool CharacterPanel::outsideCheckMouseOver()
 {
-	Vector2D* mousepos = Inputor::Inst()->getMouseRelativePosition();
-	if (mousepos->x <= position.x + width && mousepos->x >= position.x && mousepos->y >= position.y && mousepos->y <= position.y + height)
+	Vector2D mousepos = Inputor::Inst()->getMouseRelativePosition();
+	if (mousepos.x <= position.x + width && mousepos.x >= position.x && mousepos.y >= position.y && mousepos.y <= position.y + height)
 		return true;
 	return false;
 }
