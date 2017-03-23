@@ -11,7 +11,7 @@ int ExpSheet(int level);
 #define INVENTORYSIZE 36
 #define CLICKCOOLDOWN 80
 #define PRESSCOOLDOWN 100
-#define UIHEIGHT 168
+#define UIHEIGHT 66
 //colors
 #define COLOR_BLACK		{0,0,0}
 #define COLOR_GREY		{192,192,192}
@@ -61,6 +61,7 @@ enum MapChangeType
 #define MenuOptions						10110001
 #define MenuGameMain					10110002
 #define MenuControlSettings				10110003
+#define MenuGameOver					10110004
 //mapID 102
 #define MapTest01						10210001
 #define MapTest02						10210002
@@ -117,6 +118,7 @@ enum MapChangeType
 #define ResumeButton					10310101
 #define ExittoMainMenuButton			10310102
 #define ExittoDesktopButton				10310103
+#define GameOverText					10310104
 //button typeID 104
 #define ButtonTypeTextbox				10410000
 #define ButtonTypeButton				10410001
@@ -181,6 +183,8 @@ enum MapChangeType
 #define SkillPanelAddSkillButtonFile	"..\\assets\\SkillPlusButton.png"
 #define SkillPanelMinusSkillButton		30210013
 #define SkillPanelMinusSkillButtonFile	"..\\assets\\SkillMinusButton.png"
+#define xpBar							30210014
+#define xpBarFile						"..\\assets\\expBar.png"
 //Hostile 303
 #define BlackBlock						30310000
 #define BlackBlockFile					"..\\assets\\BlackBlock.png"

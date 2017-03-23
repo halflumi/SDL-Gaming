@@ -10,6 +10,15 @@
 #include "XmlParser.h"
 
 #define LAYERCOUNT 7
+#define HealthTextPos		191, Main::Inst()->getRenderHeight() + 1
+#define ManaTextPos			191, Main::Inst()->getRenderHeight() + 22
+#define xpTextPos			941, Main::Inst()->getRenderHeight() + 42 
+#define HealthBarPos		39, Main::Inst()->getRenderHeight() + 9
+#define ManaBarPos			39, Main::Inst()->getRenderHeight() + 30
+#define HealthBarLength		148.f
+#define HealthBarHeight		9
+#define xpBarPos			39, Main::Inst()->getRenderHeight() + 50
+#define xpBarLength			898.f
 
 World* World::INSTANCE = 0;
 
@@ -25,6 +34,7 @@ void World::initialize()
 	TextureLoader::Inst()->load(UIpicFile, UIpic);
 	TextureLoader::Inst()->load(HealthBarFile, HealthBar);
 	TextureLoader::Inst()->load(ManaBarFile, ManaBar);
+	TextureLoader::Inst()->load(xpBarFile, xpBar);
 	TextureLoader::Inst()->load(InventoryGridFile, InventoryGrid);
 	TextureLoader::Inst()->load(InventoryGridMaskFile, InventoryGridMask);
 	TextureLoader::Inst()->load(InventoryCloseButtonFile, InventoryCloseButton);
@@ -91,13 +101,12 @@ void World::initialize()
 		changeMap(MapTest01, MAPCHANGE_LOAD);
 	///load UI
 	const Player* player = Camera::Inst()->getTarget();
-	Vector2D nameTextpos(20, Main::Inst()->getRenderHeight() + 10);
-	Vector2D healthNumTextpos(406, Main::Inst()->getRenderHeight() + 65);
-	Vector2D manaNumTextpos(406, Main::Inst()->getRenderHeight() + 117);
-	nameText = Textbox(nameTextpos, "", arial28_bold, { 255,255,255 }, -1);
-	healthNumText = Textbox(healthNumTextpos, "", arial28_bold, { 255,255,255 }, -1);
-	manaNumText = Textbox(manaNumTextpos, "", arial28_bold, { 255,255,255 }, -1);
-
+	Vector2D healthNumTextpos(HealthTextPos);
+	Vector2D manaNumTextpos(ManaTextPos);
+	Vector2D xpTextpos(xpTextPos);
+	healthNumText = Textbox(healthNumTextpos, "", segoeui18, COLOR_WHITE, -1);
+	manaNumText = Textbox(manaNumTextpos, "", segoeui18, COLOR_WHITE, -1);
+	xpNumText = Textbox(xpTextpos, "", segoeui18, COLOR_WHITE, -1);
 }
 
 void World::clearWorld()
@@ -297,15 +306,16 @@ void World::RenderUI()
 	TextureLoader::Inst()->draw(UIpic, 0, Main::Inst()->getRenderHeight(), Main::Inst()->getRenderWidth(), UIHEIGHT);
 
 	const Player* player = Camera::Inst()->getTarget();
-	TextureLoader::Inst()->draw(HealthBar, 105, Main::Inst()->getRenderHeight() + 67, player->life * 292.0f / player->maxlife, 26);
-	TextureLoader::Inst()->draw(ManaBar, 105, Main::Inst()->getRenderHeight() + 117, player->mana * 292.0f / player->maxmana, 26);
+	TextureLoader::Inst()->drawEx2(HealthBar, HealthBarPos, 10, 10, player->life * HealthBarLength / player->maxlife, HealthBarHeight);
+	TextureLoader::Inst()->drawEx2(ManaBar, ManaBarPos, 10, 10, player->mana * HealthBarLength / player->maxmana, HealthBarHeight);
+	TextureLoader::Inst()->drawEx2(xpBar, xpBarPos, 10, 10, player->exp * xpBarLength / player->expToNextLevel, HealthBarHeight);
 
-	nameText.changeText(player->name);
-	nameText.draw();
 	healthNumText.changeText(to_string(player->life) + " / " + to_string(player->maxlife));
 	healthNumText.draw();
 	manaNumText.changeText(to_string(player->mana) + " / " + to_string(player->maxmana));
 	manaNumText.draw();
+	xpNumText.changeText(to_string(player->exp) + " / " + to_string(player->expToNextLevel));
+	xpNumText.draw();
 }
 
 void World::newProjectile(int id, Vector2D pos, float velocity_x, float velocity_y, Entity* owner, bool gravitational)
