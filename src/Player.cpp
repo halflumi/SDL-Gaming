@@ -14,7 +14,7 @@
 #define AIRACCELERATION 0.3f
 #define MIDAIRACCERLATION 0.05f
 #define DEFAULTMAXSPEED 5.0f
-#define JUMPSPEED -15.f
+#define JUMPSPEED -10.f
 #define LADDERSPEED 2.0f
 #define LADDERJUMPSPEED -12.f
 #define SEARCH_LADDER 1
@@ -72,7 +72,7 @@ void Player::Load()
 	baseDEF = 2;
 	critChance = 10;
 
-	attackInterval = 30;
+	attackInterval = 15;
 	attackTick = 0;
 	lifeRegenInterval = 300;
 	lifeRegenTick = 0;
