@@ -28,6 +28,7 @@ void Projectile::Load()
 		height = 28;
 		
 		penetrate = 2;
+		return;
 	}
 	if (uniqueID == OrichalcumShortswordProjectile)
 	{
@@ -35,6 +36,7 @@ void Projectile::Load()
 		height = 38;
 
 		penetrate = -1;
+		return;
 	}
 	if (uniqueID == PurificationBulletProjectile)
 	{
@@ -42,6 +44,7 @@ void Projectile::Load()
 		height = 20;
 
 		penetrate = -1;
+		return;
 	}
 	if (uniqueID == ChlorophyteTrackerProjectile)
 	{
@@ -49,6 +52,31 @@ void Projectile::Load()
 		height = 32;
 
 		penetrate = 1;
+		return;
+	}
+	if (uniqueID == IronDartProjectile)
+	{
+		width = 27;
+		height = 27;
+
+		penetrate = 1;
+		return;
+	}
+	if (uniqueID == CrystalDartProjectile)
+	{
+		width = 27;
+		height = 27;
+
+		penetrate = 1;
+		return;
+	}
+	if (uniqueID == MokbiDartProjectile)
+	{
+		width = 28;
+		height = 28;
+
+		penetrate = 2;
+		return;
 	}
 }
 
@@ -110,6 +138,36 @@ void Projectile::update()
 	if (uniqueID == ChlorophyteTrackerProjectile)
 	{
 		angle = atan2(velocity.y, velocity.x) * 180.F / PI + 45.F;
+		if (life > 60)
+			acceleration.y = GRAVITY;
+		if (life > 300)
+			Kill();
+		life++;
+		return;
+	}
+	if (uniqueID == IronDartProjectile)
+	{
+		angle += 10.F;
+		if (life > 60)
+			acceleration.y = GRAVITY;
+		if (life > 300)
+			Kill();
+		life++;
+		return;
+	}
+	if (uniqueID == CrystalDartProjectile)
+	{
+		angle += 10.F;
+		if (life > 60)
+			acceleration.y = GRAVITY;
+		if (life > 300)
+			Kill();
+		life++;
+		return;
+	}
+	if (uniqueID == MokbiDartProjectile)
+	{
+		angle += 10.F;
 		if (life > 60)
 			acceleration.y = GRAVITY;
 		if (life > 300)

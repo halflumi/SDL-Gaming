@@ -24,8 +24,6 @@ void Entity::update()
 	}
 	if (velocity.y < MAXFALLINGSPEED)
 		velocity.y += acceleration.y;
-
-	//position += velocity;
 }
 
 void Entity::heal(int point)

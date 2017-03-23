@@ -409,6 +409,39 @@ void Player::Attacking()
 		World::Inst()->newProjectile(ChlorophyteTrackerProjectile, entityCenter, direction.x, direction.y, this);
 		SoundLoader::Inst()->playSound(AttackSound);
 	}
+	else if (rightHand_equ->getUniqueID() == IronDartItem)
+	{
+		attackTick = 1;
+		Vector2D mousepos = Inputor::Inst()->getMouseDefinitePosition();
+		Vector2D direction = mousepos - entityCenter;
+		direction.normalize();
+		direction.x *= 10;
+		direction.y *= 5;
+		World::Inst()->newProjectile(IronDartProjectile, entityCenter, direction.x, direction.y, this);
+		SoundLoader::Inst()->playSound(AttackSound);
+	}
+	else if (rightHand_equ->getUniqueID() == CrystalDartItem)
+	{
+		attackTick = 1;
+		Vector2D mousepos = Inputor::Inst()->getMouseDefinitePosition();
+		Vector2D direction = mousepos - entityCenter;
+		direction.normalize();
+		direction.x *= 10;
+		direction.y *= 5;
+		World::Inst()->newProjectile(CrystalDartProjectile, entityCenter, direction.x, direction.y, this);
+		SoundLoader::Inst()->playSound(AttackSound);
+	}
+	else if (rightHand_equ->getUniqueID() == MokbiDartItem)
+	{
+		attackTick = 1;
+		Vector2D mousepos = Inputor::Inst()->getMouseDefinitePosition();
+		Vector2D direction = mousepos - entityCenter;
+		direction.normalize();
+		direction.x *= 10;
+		direction.y *= 5;
+		World::Inst()->newProjectile(MokbiDartProjectile, entityCenter, direction.x, direction.y, this);
+		SoundLoader::Inst()->playSound(AttackSound);
+	}
 }
 
 void Player::HandlePlayerPhysics( ) 
