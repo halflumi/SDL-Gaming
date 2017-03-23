@@ -51,7 +51,7 @@ private:
 	bool CheckCollision_tileX(float& x);
 	bool CheckCollision_tileY(float& y);
 	void CheckCollision_hostile(Vector2D newpos);
-	void CheckInteractive();
+	void CheckInteractive(short flag = 0);
 
 	void DoInteractive(Object*);
 	void CheckPickup();
