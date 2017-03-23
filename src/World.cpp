@@ -42,7 +42,7 @@ void World::initialize()
 	///Load tiles
 	TextureLoader::Inst()->load(Tile01File, Tile01);
 	TextureLoader::Inst()->load(BrickFile, Brick);
-    TextureLoader::Inst()->load(HealingMagicSkillFile,HealingMagicSkill);
+    TextureLoader::Inst()->load(HealingMagicSkillbrickFile,HealingMagicSkillbrick);
 	///Load sprites
 	TextureLoader::Inst()->load(WaterMushroomFrameFile, WaterMushroomFrame);
 	TextureLoader::Inst()->load(TestPortalFile, TestPortal);
@@ -163,22 +163,33 @@ void World::changeMap(int mapID, MapChangeType form)
         for (int i = 35; i < 42; i++)
             getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 600));
         
-        getLayer_tile().push_back(new Tile (HealingMagicSkill, 500, height - 500));
+        for (int i = 25; i < 27; i++)
+            for(int j = 0; j <= 4; j++)
+            getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 110 + j * 37));
+        
+        getLayer_tile().push_back(new Tile (HealingMagicSkillbrick, 500, height - 536));
 
 		///sprites
 		getLayer_background().push_back(new Sprite(WaterMushroomFrame, 1000, height - 136));
-		getLayer_foreground().push_back(new Sprite(TestPortal, 1200, height - 105));
+		getLayer_foreground().push_back(new Sprite(TestPortal, 1645, height - 700));
+        getLayer_foreground().push_back(new Sprite(TestPortal, 470, height - 348));
+
 		getLayer_foreground().push_back(new Sprite(LadderSprite, 19 * 47, height - 244));
-        getLayer_foreground().push_back(new Sprite(LadderSprite, 19 * 30, height - 488));
-        getLayer_foreground().push_back(new Sprite(LadderSprite, 19 * 120, height - 440));
+        getLayer_foreground().push_back(new Sprite(LadderSprite, 12 * 47, height - 488));
+        
+        getLayer_foreground().push_back(new Sprite(LadderSprite, 49 * 47, height - 450));
       
 		getLayer_foreground().push_back(new Sprite(MapGate, 0, height - 154));
 		///entities
 		getLayer_entity().push_back(new NPC(LeafNPC, 2000, height - 100));
+       
 		getLayer_entity().push_back(new NPC(ShopNPC, 1600, height - 215));
 		getLayer_entity().push_back(new NPC(GhostNPC, 1400, height - 80));
+        getLayer_entity().push_back(new NPC(GhostNPC, 1000, height - 312));
+        getLayer_entity().push_back(new NPC(GhostNPC, 1600, height - 412));
 		getLayer_entity().push_back(new NPC(MapleFlagNPC, 800, height - 177));
         getLayer_entity().push_back(new NPC(MapleFlagNPC, 300, height - 300));
+        getLayer_entity().push_back(new NPC(MapleFlagNPC, 1800, height - 400));
 		getLayer_entity().push_back(new Hostile(BlackBlock, 0, 2500, height - 200));
 		///items
 		getLayer_entity().push_back(new Item(BowItem, 1, 1200, 0));
@@ -208,10 +219,10 @@ void World::changeMap(int mapID, MapChangeType form)
 
 		///sprites
 		getLayer_foreground().push_back(new Sprite(MapGate2, width - 108, height - 154));
-        getLayer_foreground().push_back(new Sprite(LadderSprite, 19 * 47, height - 244));
         getLayer_foreground().push_back(new Sprite(LadderSprite, 29 * 47, height - 488));
 		///entities
 		getLayer_entity().push_back(new NPC(SavePointNPC, 1600, height - 211));
+          getLayer_entity().push_back(new NPC(MapleFlagNPC, 300, height - 300));
 		///items
 		getLayer_entity().push_back(new Item(OrichalcumShortsword, 1, 1200, 0));
 	}

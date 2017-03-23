@@ -233,8 +233,8 @@ enum MapChangeType
 #define BrickFile "../assets/Brick.png"
 #define Tile01 30910001
 #define Tile01File "../assets/Tile01.png"
-#define HealingMagicSkill 30910002
-#define HealingMagicSkillFile "../assets/HealingMagicSkill.png"
+#define HealingMagicSkillbrick 30910002
+#define HealingMagicSkillbrickFile "../assets/HealingMagicSkill.png"
 ///sounds 400xxxxx
 //musics 400
 #define Music01 40010000
