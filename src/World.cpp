@@ -74,6 +74,10 @@ void World::initialize()
 	TextureLoader::Inst()->load(BlackBlockFile, BlackBlock);
 	TextureLoader::Inst()->load(DemonHostileFile, DemonHostile);
 	TextureLoader::Inst()->load(HostileGhostMobFile, HostileGhostMob);
+	TextureLoader::Inst()->load(HostileSkeletonFile, HostileSkeleton);
+	TextureLoader::Inst()->load(HostileGhostMobFile, HostileGhostMob);
+	TextureLoader::Inst()->load(HostileWoodMobFile, HostileWoodMob);
+	TextureLoader::Inst()->load(HostileGiantCatFile, HostileGiantCat);
 	///Load Projectiles
 	TextureLoader::Inst()->load(SubiDartProjectileFile, SubiDartProjectile);
 	TextureLoader::Inst()->load(IronDartProjectileFile, IronDartProjectile);
@@ -179,7 +183,7 @@ void World::changeMap(int mapID, MapChangeType form)
 		getLayer_entity().push_back(new NPC(GhostNPC, 1400, height - 80));
 		getLayer_entity().push_back(new NPC(MapleFlagNPC, 800, height - 177));
 		getLayer_entity().push_back(new Hostile(BlackBlock, 0, 2500, height - 200));
-		getLayer_entity().push_back(new Hostile(HostileGhostMob, 0, 2700, height - 200));
+		getLayer_entity().push_back(new Hostile(HostileGiantCat, 0, 2700, height - 200));
 		///items
 		return;
 	}

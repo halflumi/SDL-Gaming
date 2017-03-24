@@ -214,9 +214,15 @@ enum MapChangeType
 #define BlackBlock							30310000
 #define BlackBlockFile						"../assets/BlackBlock.png"
 #define DemonHostile						30310001
-#define DemonHostileFile					"../assets/Demon.png"
+#define DemonHostileFile					"../assets/entities/Demon.png"
 #define HostileGhostMob						30310002
 #define HostileGhostMobFile					"../assets/entities/GhostMob.png"
+#define HostileSkeleton						30310003
+#define HostileSkeletonFile					"../assets/entities/Skeleton.png"
+#define HostileWoodMob						30310004
+#define HostileWoodMobFile					"../assets/entities/WoodMob.png"
+#define HostileGiantCat						30310005
+#define HostileGiantCatFile					"../assets/entities/GiantCat.png"
 //Item 304
 #define IronDartItem						30410000
 #define IronDartItemName					"Iron Dart"
