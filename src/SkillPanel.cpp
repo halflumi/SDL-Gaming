@@ -226,7 +226,7 @@ void SkillPanel::Load()
 	skillslots.push_back(new SkillSlot(SkillMPBoostIcon, skills[SkillIndexMPBoost]));
 	skillslots.push_back(new SkillSlot(SkillCriticalThrowIcon, skills[SkillIndexCriticalThrow]));
 	///load skill points
-	skillPoints = 10;
+	skillPoints = 2;
 	skillPointsText = new Textbox(position, "sp: 1", arial28_bold, COLOR_BLACK, -1);
 }
 

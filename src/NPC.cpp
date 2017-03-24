@@ -70,7 +70,7 @@ void NPC::update()
 		{
 			if (Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && clickCooldown.getTicks() > CLICKCOOLDOWN )
 			{
-				World::Inst()->newHostile(BlackBlock, 2000 + Dice::Inst()->rand(500), Dice::Inst()->rand(600, 800));
+				World::Inst()->newHostile(BlackBlock, 1800 + Dice::Inst()->rand(500), Dice::Inst()->rand(600, 800));
 				clickCooldown.start();
 			}
 			currentRow = 1;
