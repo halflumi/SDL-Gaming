@@ -38,6 +38,7 @@ private:
 	static enum AttributesList { ATK, DEF, HP, MP, SP };
 	static const int LvUpBonus[TOTALATTRIBUTES][MAXLEVEL];
 
+
 	bool focused;
 	Vector2D display_pos;
 

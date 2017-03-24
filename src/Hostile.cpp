@@ -50,6 +50,7 @@ void Hostile::Load()
 		numFrames = 4;
 
 		maxSpeed = SPEED_SLOW;
+
 		acceleration.y = GRAVITY;
 		level = 5;
 		exp = 100;
@@ -124,6 +125,73 @@ void Hostile::Load()
 		minATT = 35;
 		maxATT = 45;
 		defense = 0;
+		return;
+	}
+	if (uniqueID == HostileGhostMob)
+	{
+		width = 71;
+		height = 64;
+		numFrames = 3;
+
+		maxSpeed = 2.f;
+		acceleration.y = GRAVITY;
+		level = 1;
+		exp = 20;
+		life = 300;
+		minATT = 20;
+		maxATT = 40;
+		defense = 5;
+		return;
+	}
+	if (uniqueID == HostileSkeleton)
+	{
+		width = 84;
+		height = 95;
+		numFrames = 4;
+		animatedSpeed = 350;
+
+		maxSpeed = 1.f;
+		acceleration.y = GRAVITY;
+		level = 1;
+		exp = 20;
+		life = 300;
+		minATT = 20;
+		maxATT = 40;
+		defense = 5;
+		return;
+	}
+	if (uniqueID == HostileWoodMob)
+	{
+		width = 74;
+		height = 77;
+		numFrames = 4;
+		animatedSpeed = 350;
+
+		maxSpeed = 1.f;
+		acceleration.y = GRAVITY;
+		level = 1;
+		exp = 20;
+		life = 300;
+		minATT = 20;
+		maxATT = 40;
+		defense = 5;
+		return;
+	}
+	if (uniqueID == HostileGiantCat)
+	{
+		width = 165;
+		height = 96;
+		numFrames = 5;
+		animatedSpeed = 150;
+
+		maxSpeed = 4.f;
+		acceleration.y = GRAVITY;
+		level = 1;
+		exp = 20;
+		life = 300;
+		minATT = 20;
+		maxATT = 40;
+		defense = 5;
 		return;
 	}
 }

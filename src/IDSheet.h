@@ -9,6 +9,7 @@ int ExpSheet(int level);
 //global
 #define TOTALSKILLS 8
 #define MAXLEVEL 10
+
 #define INVENTORYSIZE 36
 #define CLICKCOOLDOWN 80
 #define PRESSCOOLDOWN 100

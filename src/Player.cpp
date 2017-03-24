@@ -85,6 +85,7 @@ void Player::Load()
 	baseMaxMana = LvUpBonus[MP][0];
 	baseATT = LvUpBonus[ATK][0];
 	baseDEF = LvUpBonus[DEF][0];
+  
 	critChance = 10;
 
 	attackInterval = 30;
