@@ -51,12 +51,31 @@ void InventoryItem::Load()
 		name = IronDartItemName;
 		itemClass = ItemClassWeapon;
 
-		width = 276;
-		height = 276;
+		width = 48;
+		height = 48;
 		minATT = 1;
 		maxATT = 10;
 	}
+	else if (uniqueID == CrystalDartItem)
+	{
+		name = CrystalDartName;
+		itemClass = ItemClassWeapon;
 
+		width = 48;
+		height = 48;
+		minATT = 1;
+		maxATT = 40;
+	}
+	else if (uniqueID == MokbiDartItem)
+	{
+		name = MokbiDartName;
+		itemClass = ItemClassWeapon;
+
+		width = 48;
+		height = 48;
+		minATT = 10;
+		maxATT = 20;
+	}
 	InitItemInfo();
 }
 
@@ -223,10 +242,7 @@ void Inventory::Load()
 	position.y = 100;
 
 	for (int i = 0; i < INVENTORYSIZE * 2; i += 2)
-	{
 		items.push_back(new InventoryItem(XmlParser::Inst()->inventory[i], XmlParser::Inst()->inventory[i + 1]));
-		cout << XmlParser::Inst()->inventory[i] << ' ' << XmlParser::Inst()->inventory[i + 1] << ' ';
-	}
 }
 
 void Inventory::update()

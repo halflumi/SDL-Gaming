@@ -60,18 +60,21 @@ void Hostile::Load()
 
 void Hostile::update()
 {
+	Entity::update();
 	VisiableCheck();
 
 	if (active)
 	{
 		///update living mob
 		if (!stasis)
+		{
 			MovingAI();
 
-		if (movingLeft || movingRight)
-			currentFrame = int(((timer.getTicks() / animatedSpeed) % numFrames));
-		else
-			currentFrame = 0;
+			if (movingLeft || movingRight)
+				currentFrame = int(((timer.getTicks() / animatedSpeed) % numFrames));
+			else
+				currentFrame = 0;
+		}
 		///death check
 		if (life <= 0)
 		{
@@ -112,7 +115,6 @@ void Hostile::MovingAI()
 		movingRight = false;
 		movingLeft = true;
 	}
-	cout << midair << endl;
 	//calculate speed
 	if (!midair)
 	{
@@ -136,7 +138,6 @@ void Hostile::MovingAI()
 			acceleration.x = 0;
 		}
 	}
-	Entity::update();
 	//calculate position
 	Vector2D newposition = position + velocity;
 
@@ -277,8 +278,12 @@ void Hostile::kill()
 	if (uniqueID == BlackBlock)
 	{
 		SoundLoader::Inst()->playSound(DeathSound);
-		if(Dice::Inst()->rand(10) == 0)
+		if(Dice::Inst()->rand(3) == 0)
 			World::Inst()->newItem(IronDartItem, 1, position.x + width / 2, position.y + height / 2);
+		if (Dice::Inst()->rand(3) == 0)
+			World::Inst()->newItem(CrystalDartItem, 1, position.x + width / 2, position.y + height / 2);
+		if (Dice::Inst()->rand(3) == 0)
+			World::Inst()->newItem(MokbiDartItem, 1, position.x + width / 2, position.y + height / 2);
 		return;
 	}
 	if (uniqueID == DemonHostile)

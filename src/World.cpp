@@ -76,8 +76,13 @@ void World::initialize()
 	TextureLoader::Inst()->load(OrichalcumShortswordProjectileFile, OrichalcumShortswordProjectile);
 	TextureLoader::Inst()->load(PurificationBulletProjectileFile, PurificationBulletProjectile);
 	TextureLoader::Inst()->load(ChlorophyteTrackerProjectileFile, ChlorophyteTrackerProjectile);
+	TextureLoader::Inst()->load(IronDartProjectileFile, IronDartProjectile);
+	TextureLoader::Inst()->load(CrystalDartProjectileFile, CrystalDartProjectile);
+	TextureLoader::Inst()->load(MokbiDartProjectileFile, MokbiDartProjectile);
 	///Load Items
 	TextureLoader::Inst()->load(IronDartItemFile, IronDartItem);
+	TextureLoader::Inst()->load(CrystalDartItemFile, CrystalDartItem);
+	TextureLoader::Inst()->load(MokbiDartItemFile, MokbiDartItem);
 	///Load sounds
 	SoundLoader::Inst()->load(WalkOnSnow1File, WalkOnSnow1, SOUND_SFX);
 	SoundLoader::Inst()->load(WalkOnSnow2File, WalkOnSnow2, SOUND_SFX);

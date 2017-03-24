@@ -40,31 +40,31 @@ enum MapChangeType
 };
 ///typeID 100xxxxx
 //Object type
-#define TypeButton						10010000
-#define TypeInventory					10010001
-#define TypeInventoryItem				10010002
-#define TypeCharacterPanel				10010003
-#define TypeDialog						10010004
-#define TypeTextbox						10010005
-#define TypeNPC							10010006
-#define TypeHostile						10010007
-#define TypeTile						10010008
-#define TypePlayer						10010009
-#define TypeProjectile					10010010
-#define TypeSprite						10010011
-#define TypeItem						10010012
-#define TypeSkillPanel					10010013
-#define TypeSkillSlot					10010014
-#define TypeBuff						10010015
+#define TypeButton							10010000
+#define TypeInventory						10010001
+#define TypeInventoryItem					10010002
+#define TypeCharacterPanel					10010003
+#define TypeDialog							10010004
+#define TypeTextbox							10010005
+#define TypeNPC								10010006
+#define TypeHostile							10010007
+#define TypeTile							10010008
+#define TypePlayer							10010009
+#define TypeProjectile						10010010
+#define TypeSprite							10010011
+#define TypeItem							10010012
+#define TypeSkillPanel						10010013
+#define TypeSkillSlot						10010014
+#define TypeBuff							10010015
 //menuID 101
-#define MenuMain						10110000
-#define MenuOptions						10110001
-#define MenuGameMain					10110002
-#define MenuControlSettings				10110003
-#define MenuGameOver					10110004
+#define MenuMain							10110000
+#define MenuOptions							10110001
+#define MenuGameMain						10110002
+#define MenuControlSettings					10110003
+#define MenuGameOver						10110004
 //mapID 102
-#define MapTest01						10210001
-#define MapTest02						10210002
+#define MapTest01							10210001
+#define MapTest02							10210002
 //menu elementsID 103
 #define NewGameButton					10310000
 #define ExitButton						10310001
@@ -92,26 +92,26 @@ enum MapChangeType
 #define OptionsMenuView					10310019
 #define OptionsMenuViewFile				"../assets/OptionsMenuView.png"
 
-#define ControlMovingUpText				10310200
-#define ControlMovingUpButton			10310201
-#define ControlMovingDownText			10310202
-#define ControlMovingDownButton			10310203
-#define ControlMovingLeftText			10310204
-#define ControlMovingLeftButton			10310205
-#define ControlMovingRightText			10310206
-#define ControlMovingRightButton		10310207
-#define ControlCharacterPanelText		10310208
-#define ControlCharacterPanelButton		10310209
-#define ControlSkillPanelText			10310210
-#define ControlSkillPanelButton			10310211
-#define ControlInventoryText			10310212
-#define ControlInventoryButton			10310213
-#define ControlSkillHotkey1Text			10310214
-#define ControlSkillHotkey1Button		10310215
-#define ControlSkillHotkey2Text			10310216
-#define ControlSkillHotkey2Button		10310217
-#define ControlSkillHotkey3Text			10310218
-#define ControlSkillHotkey3Button		10310219
+#define ControlMovingUpText					10310200
+#define ControlMovingUpButton				10310201
+#define ControlMovingDownText				10310202
+#define ControlMovingDownButton				10310203
+#define ControlMovingLeftText				10310204
+#define ControlMovingLeftButton				10310205
+#define ControlMovingRightText				10310206
+#define ControlMovingRightButton			10310207
+#define ControlCharacterPanelText			10310208
+#define ControlCharacterPanelButton			10310209
+#define ControlSkillPanelText				10310210
+#define ControlSkillPanelButton				10310211
+#define ControlInventoryText				10310212
+#define ControlInventoryButton				10310213
+#define ControlSkillHotkey1Text				10310214
+#define ControlSkillHotkey1Button			10310215
+#define ControlSkillHotkey2Text				10310216
+#define ControlSkillHotkey2Button			10310217
+#define ControlSkillHotkey3Text				10310218
+#define ControlSkillHotkey3Button			10310219
 
 #define GameMenuBackground				10310100
 #define GameMenuBackgroundFile			"../assets/GameMenuBackground.png"
@@ -120,11 +120,11 @@ enum MapChangeType
 #define ExittoDesktopButton				10310103
 #define GameOverText					10310104
 //button typeID 104
-#define ButtonTypeTextbox				10410000
-#define ButtonTypeButton				10410001
-#define ButtonTypeBackground			10410002
+#define ButtonTypeTextbox					10410000
+#define ButtonTypeButton					10410001
+#define ButtonTypeBackground				10410002
 //ItemClass 105
-#define ItemClassWeapon					10510000
+#define ItemClassWeapon						10510000
 //skillID 106
 #define HealingMagicSkill				10610000
 #define HealingMagicSkillIcon			10610001
@@ -132,9 +132,11 @@ enum MapChangeType
 #define IchorKnifeSkill					10610002
 #define IchorKnifeSkillIcon				10610003
 #define IchorKnifeSkillIconFile			"../assets/IchorKnifeSkill.png"
+
+
 //skilClass 107
-#define SkillClassHealingMagic			10710000
-#define SkillClassAttackingMagic		10710001
+#define SkillClassHealingMagic				10710000
+#define SkillClassAttackingMagic			10710001
 
 ///fonts 200xxxxx
 #define segoeuiFile						"../fonts/segoeui.ttf"

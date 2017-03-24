@@ -28,8 +28,20 @@ void Item::Load()
 	acceleration.y = GRAVITY;
 	if (uniqueID == IronDartItem)
 	{
-		width = 256;
-		height = 256;
+		width = 48;
+		height = 48;
+		return;
+	}
+	if(uniqueID == CrystalDartItem)
+	{
+		width = 48;
+		height = 48;
+		return;
+	}
+	if (uniqueID == MokbiDartItem)
+	{
+		width = 48;
+		height = 48;
 		return;
 	}
 }
