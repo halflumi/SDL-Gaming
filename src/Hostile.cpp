@@ -10,6 +10,9 @@
 #define DAMAGETICK 10
 #define MIDAIR 1
 #define PLAYERACCERLATION 0.7f
+#define SPEED_SLOW 1.5f
+#define SPEED_MEDIUM 3.f
+#define SPEED_FAST 6.f
 
 Hostile::Hostile(int id, int _worldID, int x, int y) : timer(true)
 {
@@ -46,14 +49,82 @@ void Hostile::Load()
 		height = 163;
 		numFrames = 4;
 
-		maxSpeed = 2.f;
+		maxSpeed = SPEED_SLOW;
+
 		acceleration.y = GRAVITY;
-		level = 1;
-		exp = 20;
+		level = 5;
+		exp = 100;
+		life = 500;
+		minATT = 45;
+		maxATT = 55;
+		defense = 10;
+		return;
+	}
+	if (uniqueID == HostileGhostMob)
+	{
+		width = 71;
+		height = 64;
+		numFrames = 3;
+
+		maxSpeed = SPEED_MEDIUM;
+		acceleration.y = GRAVITY;
+		level = 4;
+		exp = 75;
 		life = 300;
+		minATT = 35;
+		maxATT = 45;
+		defense = 5;
+		return;
+	}
+	if (uniqueID == HostileSkeleton)
+	{
+		width = 84;
+		height = 95;
+		numFrames = 4;
+		animatedSpeed = 350;
+
+		maxSpeed = SPEED_MEDIUM;
+		acceleration.y = GRAVITY;
+		level = 2;
+		exp = 20;
+		life = 150;
 		minATT = 20;
 		maxATT = 40;
-		defense = 5;
+		defense = 2;
+		return;
+	}
+	if (uniqueID == HostileWoodMob)
+	{
+		width = 74;
+		height = 77;
+		numFrames = 4;
+		animatedSpeed = 350;
+
+		maxSpeed = SPEED_SLOW;
+		acceleration.y = GRAVITY;
+		level = 1;
+		exp = 10;
+		life = 50;
+		minATT = 5;
+		maxATT = 15;
+		defense = 1;
+		return;
+	}
+	if (uniqueID == HostileGiantCat)
+	{
+		width = 165;
+		height = 96;
+		numFrames = 5;
+		animatedSpeed = 150;
+
+		maxSpeed = SPEED_FAST;
+		acceleration.y = GRAVITY;
+		level = 3;
+		exp = 50;
+		life = 100;
+		minATT = 35;
+		maxATT = 45;
+		defense = 0;
 		return;
 	}
 	if (uniqueID == HostileGhostMob)
@@ -341,7 +412,8 @@ void Hostile::kill()
 {
 	active = false;
 	timer.start();
-	Camera::Inst()->getTarget_nonConst()->exp += exp;
+	if(Camera::Inst( )->getTarget_nonConst( )->level < MAXLEVEL)
+		Camera::Inst()->getTarget_nonConst()->exp += exp;
 	if (uniqueID == BlackBlock)
 	{
 		SoundLoader::Inst()->playSound(DeathSound);
