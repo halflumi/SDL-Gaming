@@ -52,7 +52,6 @@ void World::initialize()
 	///Load tiles
 	TextureLoader::Inst()->load(Tile01File, Tile01);
 	TextureLoader::Inst()->load(BrickFile, Brick);
-    TextureLoader::Inst()->load(HealingMagicSkillFile,HealingMagicSkill);
 	///Load sprites
 	TextureLoader::Inst()->load(WaterMushroomFrameFile, WaterMushroomFrame);
 	TextureLoader::Inst()->load(TestPortalFile, TestPortal);
@@ -173,7 +172,6 @@ void World::changeMap(int mapID, MapChangeType form)
         for (int i = 35; i < 42; i++)
             getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 600));
         
-        getLayer_tile().push_back(new Tile (HealingMagicSkill, 500, height - 500));
 
 		///sprites
 		getLayer_background().push_back(new Sprite(WaterMushroomFrame, 1000, height - 136));
