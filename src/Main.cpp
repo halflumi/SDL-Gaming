@@ -114,6 +114,8 @@ bool Main::initialize(const char* title, int xpos, int ypos, int width, int heig
 	///load menu music and sounds
 	//SoundLoader::Inst()->load(Music01File, Music01, SOUND_MUSIC);
 	//SoundLoader::Inst()->playMusic(Music01, 2);
+	SoundLoader::Inst()->load(Music02File, Music02, SOUND_MUSIC);
+	SoundLoader::Inst()->playMusic(Music02, 2);
 	SoundLoader::Inst()->load(MenuMouseClickFile, MenuMouseClick, SOUND_SFX);
 	SoundLoader::Inst()->load(ControlKeyChangeSound1File, ControlKeyChangeSound1, SOUND_SFX);
 	SoundLoader::Inst()->load(ControlKeyChangeSound2File, ControlKeyChangeSound2, SOUND_SFX);
