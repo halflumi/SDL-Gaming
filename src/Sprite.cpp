@@ -46,6 +46,66 @@ void Sprite::Load()
 		height = 154;
 		return;
 	}
+	if (uniqueID == Sprite01)
+	{
+		width = 300;
+		height = 280;
+		return;
+	}
+	if (uniqueID == Sprite02)
+	{
+		width = 255;
+		height = 83;
+		return;
+	}
+	if (uniqueID == Sprite03)
+	{
+		width = 201;
+		height = 83;
+		return;
+	}
+	if (uniqueID == Sprite04)
+	{
+		width = 51;
+		height = 83;
+		return;
+	}
+	if (uniqueID == Sprite05)
+	{
+		width = 98;
+		height = 57;
+		return;
+	}
+	if (uniqueID == Sprite06)
+	{
+		width = 394;
+		height = 636;		
+		return;
+	}
+	if (uniqueID == Sprite07)
+	{
+		width = 109;
+		height = 196;
+		return;
+	}
+	if (uniqueID == Sprite08)
+	{
+		width = 59;
+		height = 36;
+		return;
+	}
+	if (uniqueID == Sprite09)
+	{
+		width = 101;
+		height = 37;
+		return;
+	}
+	if (uniqueID == Sprite10)
+	{
+		width = 84;
+		height = 38;
+		return;
+	}
 }
 
 void Sprite::update()

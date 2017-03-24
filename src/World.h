@@ -69,7 +69,7 @@ public:
 	int getWorldHeight() { return height; }
 
 	void clearWorld();
-	void startNewGame();
+	void startNewGame(bool demonic);
 	void startOldGame() { newGame = false; }
 	void initialize();
 	void changeMap(int mapID, MapChangeType form);

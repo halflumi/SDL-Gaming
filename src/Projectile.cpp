@@ -175,7 +175,7 @@ bool Projectile::CollisionCheck_entity(Vector2D newpos)
 	{
 		if (entities[i]->type() != TypeHostile)
 			continue;
-		if (!entities[i]->active)
+		if (!entities[i]->active || entities[i]->friendly)
 			continue;
 		attacked = false;
 		for (auto it = attackedTargets.begin(); it != attackedTargets.end(); it++)

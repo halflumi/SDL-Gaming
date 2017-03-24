@@ -179,12 +179,21 @@ bool Main::HandleMenuEvents()
 		if (menuButtons[i]->outsideUpdate())
 		{
 			///main menu
+			if (menuButtons[i]->getUniqueID() == DemoButton)
+			{
+				SoundLoader::Inst()->playSound(MenuMouseClick);
+				inMainMenu = false;
+				menuButtons.clear();
+				World::Inst()->startNewGame(true);
+				World::Inst()->initialize();
+				return true;
+			}
 			if (menuButtons[i]->getUniqueID() == NewGameButton)
 			{
 				SoundLoader::Inst()->playSound(MenuMouseClick);
 				inMainMenu = false;
 				menuButtons.clear();
-				World::Inst()->startNewGame();
+				World::Inst()->startNewGame(false);
 				World::Inst()->initialize();
 				return true;
 			}
@@ -360,6 +369,7 @@ void Main::changeMenu(int menuID)
 	case MenuMain:
 		inMainMenu = true;
 		menuButtons.push_back(new Button(MainMenuBackgroundView));
+		menuButtons.push_back(new Button(DemoButton));
 		menuButtons.push_back(new Button(NewGameButton));
 		menuButtons.push_back(new Button(ContinueButton));
 		menuButtons.push_back(new Button(ExitButton));

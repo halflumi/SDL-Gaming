@@ -6,9 +6,11 @@
 #include "Inputor.h"
 #include "Vector2D.h"
 #include "XmlParser.h"
+#include "Dice.h"
 
 #define MAINMENU_X 100
 #define MAINMENU_Y Main::Inst()->getWindowHeight()/2
+#define DemoPos							MAINMENU_X,MAINMENU_Y - 160
 #define NewGamePos						MAINMENU_X,MAINMENU_Y - 80
 #define ContinuePos						MAINMENU_X,MAINMENU_Y
 #define OptionsPos						MAINMENU_X,MAINMENU_Y + 80
@@ -85,6 +87,13 @@ void Button::Load()
 		position.set(0, 0);
 		width = 1920;
 		height = 1080;
+	}
+	if (uniqueID == DemoButton)
+	{
+		position.set(DemoPos);
+		buttonText = new Textbox(position, "Demo", arial48_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial48_bold), "Demo", &width, &height);
+		return;
 	}
 	if (uniqueID == NewGameButton)
 	{
@@ -464,6 +473,39 @@ void Button::Load()
 void Button::update()
 {
 	//main menu
+	if (uniqueID == DemoButton)
+	{
+		if (checkMouseOver())
+		{
+			switch (Dice::Inst()->rand(7))
+			{
+			case 0:
+				buttonText->changeColor(COLOR_RED);
+				break;
+			case 1:
+				buttonText->changeColor(COLOR_ORANGE);
+				break;
+			case 2:
+				buttonText->changeColor(COLOR_YELLOW);
+				break;
+			case 3:
+				buttonText->changeColor(COLOR_GREEN);
+				break;
+			case 4:
+				buttonText->changeColor(COLOR_BLUE);
+				break;
+			case 5:
+				buttonText->changeColor(COLOR_CLAN);
+				break;
+			case 6:
+				buttonText->changeColor(COLOR_PURPLE);
+				break;
+			}
+		}
+		else
+			buttonText->changeColor(COLOR_WHITE);
+		return;
+	}
 	if (uniqueID == NewGameButton || uniqueID == ContinueButton)
 	{
 		if (checkMouseOver())

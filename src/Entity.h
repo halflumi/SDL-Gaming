@@ -13,6 +13,8 @@ protected:
 	float maxSpeed;
 	Vector2D velocity;
 	Vector2D acceleration;
+	int invulnerableInterval;
+	int invulnerableTick;
 
 	Entity() : maxSpeed(5.0f), velocity(0.0f, 0.0f), acceleration(0.0f, 0.0f), entityCenter(0.f,0.f), life(0), maxlife(0), minATT(0), maxATT(0), defense(0)
 	{
@@ -29,6 +31,7 @@ public:
 	Vector2D entityCenter;
 
 	string name;
+	bool friendly;
 	int level;
 	int exp;
 	int life;

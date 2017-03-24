@@ -777,7 +777,7 @@ void Player::CheckCollision_hostile(Vector2D newpos)
 	{
 		if (entities[i]->type() != TypeHostile)
 			continue;
-		if (!entities[i]->active)
+		if (!entities[i]->active || entities[i]->friendly)
 			continue;
 
 		if (pBottom <= entities[i]->getPosition().y)

@@ -14,16 +14,40 @@ Tile::Tile(int id, int x, int y)
 
 void Tile::Load()
 {
-	if(uniqueID == Tile01)
-	{
-		width = 308;
-		height = 293;
-		return;
-	}
 	if (uniqueID == Brick)
 	{
 		width = 47;
 		height = 37;
+		return;
+	}
+	if (uniqueID == Tile01 || uniqueID == Tile02 || uniqueID == Tile03)
+	{
+		width = 90;
+		height = 60;
+		return;
+	}
+	if (uniqueID == Tile04 || uniqueID == Tile05 || uniqueID == Tile06)
+	{
+		width = 90;
+		height = 28;
+		return;
+	}
+	if (uniqueID == Tile07)
+	{
+		width = 57;
+		height = 27;
+		return;
+	}
+	if (uniqueID == Tile08)
+	{
+		width = 43;
+		height = 27;
+		return;
+	}
+	if (uniqueID == Tile09)
+	{
+		width = 26;
+		height = 60;
 		return;
 	}
 }

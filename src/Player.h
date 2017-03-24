@@ -23,8 +23,6 @@ private:
 	int attackTick;
 	int lifeRegenTick;
 	int manaRegenTick;
-	int invulnerableInterval;
-	int invulnerableTick;
 	int baseATT;
 	int baseDEF;
 	int baseMaxLife;

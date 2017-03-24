@@ -56,14 +56,32 @@ void World::initialize()
 	TextureLoader::Inst()->load(SkillMPBoostIconFile, SkillMPBoostIcon);
 	TextureLoader::Inst()->load(SkillCriticalThrowIconFile, SkillCriticalThrowIcon);
 	///Load tiles
-	TextureLoader::Inst()->load(Tile01File, Tile01);
 	TextureLoader::Inst()->load(BrickFile, Brick);
+	TextureLoader::Inst()->load(Tile01File, Tile01);
+	TextureLoader::Inst()->load(Tile02File, Tile02);
+	TextureLoader::Inst()->load(Tile03File, Tile03);
+	TextureLoader::Inst()->load(Tile04File, Tile04);
+	TextureLoader::Inst()->load(Tile05File, Tile05);
+	TextureLoader::Inst()->load(Tile06File, Tile06);
+	TextureLoader::Inst()->load(Tile07File, Tile07);
+	TextureLoader::Inst()->load(Tile08File, Tile08);
+	TextureLoader::Inst()->load(Tile09File, Tile09);
 	///Load sprites
 	TextureLoader::Inst()->load(WaterMushroomFrameFile, WaterMushroomFrame);
 	TextureLoader::Inst()->load(TestPortalFile, TestPortal);
 	TextureLoader::Inst()->load(LadderSpriteFile, LadderSprite);
 	TextureLoader::Inst()->load(MapGateFile, MapGate);
 	TextureLoader::Inst()->load(MapGate2File, MapGate2);
+	TextureLoader::Inst()->load(Sprite01File, Sprite01);
+	TextureLoader::Inst()->load(Sprite02File, Sprite02);
+	TextureLoader::Inst()->load(Sprite03File, Sprite03);
+	TextureLoader::Inst()->load(Sprite04File, Sprite04);
+	TextureLoader::Inst()->load(Sprite05File, Sprite05);
+	TextureLoader::Inst()->load(Sprite06File, Sprite06);
+	TextureLoader::Inst()->load(Sprite07File, Sprite07);
+	TextureLoader::Inst()->load(Sprite08File, Sprite08);
+	TextureLoader::Inst()->load(Sprite09File, Sprite09);
+	TextureLoader::Inst()->load(Sprite10File, Sprite10);
 	///Load entities
 	TextureLoader::Inst()->load(PlayerFrameFile, PlayerFrame);
 	TextureLoader::Inst()->load(LeafNPCFile, LeafNPC);
@@ -78,6 +96,7 @@ void World::initialize()
 	TextureLoader::Inst()->load(HostileGhostMobFile, HostileGhostMob);
 	TextureLoader::Inst()->load(HostileWoodMobFile, HostileWoodMob);
 	TextureLoader::Inst()->load(HostileGiantCatFile, HostileGiantCat);
+	TextureLoader::Inst()->load(HostilePigNPCFile, HostilePigNPC);
 	///Load Projectiles
 	TextureLoader::Inst()->load(SubiDartProjectileFile, SubiDartProjectile);
 	TextureLoader::Inst()->load(IronDartProjectileFile, IronDartProjectile);
@@ -94,10 +113,6 @@ void World::initialize()
 	SoundLoader::Inst()->load(WalkOnSnow4File, WalkOnSnow4, SOUND_SFX);
 	SoundLoader::Inst()->load(AttackSoundFile, AttackSound, SOUND_SFX);
 	SoundLoader::Inst()->load(CollisionSouldFile, CollisionSound, SOUND_SFX);
-	SoundLoader::Inst()->load(DamageSoundFile, DamageSound, SOUND_SFX);
-	SoundLoader::Inst()->load(DeathSoundFile, DeathSound, SOUND_SFX);
-	SoundLoader::Inst()->load(DemonDamageSoundFile, DemonDamageSound, SOUND_SFX);
-	SoundLoader::Inst()->load(DemonDeathSoundFile, DemonDeathSound, SOUND_SFX);
 	SoundLoader::Inst()->load(PortalNoiseFile, PortalNoise, SOUND_SFX);
 	SoundLoader::Inst()->load(PickupSoundFile, PickupSound, SOUND_SFX);
 	SoundLoader::Inst()->load(LevelupSoundFile, LevelupSound, SOUND_SFX);
@@ -105,14 +120,25 @@ void World::initialize()
 	SoundLoader::Inst()->load(PlayerDamageSoundFile, PlayerDamageSound, SOUND_SFX);
 	SoundLoader::Inst()->load(WrapGateNoiseFile, WrapGateNoise, SOUND_SFX);
 	SoundLoader::Inst()->load(HealingMagicSoundFile, HealingMagicSound, SOUND_SFX);
+
+	SoundLoader::Inst()->load(DamageSoundFile, DamageSound, SOUND_SFX);
+	SoundLoader::Inst()->load(DeathSoundFile, DeathSound, SOUND_SFX);
+	SoundLoader::Inst()->load(DemonDamageSoundFile, DemonDamageSound, SOUND_SFX);
+	SoundLoader::Inst()->load(DemonDieSoundFile, DemonDieSound, SOUND_SFX);
+	SoundLoader::Inst()->load(GhostMobDamageSoundFile, GhostMobDamageSound, SOUND_SFX);
+	SoundLoader::Inst()->load(GhostMobDieSoundFile, GhostMobDieSound, SOUND_SFX);
+	SoundLoader::Inst()->load(GiantCatDamageSoundFile, GiantCatDamageSound, SOUND_SFX);
+	SoundLoader::Inst()->load(GiantCatDieSoundFile, GiantCatDieSound, SOUND_SFX);
+	SoundLoader::Inst()->load(SkeletonDamageSoundFile, SkeletonDamageSound, SOUND_SFX);
+	SoundLoader::Inst()->load(SkeletonDieSoundFile, SkeletonDieSound, SOUND_SFX);
+	SoundLoader::Inst()->load(WoodMobDamageSoundFile, WoodMobDamageSound, SOUND_SFX);
+	SoundLoader::Inst()->load(WoodMobDieSoundFile, WoodMobDieSound, SOUND_SFX);
+	SoundLoader::Inst()->load(PigDamageSoundFile, PigDamageSound, SOUND_SFX);
+	SoundLoader::Inst()->load(PigDieSoundFile, PigDieSound, SOUND_SFX);
 	///Load player data from xml
 	if (!newGame)
-	{
 		XmlParser::Inst()->loadCharacter();
-		changeMap(XmlParser::Inst()->mapID, MAPCHANGE_LOAD);
-	}
-	else
-		changeMap(MapTest01, MAPCHANGE_LOAD);
+	changeMap(XmlParser::Inst()->mapID, MAPCHANGE_LOAD);
 	///load UI
 	const Player* player = Camera::Inst()->getTarget();
 	Vector2D healthNumTextpos(HealthTextPos);
@@ -133,10 +159,13 @@ void World::clearWorld()
 	layer_text.clear();
 }
 
-void World::startNewGame()
+void World::startNewGame(bool demonic)
 {
 	newGame = true;
-	XmlParser::Inst()->mapID = MapTest01;
+	if(demonic)
+		XmlParser::Inst()->mapID = MapDemo;
+	else
+		XmlParser::Inst()->mapID = MapTest01;
 	XmlParser::Inst()->level = 1;
 	XmlParser::Inst()->xp = 0;
 	XmlParser::Inst()->life = 100;
@@ -212,6 +241,7 @@ void World::changeMap(int mapID, MapChangeType form)
 	}
 	if (mapID == MapDemo)
 	{
+		int i;
 		width = 3072;
 		height = 1000;
 		backgroundID = MapBackground;
@@ -219,15 +249,43 @@ void World::changeMap(int mapID, MapChangeType form)
 		switch (form)
 		{
 		case MAPCHANGE_LOAD:
-			Camera::Inst()->getTarget_nonConst()->setPosition(500, height - 100);
+			Camera::Inst()->getTarget_nonConst()->setPosition(500, height - 200);
 			break;
 		}
 		///tiles
-
+		for (i = 0; i < 12; i++)
+		{
+			getLayer_tile().push_back(new Tile(Tile01, i * 270, height - 60));
+			getLayer_tile().push_back(new Tile(Tile02, i * 270 + 90, height - 60));
+			getLayer_tile().push_back(new Tile(Tile03, i * 270 + 180, height - 60));
+		}
+		for (i = 0; i < 10; i++)
+		{
+			getLayer_tile().push_back(new Tile(Tile04, i * 270, height - 88));
+			getLayer_tile().push_back(new Tile(Tile05, i * 270 + 90, height - 88));
+			getLayer_tile().push_back(new Tile(Tile06, i * 270 + 180, height - 88));
+		}
+		getLayer_tile().push_back(new Tile(Tile07, 10 * 270 - 26, height - 148));
+		for (; i < 12; i++)
+		{
+			getLayer_tile().push_back(new Tile(Tile01, i * 270, height - 120));
+			getLayer_tile().push_back(new Tile(Tile02, i * 270 + 90, height - 120));
+			getLayer_tile().push_back(new Tile(Tile03, i * 270 + 180, height - 120));
+			getLayer_tile().push_back(new Tile(Tile04, i * 270, height - 148));
+			getLayer_tile().push_back(new Tile(Tile05, i * 270 + 90, height - 148));
+			getLayer_tile().push_back(new Tile(Tile06, i * 270 + 180, height - 148));
+		}
+		getLayer_tile().push_back(new Tile(Tile09, 10 * 270 - 26, height - 121));
 		///sprites
-
+		getLayer_background().push_back(new Sprite(Sprite03, 0, height - 170));
+		getLayer_background().push_back(new Sprite(Sprite02, 201, height - 170));
+		getLayer_background().push_back(new Sprite(Sprite04, 455, height - 170));
+		getLayer_background().push_back(new Sprite(Sprite01, 0, height - 365));
+		getLayer_background().push_back(new Sprite(Sprite07, 300, height - 280));
+		getLayer_background().push_back(new Sprite(Sprite05, 400, height - 140));
+		getLayer_background().push_back(new Sprite(Sprite06, 456, height - 721));
 		///entities
-		getLayer_entity().push_back(new Hostile(DemonHostile, 0, 2700, height - 200));
+		getLayer_entity().push_back(new Hostile(HostilePigNPC, 0, 200, height - 200));
 		///items
 		return;
 	}

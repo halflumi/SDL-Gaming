@@ -21,6 +21,7 @@ int ExpSheet(int level);
 #define COLOR_BLUE		{0,0,255}
 #define COLOR_CLAN		{0,255,255}
 #define COLOR_PURPLE	{255,0,255}
+#define COLOR_YELLOW	{255,241,0}
 #define COLOR_ORANGE	{241,145,73}
 //savedata filepath
 #define SettingsFile "../save/settings.xm"
@@ -73,6 +74,7 @@ enum MapChangeType
 #define MapTest02							10210002
 #define MapDemo								10210003
 //menu elementsID 103
+#define DemoButton							10300001
 #define NewGameButton						10310000
 #define ExitButton							10310001
 #define OptionButton						10310002
@@ -223,6 +225,8 @@ enum MapChangeType
 #define HostileWoodMobFile					"../assets/entities/WoodMob.png"
 #define HostileGiantCat						30310005
 #define HostileGiantCatFile					"../assets/entities/GiantCat.png"
+#define HostilePigNPC						30310006
+#define HostilePigNPCFile					"../assets/entities/PigNPC.png"
 //Item 304
 #define IronDartItem						30410000
 #define IronDartItemName					"Iron Dart"
@@ -267,11 +271,47 @@ enum MapChangeType
 #define MapGate2File						"../assets/MapGate2.png"
 #define TestPortal							30810004
 #define TestPortalFile						"../assets/TestPortal.png"
+#define Sprite01							30810005
+#define Sprite01File						"../assets/sprites/Sprite01.png"
+#define Sprite02							30810006
+#define Sprite02File						"../assets/sprites/Sprite02.png"
+#define Sprite03							30810007
+#define Sprite03File						"../assets/sprites/Sprite03.png"
+#define Sprite04							30810008
+#define Sprite04File						"../assets/sprites/Sprite04.png"
+#define Sprite05							30810009
+#define Sprite05File						"../assets/sprites/Sprite05.png"
+#define Sprite06							30810010
+#define Sprite06File						"../assets/sprites/Sprite06.png"
+#define Sprite07							30810011
+#define Sprite07File						"../assets/sprites/Sprite07.png"
+#define Sprite08							30810012
+#define Sprite08File						"../assets/sprites/Sprite08.png"
+#define Sprite09							30810013
+#define Sprite09File						"../assets/sprites/Sprite09.png"
+#define Sprite10							30810014
+#define Sprite10File						"../assets/sprites/Sprite09.png"
 //Tile 309
 #define Brick								30910000
 #define BrickFile							"../assets/Brick.png"
 #define Tile01								30910001
-#define Tile01File							"../assets/Tile01.png"
+#define Tile01File							"../assets/tiles/Tile01.png"
+#define Tile02								30910002
+#define Tile02File							"../assets/tiles/Tile02.png"
+#define Tile03								30910003
+#define Tile03File							"../assets/tiles/Tile03.png"
+#define Tile04								30910004
+#define Tile04File							"../assets/tiles/Tile04.png"
+#define Tile05								30910005
+#define Tile05File							"../assets/tiles/Tile05.png"
+#define Tile06								30910006
+#define Tile06File							"../assets/tiles/Tile06.png"
+#define Tile07								30910007
+#define Tile07File							"../assets/tiles/Tile07.png"
+#define Tile08								30910008
+#define Tile08File							"../assets/tiles/Tile08.png"
+#define Tile09								30910009
+#define Tile09File							"../assets/tiles/Tile09.png"
 ///sounds 400xxxxx
 //musics 400
 #define Music01								40010000
@@ -323,7 +363,28 @@ enum MapChangeType
 #define HealingMagicSoundFile				"../sounds/0001004.Use.mp3"
 #define SpeedBuffSound						40210016
 #define SpeedBuffSoundFile					"../sounds/0001004.Use.mp3"
+
 #define DemonDamageSound					40210017
-#define DemonDamageSoundFile				"../sounds/DemonDamage.wav"
-#define DemonDeathSound						40210018
-#define DemonDeathSoundFile					"../sounds/DemonDie.wav"
+#define DemonDamageSoundFile				"../sounds/mob/DemonDamage.wav"
+#define DemonDieSound						40210018
+#define DemonDieSoundFile					"../sounds/mob/DemonDie.wav"
+#define GhostMobDamageSound					40210019
+#define GhostMobDamageSoundFile				"../sounds/mob/GhostMobDamage.wav"
+#define GhostMobDieSound					40210020	   
+#define GhostMobDieSoundFile				"../sounds/mob/GhostMobDie.wav"
+#define GiantCatDamageSound					40210021
+#define GiantCatDamageSoundFile				"../sounds/mob/GiantCatDamage.mp3"
+#define GiantCatDieSound					40210022	   
+#define GiantCatDieSoundFile				"../sounds/mob/GiantCatDie.mp3"
+#define SkeletonDamageSound					40210023
+#define SkeletonDamageSoundFile				"../sounds/mob/SkeletonDamage.wav"
+#define SkeletonDieSound					40210024	   
+#define SkeletonDieSoundFile				"../sounds/mob/SkeletonDie.wav"
+#define WoodMobDamageSound					40210025
+#define WoodMobDamageSoundFile				"../sounds/mob/WoodMobDamage.mp3"
+#define WoodMobDieSound						40210026	  
+#define WoodMobDieSoundFile					"../sounds/mob/WoodMobDie.mp3"
+#define PigDamageSound						40210027
+#define PigDamageSoundFile					"../sounds/mob/PigDamage.mp3"
+#define PigDieSound							40210028	   
+#define PigDieSoundFile						"../sounds/mob/PigDie.mp3"

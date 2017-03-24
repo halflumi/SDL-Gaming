@@ -11,12 +11,16 @@ private:
 	bool beingHit;
 	int damageTick;
 	bool stasis;
+	int damageSoundID;
+	int dieSoundID;
+	int ai[5];
 
 	void Load();
 
 	void MovingAI();
 	bool CheckCollision_tileX(float& x);
 	bool CheckCollision_tileY(float& y);
+	void CheckCollision_hostile(Vector2D newpos);
 	void HitGround();
 public:
 	Hostile(int id, int worldID, int x, int y);

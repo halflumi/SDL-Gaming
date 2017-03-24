@@ -22,14 +22,22 @@ Hostile::Hostile(int id, int _worldID, int x, int y) : timer(true)
 
 void Hostile::Load()
 {
+	friendly = false;
 	color = COLOR_WHITE;
 	damageTick = 0;
+	ai[0] = 0;
+	ai[1] = 0;
+	ai[2] = 0;
+	ai[3] = 0;
+	ai[4] = 0;
 	midair = false;
 	stasis = false;
 	if (uniqueID == BlackBlock)
 	{
 		width = 80;
 		height = 80;
+		damageSoundID = DamageSound;
+		dieSoundID = DeathSound;
 
 		stasis = true;
 		level = 1;
@@ -45,6 +53,8 @@ void Hostile::Load()
 		width = 177;
 		height = 163;
 		numFrames = 4;
+		damageSoundID = DemonDamageSound;
+		dieSoundID = DemonDieSound;
 
 		maxSpeed = 2.f;
 		acceleration.y = GRAVITY;
@@ -61,6 +71,8 @@ void Hostile::Load()
 		width = 71;
 		height = 64;
 		numFrames = 3;
+		damageSoundID = GhostMobDamageSound;
+		dieSoundID = GhostMobDieSound;
 
 		maxSpeed = 2.f;
 		acceleration.y = GRAVITY;
@@ -78,6 +90,8 @@ void Hostile::Load()
 		height = 95;
 		numFrames = 4;
 		animatedSpeed = 350;
+		damageSoundID = SkeletonDamageSound;
+		dieSoundID = SkeletonDieSound;
 
 		maxSpeed = 1.f;
 		acceleration.y = GRAVITY;
@@ -95,6 +109,8 @@ void Hostile::Load()
 		height = 77;
 		numFrames = 4;
 		animatedSpeed = 350;
+		damageSoundID = WoodMobDamageSound;
+		dieSoundID = WoodMobDieSound;
 
 		maxSpeed = 1.f;
 		acceleration.y = GRAVITY;
@@ -112,6 +128,8 @@ void Hostile::Load()
 		height = 96;
 		numFrames = 5;
 		animatedSpeed = 150;
+		damageSoundID = GiantCatDamageSound;
+		dieSoundID = GiantCatDieSound;
 
 		maxSpeed = 4.f;
 		acceleration.y = GRAVITY;
@@ -123,6 +141,29 @@ void Hostile::Load()
 		defense = 5;
 		return;
 	}
+	if (uniqueID == HostilePigNPC)
+	{
+		friendly = true;
+		width = 69;
+		height = 50;
+		numFrames = 3;
+		animatedSpeed = 250;
+		damageSoundID = PigDamageSound;
+		dieSoundID = PigDieSound;
+
+		maxSpeed = 3.f;
+		acceleration.y = GRAVITY;
+		level = 1;
+		exp = 20;
+		life = 300;
+		minATT = 20;
+		maxATT = 40;
+		defense = 5;
+
+		ai[1] = 1;
+		return;
+	}
+
 }
 
 void Hostile::update()
@@ -172,16 +213,50 @@ void Hostile::update()
 void Hostile::MovingAI()
 {
 	int player_x = Camera::Inst()->getTarget_nonConst()->getPosition().x;
-	if (position.x < player_x)
+	if (!friendly)
 	{
-		movingRight = true;
-		movingLeft = false;
+		if (position.x < player_x)
+		{
+			movingRight = true;
+			movingLeft = false;
+		}
+		else
+		{
+			movingRight = false;
+			movingLeft = true;
+		}
 	}
 	else
 	{
-		movingRight = false;
-		movingLeft = true;
+		if (ai[0] > 0)
+		{
+			ai[0]--;
+			//cout << ai[0] << ' ';
+			if (ai[1] == 1)
+				currentRow = 2;
+			if (ai[1] == 2)
+				currentRow = 3;
+			movingRight = false;
+			movingLeft = false;
+			velocity.x = 0;
+		}
+		else
+		{
+			cout << "shit" << endl;
+			if (ai[1] == 1)
+			{
+				movingLeft = false;
+				movingRight = true;
+			}
+			else
+			{
+				movingLeft = true;
+				movingRight = false;
+			}
+			ai[1] = 0;
+		}
 	}
+	cout << ai[1];
 	//calculate speed
 	if (!midair)
 	{
@@ -207,6 +282,20 @@ void Hostile::MovingAI()
 	}
 	//calculate position
 	Vector2D newposition = position + velocity;
+	cout << newposition.x << endl;
+	if (friendly || !ai[1])
+	{
+		if (newposition.x < 0)
+		{
+			ai[0] = Dice::Inst()->rand(60, 60);
+			ai[1] = 1;
+		}
+		else if (newposition.x > 400)
+		{
+			ai[0] = Dice::Inst()->rand(60, 60);
+			ai[1] = 2;
+		}
+	}
 
 	if (!CheckCollision_tileX(newposition.x)) {
 		position.x = newposition.x;
@@ -214,6 +303,8 @@ void Hostile::MovingAI()
 	if (!CheckCollision_tileY(newposition.y)) {
 		position.y = newposition.y;
 	}
+
+	CheckCollision_hostile(newposition);
 }
 
 bool Hostile::CheckCollision_tileX(float& x)
@@ -321,6 +412,53 @@ bool Hostile::CheckCollision_tileY(float& y)
 	return false;
 }
 
+void Hostile::CheckCollision_hostile(Vector2D newpos)
+{
+	if (invulnerableTick > 0)
+		return;
+	int pRight = newpos.x + width;
+	int pBottom = newpos.y + height;
+
+	vector<Entity*>& entities = World::Inst()->getLayer_entity();
+	int i;
+	int len = entities.size();
+	for (i = 0; i < len; i++)
+	{
+		if (entities[i]->type() != TypeHostile)
+			continue;
+		if (!entities[i]->active || entities[i]->friendly)
+			continue;
+
+		if (pBottom <= entities[i]->getPosition().y)
+			continue;
+		if (newpos.y >= entities[i]->getPosition().y + entities[i]->getHeight())
+			continue;
+		if (pRight <= entities[i]->getPosition().x)
+			continue;
+		if (newpos.x >= entities[i]->getPosition().x + entities[i]->getWidth())
+			continue;
+
+		//onhit
+		SoundLoader::Inst()->playSound(PlayerDamageSound);
+		int damage = Dice::Inst()->rand(entities[i]->minATT, entities[i]->maxATT) - defense;
+		life -= damage;
+		Vector2D textShift(entityCenter.x + Dice::Inst()->randInverse(20), position.y + Dice::Inst()->randInverse(20));
+		World::Inst()->createText(textShift, 0, -0.1f, to_string(damage), segoeui22, COLOR_RED, 60);
+		velocity.y = -10.f;
+		//acceleration.y = -GRAVITY;
+		if (entities[i]->getPosition().x > position.x) {
+			velocity.x = -5.f;
+			acceleration.x = 0;
+		}
+		else {
+			velocity.x = 5.f;
+			acceleration.x = 0;
+		}
+		invulnerableTick = 1;
+		return;
+	}
+}
+
 void Hostile::HitGround()
 {
 	midair = false;
@@ -342,6 +480,7 @@ void Hostile::kill()
 	active = false;
 	timer.start();
 	Camera::Inst()->getTarget_nonConst()->exp += exp;
+	///drop
 	if (uniqueID == BlackBlock)
 	{
 		SoundLoader::Inst()->playSound(DeathSound);
@@ -353,17 +492,8 @@ void Hostile::kill()
 			World::Inst()->newItem(MokbiDartItem, 1, position.x + width / 2, position.y + height / 2);
 		return;
 	}
-	if (uniqueID == DemonHostile)
-		SoundLoader::Inst()->playSound(DemonDeathSound);
-	else if (uniqueID == HostileGhostMob)
-		SoundLoader::Inst()->playSound(DemonDeathSound);
-	else if (uniqueID == HostileSkeleton)
-		SoundLoader::Inst()->playSound(DemonDeathSound);
-	else if (uniqueID == HostileWoodMob)
-		SoundLoader::Inst()->playSound(DemonDeathSound);
-	else if (uniqueID == HostileGiantCat)
-		SoundLoader::Inst()->playSound(DemonDeathSound);
 
+	SoundLoader::Inst()->playSound(dieSoundID);
 	color = COLOR_WHITE;
 }
 
@@ -392,28 +522,7 @@ void Hostile::onHit(int damage, int critChance)
 		Vector2D textShift(entityCenter.x + Dice::Inst()->randInverse(20), position.y + Dice::Inst()->randInverse(20));
 		World::Inst()->createText(textShift, 0, -0.1f, to_string(actualDamage), segoeui22, COLOR_WHITE, 60);
 	}
-	if (uniqueID == BlackBlock)
-		SoundLoader::Inst()->playSound(DamageSound);
-	else if (uniqueID == DemonHostile)
-	{
-		SoundLoader::Inst()->playSound(DemonDamageSound);
-	}
-	else if (uniqueID == HostileGhostMob)
-	{
-		SoundLoader::Inst()->playSound(DemonDamageSound);
-	}
-	else if (uniqueID == HostileSkeleton)
-	{
-		SoundLoader::Inst()->playSound(DemonDamageSound);
-	}
-	else if (uniqueID == HostileWoodMob)
-	{
-		SoundLoader::Inst()->playSound(DemonDamageSound);
-	}
-	else if (uniqueID == HostileGiantCat)
-	{
-		SoundLoader::Inst()->playSound(DemonDamageSound);
-	}
+	SoundLoader::Inst()->playSound(damageSoundID);
 	color = COLOR_RED;
 	damageTick = DAMAGETICK;
 }
