@@ -14,7 +14,7 @@
 #define AIRACCELERATION 0.3f
 #define MIDAIRACCERLATION 0.05f
 #define DEFAULTMAXSPEED 5.0f
-#define JUMPSPEED -15.f
+#define JUMPSPEED -10.f
 #define LADDERSPEED 2.0f
 #define LADDERJUMPSPEED -12.f
 #define SEARCH_LADDER 1
@@ -47,6 +47,13 @@ Player::Player(int id, int x, int y)
 	Load();
 }
 
+Player::~Player() 
+{
+	delete characterPanel;
+	delete skillPanel;
+	delete inventory;
+}
+
 void Player::Load()
 {
 	width = PLAYERWIDTH;
@@ -65,8 +72,7 @@ void Player::Load()
 	baseDEF = 2;
 	critChance = 10;
 
-	meleeProjectile = NULL;
-	attackInterval = 30;
+	attackInterval = 15;
 	attackTick = 0;
 	lifeRegenInterval = 300;
 	lifeRegenTick = 0;
@@ -78,22 +84,21 @@ void Player::Load()
 
 void Player::update()
 {
-	isLevelingup();
-	updateAttributes();
+	IsDead();
+	IsLevelingup();
+	UpdateAttributes();
 	HandleInput();
 	HandleMovement();
 	HandleDisplay();
-
-	if (meleeProjectile != NULL && meleeProjectile->active)
-		meleeProjectile->update();
-
-	if (characterPanel->active)
+	///update character panel
+ 	if (characterPanel->active)
 		characterPanel->update();
+	///update skill panel
 	if (skillPanel->active)
 		skillPanel->update();
+	///update inventory and selecting item
 	if (inventory->active)
 		inventory->update();
-
 	if (selectingItem != NULL)
 	{
 		if (!inventory->active)
@@ -116,9 +121,6 @@ void Player::draw()
 	///draw player
 	TextureLoader::Inst()->drawFrame(uniqueID, display_pos.x, display_pos.y, width, height, currentRow, currentFrame, angle, alpha);
 	
-	///draw melee
-	if (meleeProjectile != NULL && meleeProjectile->active)
-		meleeProjectile->draw();
 	///draw dialog
 	if (dialog != NULL)
 		dialog->draw();
@@ -137,11 +139,18 @@ void Player::draw()
 		selectingItem->draw();
 }
 
-void Player::isLevelingup()
+void Player::IsDead()
+{
+	if (life <= 0)
+		Main::Inst()->changeMenu(MenuGameOver);
+}
+
+void Player::IsLevelingup()
 {
 	if (exp >= expToNextLevel)
 	{
 		level++;
+		skillPanel->skillPoints++;
 		exp -= expToNextLevel;
 		SoundLoader::Inst()->playSound(LevelupSound);
 		life = maxlife;
@@ -150,8 +159,9 @@ void Player::isLevelingup()
 	}
 }
 
-void Player::updateAttributes()
+void Player::UpdateAttributes()
 {
+	///refresh attributes
 	if (rightHand_equ == NULL || !rightHand_equ->active)
 	{
 		minATT = baseATT;
@@ -194,7 +204,7 @@ void Player::updateAttributes()
 				mana++;
 		}
 	}
-
+	///invulnerable tick
 	if (invulnerableTick)
 	{
 		invulnerableTick++;
@@ -232,9 +242,10 @@ void Player::HandleInput()
 
 	if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_ESCAPE) && keyCooldown.getTicks() > PRESSCOOLDOWN)
 	{
-		if (characterPanel->active || inventory->active)
+		if (characterPanel->active || inventory->active || skillPanel->active)
 		{
 			characterPanel->active = false;
+			skillPanel->active = false;
 			inventory->active = false;
 		}
 		else
@@ -396,31 +407,6 @@ void Player::Attacking()
 		direction.x *= 10;
 		direction.y *= 5;
 		World::Inst()->newProjectile(ChlorophyteTrackerProjectile, entityCenter, direction.x, direction.y, this);
-		SoundLoader::Inst()->playSound(AttackSound);
-
-		life--;
-		Vector2D textShift(position.x + width / 2 + Dice::Inst()->randInverse(20), position.y + Dice::Inst()->randInverse(20));
-		World::Inst()->createText(textShift, 0.f, -0.5f, "-1s", segoeui22, COLOR_RED, 120);
-	}
-	else if (rightHand_equ->getUniqueID() == OrichalcumShortsword)
-	{
-		attackTick = 1;
-		Vector2D mousepos = Inputor::Inst()->getMouseDefinitePosition();
-		Vector2D direction = mousepos - entityCenter;
-		
-		if (meleeProjectile != NULL)
-			delete meleeProjectile;
-		if (direction.x > 0)
-		{
-			Vector2D swordpos(position.x + width, entityCenter.y - 20.f);
-			meleeProjectile = new Projectile(OrichalcumShortswordProjectile, -1, swordpos, 0.1f, 0.f, this);
-		}
-		else
-		{
-			Vector2D swordpos(position.x, entityCenter.y - 20.f);
-			meleeProjectile = new Projectile(OrichalcumShortswordProjectile, -1, swordpos, -0.1f, 0.f, this);
-		}
-			
 		SoundLoader::Inst()->playSound(AttackSound);
 	}
 }

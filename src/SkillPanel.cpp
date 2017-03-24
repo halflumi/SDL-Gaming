@@ -12,6 +12,7 @@
 #define GRIDSIZE 46
 #define TITLEHEIGHT 53
 #define HOTKEYNUMS	6
+#define SKILLGRIDSIZE 30
 
 #define CloseButtonPos				position.x + 460, position.y + 2
 #define HealingMagicSkillSlotPos	position.x + 130, position.y + 118
@@ -23,12 +24,12 @@
 #define SkillPointsTextPos			position.x + 5, position.y + height - skillPointsText->getHeight() - 5
 #define SkillInfoPos_X				pos.x + 309
 #define SkillInfoPos_Y				pos.y + 58
-#define SkillHotkeySlot1Pos_X		719
-#define SkillHotkeySlot1Pos_Y		Main::Inst()->getRenderHeight() + 65
-#define SkillHotkeySlot2Pos_X		769
-#define SkillHotkeySlot2Pos_Y		Main::Inst()->getRenderHeight() + 65
-#define SkillHotkeySlot3Pos_X		819
-#define SkillHotkeySlot3Pos_Y		Main::Inst()->getRenderHeight() + 65
+#define SkillHotkeySlot1Pos_X		750
+#define SkillHotkeySlot1Pos_Y		Main::Inst()->getRenderHeight() + 7
+#define SkillHotkeySlot2Pos_X		782								  
+#define SkillHotkeySlot2Pos_Y		Main::Inst()->getRenderHeight() + 7
+#define SkillHotkeySlot3Pos_X		814								  
+#define SkillHotkeySlot3Pos_Y		Main::Inst()->getRenderHeight() + 7
 
 SkillSlot::SkillSlot(int skillID, Skill* _skill)
 {
@@ -295,20 +296,20 @@ void SkillPanel::outsideDrawHotkeys()
 {
 	if (hotkeySkillIndexes[hotkey1] != -1)
 	{
-		TextureLoader::Inst()->draw(skillslots[hotkeySkillIndexes[hotkey1]]->getUniqueID(), SkillHotkeySlot1Pos_X, SkillHotkeySlot1Pos_Y, GRIDSIZE, GRIDSIZE);
+		TextureLoader::Inst()->drawEx2(skillslots[hotkeySkillIndexes[hotkey1]]->getUniqueID(), SkillHotkeySlot1Pos_X, SkillHotkeySlot1Pos_Y, skillslots[hotkeySkillIndexes[hotkey1]]->getWidth(), skillslots[hotkeySkillIndexes[hotkey1]]->getHeight(), SKILLGRIDSIZE, SKILLGRIDSIZE);
 		if (skills[hotkeySkillIndexes[hotkey1]]->cooldownTick)
-			TextureLoader::Inst()->drawEx2(GameMenuBackground, SkillHotkeySlot1Pos_X, SkillHotkeySlot1Pos_Y, 10, 10, GRIDSIZE, GRIDSIZE * (float)(skills[hotkeySkillIndexes[hotkey1]]->cooldownInterval - skills[hotkeySkillIndexes[hotkey1]]->cooldownTick) / skills[hotkeySkillIndexes[hotkey1]]->cooldownInterval);
+			TextureLoader::Inst()->drawEx2(GameMenuBackground, SkillHotkeySlot1Pos_X, SkillHotkeySlot1Pos_Y, 10, 10, SKILLGRIDSIZE, SKILLGRIDSIZE * (float)(skills[hotkeySkillIndexes[hotkey1]]->cooldownInterval - skills[hotkeySkillIndexes[hotkey1]]->cooldownTick) / skills[hotkeySkillIndexes[hotkey1]]->cooldownInterval);
 	}
 	if (hotkeySkillIndexes[hotkey2] != -1)
 	{
-		TextureLoader::Inst()->draw(skillslots[hotkeySkillIndexes[hotkey2]]->getUniqueID(), SkillHotkeySlot2Pos_X, SkillHotkeySlot2Pos_Y, GRIDSIZE, GRIDSIZE);
+		TextureLoader::Inst()->drawEx2(skillslots[hotkeySkillIndexes[hotkey2]]->getUniqueID(), SkillHotkeySlot2Pos_X, SkillHotkeySlot2Pos_Y, skillslots[hotkeySkillIndexes[hotkey2]]->getWidth(), skillslots[hotkeySkillIndexes[hotkey2]]->getHeight(), SKILLGRIDSIZE, SKILLGRIDSIZE);
 		if (skills[hotkeySkillIndexes[hotkey2]]->cooldownTick)
-			TextureLoader::Inst()->drawEx2(GameMenuBackground, SkillHotkeySlot2Pos_X, SkillHotkeySlot2Pos_Y, 10, 10, GRIDSIZE, GRIDSIZE * (float)(skills[hotkeySkillIndexes[hotkey2]]->cooldownInterval - skills[hotkeySkillIndexes[hotkey2]]->cooldownTick) / skills[hotkeySkillIndexes[hotkey2]]->cooldownInterval);
+			TextureLoader::Inst()->drawEx2(GameMenuBackground, SkillHotkeySlot2Pos_X, SkillHotkeySlot2Pos_Y, 10, 10, SKILLGRIDSIZE, SKILLGRIDSIZE * (float)(skills[hotkeySkillIndexes[hotkey2]]->cooldownInterval - skills[hotkeySkillIndexes[hotkey2]]->cooldownTick) / skills[hotkeySkillIndexes[hotkey2]]->cooldownInterval);
 	}
 	if (hotkeySkillIndexes[hotkey3] != -1)
 	{
-		TextureLoader::Inst()->draw(skillslots[hotkeySkillIndexes[hotkey3]]->getUniqueID(), SkillHotkeySlot3Pos_X, SkillHotkeySlot3Pos_Y, GRIDSIZE, GRIDSIZE);
+		TextureLoader::Inst()->drawEx2(skillslots[hotkeySkillIndexes[hotkey3]]->getUniqueID(), SkillHotkeySlot3Pos_X, SkillHotkeySlot3Pos_Y, skillslots[hotkeySkillIndexes[hotkey3]]->getWidth(), skillslots[hotkeySkillIndexes[hotkey3]]->getHeight(), SKILLGRIDSIZE, SKILLGRIDSIZE);
 		if (skills[hotkeySkillIndexes[hotkey3]]->cooldownTick)
-			TextureLoader::Inst()->drawEx2(GameMenuBackground, SkillHotkeySlot3Pos_X, SkillHotkeySlot3Pos_Y, 10, 10, GRIDSIZE, GRIDSIZE * (float)(skills[hotkeySkillIndexes[hotkey3]]->cooldownInterval - skills[hotkeySkillIndexes[hotkey3]]->cooldownTick) / skills[hotkeySkillIndexes[hotkey3]]->cooldownInterval);
+			TextureLoader::Inst()->drawEx2(GameMenuBackground, SkillHotkeySlot3Pos_X, SkillHotkeySlot3Pos_Y, 10, 10, SKILLGRIDSIZE, SKILLGRIDSIZE * (float)(skills[hotkeySkillIndexes[hotkey3]]->cooldownInterval - skills[hotkeySkillIndexes[hotkey3]]->cooldownTick) / skills[hotkeySkillIndexes[hotkey3]]->cooldownInterval);
 	}
 }

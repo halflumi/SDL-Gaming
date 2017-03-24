@@ -11,7 +11,7 @@ int ExpSheet(int level);
 #define INVENTORYSIZE 36
 #define CLICKCOOLDOWN 80
 #define PRESSCOOLDOWN 100
-#define UIHEIGHT 168
+#define UIHEIGHT 66
 //colors
 #define COLOR_BLACK		{0,0,0}
 #define COLOR_GREY		{192,192,192}
@@ -61,6 +61,7 @@ enum MapChangeType
 #define MenuOptions						10110001
 #define MenuGameMain					10110002
 #define MenuControlSettings				10110003
+#define MenuGameOver					10110004
 //mapID 102
 #define MapTest01						10210001
 #define MapTest02						10210002
@@ -117,6 +118,7 @@ enum MapChangeType
 #define ResumeButton					10310101
 #define ExittoMainMenuButton			10310102
 #define ExittoDesktopButton				10310103
+#define GameOverText					10310104
 //button typeID 104
 #define ButtonTypeTextbox				10410000
 #define ButtonTypeButton				10410001
@@ -181,19 +183,17 @@ enum MapChangeType
 #define SkillPanelAddSkillButtonFile	"../assets/SkillPlusButton.png"
 #define SkillPanelMinusSkillButton		30210013
 #define SkillPanelMinusSkillButtonFile	"../assets/SkillMinusButton.png"
+#define xpBar							30210014
+#define xpBarFile						"../assets/expBar.png"
 //Hostile 303
 #define BlackBlock						30310000
 #define BlackBlockFile					"../assets/BlackBlock.png"
+#define DemonHostile					30310001
+#define DemonHostileFile				"../assets/Demon.png"
 //Item 304
-#define WoodenSword						30410000
-#define WoodenSwordName					"Wooden Sword"
-#define WoodenSwordFile					"../assets/WoodenSword.png"
-#define OrichalcumShortsword			30410001
-#define OrichalcumShortswordName		"Orichalcum Shortsword"
-#define OrichalcumShortswordFile		"../assets/OrichalcumShortsword.png"
-#define BowItem							30410002
-#define BowItemName						"Bow"
-#define BowItemFile						"../assets/bow_standby_item.png"
+#define IronDartItem					30410000
+#define IronDartItemName				"Iron Dart"
+#define IronDartItemFile				"../assets/items/IronDartItem.png"
 //NPC 305
 #define LeafNPC							30510000
 #define LeafNPCFile						"../assets/LeafNPC.png"
@@ -228,13 +228,19 @@ enum MapChangeType
 #define MapGate2File "../assets/MapGate2.png"
 #define TestPortal 30810004
 #define TestPortalFile "../assets/TestPortal.png"
+#define Flock 30810005
+#define FlockFile "../assets/Flock.png"
+#define HalfLadder 30810006
+#define HalfLadderFile "../assets/LadderSprite.png"
 //Tile 309
 #define Brick 30910000
 #define BrickFile "../assets/Brick.png"
 #define Tile01 30910001
 #define Tile01File "../assets/Tile01.png"
+
 #define HealingMagicSkillbrick 30910002
 #define HealingMagicSkillbrickFile "../assets/HealingMagicSkill.png"
+
 ///sounds 400xxxxx
 //musics 400
 #define Music01 40010000
@@ -286,3 +292,7 @@ enum MapChangeType
 #define HealingMagicSoundFile		"../sounds/0001004.Use.mp3"
 #define SpeedBuffSound				40210016
 #define SpeedBuffSoundFile			"../sounds/0001004.Use.mp3"
+#define DemonDamageSound			40210017
+#define DemonDamageSoundFile		"../sounds/DemonDamage.wav"
+#define DemonDeathSound				40210018
+#define DemonDeathSoundFile			"../sounds/DemonDie.wav"
