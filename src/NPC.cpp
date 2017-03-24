@@ -43,10 +43,8 @@ void NPC::Load()
 	}
 	if (uniqueID == SavePointNPC)
 	{
-		width = 254;
-		height = 221;
-		numFrames = 40;
-		animatedSpeed = 150;
+		width = 95;
+		height = 208;
 		return;
 	}
 	if (uniqueID == ShopNPC)

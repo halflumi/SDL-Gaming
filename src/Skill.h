@@ -12,7 +12,8 @@ private:
 public:
 	string name;
 	int preSkillIndex;
-	int skillClass;
+	int postSkillIndex;
+	bool passive;
 	int sp;
 	int level;
 	int maxLevel;

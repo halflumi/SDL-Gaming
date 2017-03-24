@@ -22,59 +22,30 @@ Projectile::Projectile(int id, int _worldID, Vector2D pos, float velocity_x, flo
 
 void Projectile::Load()
 {
-	if (uniqueID == IchorKnifeProjectile)
-	{
-		width = 14;
-		height = 28;
-		
-		penetrate = 2;
-		return;
-	}
-	if (uniqueID == OrichalcumShortswordProjectile)
-	{
-		width = 38;
-		height = 38;
+	penetrate = 1;
 
-		penetrate = -1;
-		return;
-	}
-	if (uniqueID == PurificationBulletProjectile)
+	if (uniqueID == SubiDartProjectile)
 	{
-		width = 2;
-		height = 20;
-
-		penetrate = -1;
-		return;
-	}
-	if (uniqueID == ChlorophyteTrackerProjectile)
-	{
-		width = 32;
-		height = 32;
-
-		penetrate = 1;
+		width = 27;
+		height = 27;
 		return;
 	}
 	if (uniqueID == IronDartProjectile)
 	{
 		width = 27;
 		height = 27;
-
-		penetrate = 1;
 		return;
 	}
 	if (uniqueID == CrystalDartProjectile)
 	{
 		width = 27;
 		height = 27;
-
-		penetrate = 1;
 		return;
 	}
 	if (uniqueID == MokbiDartProjectile)
 	{
 		width = 28;
 		height = 28;
-
 		penetrate = 2;
 		return;
 	}
@@ -102,42 +73,9 @@ void Projectile::update()
 
 	VisiableCheck();
 
-	if (uniqueID == IchorKnifeProjectile)
+	if (uniqueID == SubiDartProjectile)
 	{
-		if (life <= 40)
-			angle = atan2(velocity.y, velocity.x) * 180.F / PI + 90.F;
-		else
-		{
-			acceleration.y = GRAVITY;
-			angle += velocity.x * 2.f;
-		}
-		if (life > 300)
-			Kill();
-		life++;
-		return;
-	}
-	if (uniqueID == OrichalcumShortswordProjectile)
-	{
-		if (velocity.x > 0)
-			angle = 45;
-		else
-			angle = 225;
-		if (life > 120)
-			Kill();
-		life++;
-		return;
-	}
-	if (uniqueID == PurificationBulletProjectile)
-	{
-		angle = atan2(velocity.y, velocity.x) * 180.F / PI + 90.F;
-		if (life > 300)
-			Kill();
-		life++;
-		return;
-	}
-	if (uniqueID == ChlorophyteTrackerProjectile)
-	{
-		angle = atan2(velocity.y, velocity.x) * 180.F / PI + 45.F;
+		angle += 10.F;
 		if (life > 60)
 			acceleration.y = GRAVITY;
 		if (life > 300)
@@ -260,7 +198,6 @@ bool Projectile::CollisionCheck_entity(Vector2D newpos)
 
 		attackedTargets.push_back(entities[i]->worldID);
 		entities[i]->onHit(Dice::Inst()->rand(owner->minATT, owner->maxATT), owner->critChance);
-		owner->heal(1);
 		penetrate--;
 		if(penetrate == 0)
 			return true;

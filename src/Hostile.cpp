@@ -56,6 +56,23 @@ void Hostile::Load()
 		defense = 5;
 		return;
 	}
+	if (uniqueID == HostileGhostMob)
+	{
+		width = 71;
+		height = 163;
+		numFrames = 4;
+
+		stasis = false;
+		maxSpeed = 2.f;
+		acceleration.y = GRAVITY;
+		level = 1;
+		exp = 20;
+		life = 300;
+		minATT = 20;
+		maxATT = 40;
+		defense = 5;
+		return;
+	}
 }
 
 void Hostile::update()
@@ -317,7 +334,7 @@ void Hostile::onHit(int damage, int critChance)
 		life -= actualDamage;
 
 		Vector2D textShift(entityCenter.x + Dice::Inst()->randInverse(20), position.y + Dice::Inst()->randInverse(20));
-		World::Inst()->createText(textShift, 0, -0.1f, to_string(actualDamage), segoeui22, COLOR_GREEN, 60);
+		World::Inst()->createText(textShift, 0, -0.1f, to_string(actualDamage), segoeui22, COLOR_WHITE, 60);
 	}
 	if (uniqueID == BlackBlock)
 	{

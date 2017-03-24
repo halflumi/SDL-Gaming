@@ -21,9 +21,7 @@ private:
 	bool movingDown;
 	int attackInterval;
 	int attackTick;
-	int lifeRegenInterval;
 	int lifeRegenTick;
-	int manaRegenInterval;
 	int manaRegenTick;
 	int invulnerableInterval;
 	int invulnerableTick;
@@ -31,6 +29,11 @@ private:
 	int baseDEF;
 	int baseMaxLife;
 	int baseMaxMana;
+	int baseLifeRegenInterval;
+	int baseLifeRegenAmount;
+	int baseManaRegenInterval;
+	int baseManaRegenAmount;
+	int baseInvulnerableInterval;
 
 	bool focused;
 	Vector2D display_pos;
@@ -44,7 +47,6 @@ private:
 	void HandlePlayerPhysics( );
 	void HandleMovement();
 	void HandleDisplay();
-	void Attacking();
 
 	bool CheckCollision_tileX(float& x);
 	bool CheckCollision_tileY(float& y);
@@ -66,7 +68,12 @@ public:
 	InventoryItem* rightHand_equ;
 	InventoryItem* leftHand_equ;
 	InventoryItem* helmet_equ;
+
 	int expToNextLevel;
+	int lifeRegenInterval;
+	int lifeRegenAmount;
+	int manaRegenInterval;
+	int manaRegenAmount;
 
 	Player(int id, int x, int y);
 	~Player();
@@ -78,4 +85,6 @@ public:
 	int type() { return TypePlayer; }
 	void update();
 	void draw();
+
+	void attacking();
 };

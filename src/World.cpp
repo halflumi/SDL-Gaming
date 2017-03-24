@@ -47,8 +47,14 @@ void World::initialize()
 	TextureLoader::Inst()->load(SkillPanelAddSkillButtonFile, SkillPanelAddSkillButton);
 	TextureLoader::Inst()->load(SkillPanelMinusSkillButtonFile, SkillPanelMinusSkillButton);
 	///Load skill icons
-	TextureLoader::Inst()->load(HealingMagicSkillIconFile, HealingMagicSkillIcon);
-	TextureLoader::Inst()->load(IchorKnifeSkillIconFile, IchorKnifeSkillIcon);
+	TextureLoader::Inst()->load(SkillPhysicalTrainingIconFile, SkillPhysicalTrainingIcon);
+	TextureLoader::Inst()->load(SkillDoubleThrowIconFile, SkillDoubleThrowIcon);
+	TextureLoader::Inst()->load(SkillTripleThrowIconFile, SkillTripleThrowIcon);
+	TextureLoader::Inst()->load(SkillLifeForceIconFile, SkillLifeForceIcon);
+	TextureLoader::Inst()->load(SkillIronBodyIconFile, SkillIronBodyIcon);
+	TextureLoader::Inst()->load(SkillLifeRegenerationIconFile, SkillLifeRegenerationIcon);
+	TextureLoader::Inst()->load(SkillMPBoostIconFile, SkillMPBoostIcon);
+	TextureLoader::Inst()->load(SkillCriticalThrowIconFile, SkillCriticalThrowIcon);
 	///Load tiles
 	TextureLoader::Inst()->load(Tile01File, Tile01);
 	TextureLoader::Inst()->load(BrickFile, Brick);
@@ -68,10 +74,7 @@ void World::initialize()
 	TextureLoader::Inst()->load(BlackBlockFile, BlackBlock);
 	TextureLoader::Inst()->load(DemonHostileFile, DemonHostile);
 	///Load Projectiles
-	TextureLoader::Inst()->load(IchorKnifeProjectileFile, IchorKnifeProjectile);
-	TextureLoader::Inst()->load(OrichalcumShortswordProjectileFile, OrichalcumShortswordProjectile);
-	TextureLoader::Inst()->load(PurificationBulletProjectileFile, PurificationBulletProjectile);
-	TextureLoader::Inst()->load(ChlorophyteTrackerProjectileFile, ChlorophyteTrackerProjectile);
+	TextureLoader::Inst()->load(SubiDartProjectileFile, SubiDartProjectile);
 	TextureLoader::Inst()->load(IronDartProjectileFile, IronDartProjectile);
 	TextureLoader::Inst()->load(CrystalDartProjectileFile, CrystalDartProjectile);
 	TextureLoader::Inst()->load(MokbiDartProjectileFile, MokbiDartProjectile);
@@ -200,6 +203,28 @@ void World::changeMap(int mapID, MapChangeType form)
 		///entities
 		getLayer_entity().push_back(new NPC(SavePointNPC, 1600, height - 211));
 		///items
+		return;
+	}
+	if (mapID == MapDemo)
+	{
+		width = 3072;
+		height = 1000;
+		backgroundID = MapBackground;
+		///Spawn point
+		switch (form)
+		{
+		case MAPCHANGE_LOAD:
+			Camera::Inst()->getTarget_nonConst()->setPosition(500, height - 100);
+			break;
+		}
+		///tiles
+
+		///sprites
+
+		///entities
+		getLayer_entity().push_back(new Hostile(DemonHostile, 0, 2700, height - 200));
+		///items
+		return;
 	}
 }
 

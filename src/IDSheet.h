@@ -7,7 +7,7 @@ std::string ScancodeToString(SDL_Scancode scannode);
 int ExpSheet(int level);
 ///const
 //global
-#define TOTALSKILLS 2
+#define TOTALSKILLS 8
 #define INVENTORYSIZE 36
 #define CLICKCOOLDOWN 80
 #define PRESSCOOLDOWN 100
@@ -28,8 +28,14 @@ int ExpSheet(int level);
 
 enum SkillIndex
 {
-	HealingMagicIndex,
-	DoubleIchorKnifeIndex
+	SkillIndexPhysicalTraining,
+	SkillIndexDoubleThrow,
+	SkillIndexTripleThrow,
+	SkillIndexLifeForce,
+	SkillIndexIronBody,
+	SkillIndexLifeRegeneration,
+	SkillIndexMPBoost,
+	SkillIndexCriticalThrow
 };
 
 enum MapChangeType
@@ -65,6 +71,7 @@ enum MapChangeType
 //mapID 102
 #define MapTest01							10210001
 #define MapTest02							10210002
+#define MapDemo								10210003
 //menu elementsID 103
 #define NewGameButton						10310000
 #define ExitButton							10310001
@@ -126,12 +133,30 @@ enum MapChangeType
 //ItemClass 105
 #define ItemClassWeapon						10510000
 //skillID 106
-#define HealingMagicSkill					10610000
-#define HealingMagicSkillIcon				10610001
-#define HealingMagicSkillIconFile			"..\\assets\\HealingMagicSkill.png"
-#define IchorKnifeSkill						10610002
-#define IchorKnifeSkillIcon					10610003
-#define IchorKnifeSkillIconFile				"..\\assets\\IchorKnifeSkill.png"
+#define SkillPhysicalTraining				10610000
+#define SkillPhysicalTrainingIcon			10610001
+#define SkillPhysicalTrainingIconFile		"..\\assets\\skills\\SkillPhysicalTrainingIcon.png"
+#define SkillDoubleThrow					10610002
+#define SkillDoubleThrowIcon				10610003
+#define SkillDoubleThrowIconFile			"..\\assets\\skills\\SkillDoubleThrowIcon.png"
+#define SkillLifeForce						10610004
+#define SkillLifeForceIcon					10610005
+#define SkillLifeForceIconFile				"..\\assets\\skills\\SkillLifeForceIcon.png"
+#define SkillIronBody						10610006
+#define SkillIronBodyIcon					10610007
+#define SkillIronBodyIconFile				"..\\assets\\skills\\SkillIronBodyIcon.png"
+#define SkillLifeRegeneration				10610008
+#define SkillLifeRegenerationIcon			10610009
+#define SkillLifeRegenerationIconFile		"..\\assets\\skills\\SkillLifeRegenerationIcon.png"
+#define SkillMPBoost						10610010
+#define SkillMPBoostIcon					10610011
+#define SkillMPBoostIconFile				"..\\assets\\skills\\SkillMPBoostIcon.png"
+#define SkillTripleThrow					10610012
+#define SkillTripleThrowIcon				10610013
+#define SkillTripleThrowIconFile			"..\\assets\\skills\\SkillTripleThrowIcon.png"
+#define SkillCriticalThrow					10610014
+#define SkillCriticalThrowIcon				10610015
+#define SkillCriticalThrowIconFile			"..\\assets\\skills\\SkillCriticalThrowIcon.png"
 //skilClass 107
 #define SkillClassHealingMagic				10710000
 #define SkillClassAttackingMagic			10710001
@@ -190,6 +215,8 @@ enum MapChangeType
 #define BlackBlockFile						"..\\assets\\BlackBlock.png"
 #define DemonHostile						30310001
 #define DemonHostileFile					"..\\assets\\Demon.png"
+#define HostileGhostMob						30310002
+#define HostileGhostMobFile					"..\\assets\\GhostMob.png"
 //Item 304
 #define IronDartItem						30410000
 #define IronDartItemName					"Iron Dart"
@@ -215,14 +242,8 @@ enum MapChangeType
 #define PlayerFrame							30610000
 #define PlayerFrameFile						"..\\assets\\PlayerFrame.png"
 //projectile 307
-#define IchorKnifeProjectile				30710000
-#define IchorKnifeProjectileFile			"..\\assets\\IchorKnifeProjectile.png"
-#define OrichalcumShortswordProjectile		30710001
-#define OrichalcumShortswordProjectileFile	"..\\assets\\OrichalcumShortsword.png"
-#define PurificationBulletProjectile		30710002
-#define PurificationBulletProjectileFile	"..\\assets\\PurificationBulletProjectile.png"
-#define ChlorophyteTrackerProjectile		30710003
-#define ChlorophyteTrackerProjectileFile	"..\\assets\\ChlorophyteTracker.png"
+#define SubiDartProjectile					30710000
+#define SubiDartProjectileFile				"..\\assets\\items\\SubiDartProjectile.png"
 #define IronDartProjectile					30710004
 #define IronDartProjectileFile				"..\\assets\\items\\IronDartProjectile.png"
 #define CrystalDartProjectile				30710005

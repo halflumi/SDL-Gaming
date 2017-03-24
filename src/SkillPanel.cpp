@@ -15,12 +15,16 @@
 #define SKILLGRIDSIZE 30
 
 #define CloseButtonPos				position.x + 460, position.y + 2
-#define HealingMagicSkillSlotPos	position.x + 130, position.y + 118
-#define HealingMagicLButtonPos		position.x + 130 - 14, position.y + 118 + GRIDSIZE - 8
-#define HealingMagicRButtonPos		position.x + 130 + 50, position.y + 118 + GRIDSIZE - 8		
-#define DoubleKnifeSkillSlotPos		position.x + 130, position.y + 193
-#define DoubleKnifeLButtonPos		position.x + 130 - 14, position.y + 193 + GRIDSIZE - 8
-#define DoubleKnifeRButtonPos		position.x + 130 + 50, position.y + 193 + GRIDSIZE - 8		
+
+#define SkillPhysicalTrainingPos	position.x + 40, position.y + 118
+#define SkillDoubleThrowPos			position.x + 40, position.y + 193
+#define SkillTripleThrowPos			position.x + 40, position.y + 267
+#define SkillLifeForcePos			position.x + 130, position.y + 118
+#define SkillIronBodyPos			position.x + 130, position.y + 193
+#define SkillLifeRegenerationPos	position.x + 130, position.y + 267
+#define SkillMPBoostPos				position.x + 220, position.y + 118
+#define SkillCriticalThrowPos		position.x + 220, position.y + 193
+
 #define SkillPointsTextPos			position.x + 5, position.y + height - skillPointsText->getHeight() - 5
 #define SkillInfoPos_X				pos.x + 309
 #define SkillInfoPos_Y				pos.y + 58
@@ -53,10 +57,24 @@ void SkillSlot::Load()
 	levelNumText = new Textbox(position, to_string(1), segoeui18, COLOR_BLACK, -1);
 	mouseAbove = false;
 
-	if (uniqueID == HealingMagicSkillIcon)
-		skillIndex = HealingMagicIndex;
-	if (uniqueID == IchorKnifeSkillIcon)
-		skillIndex = DoubleIchorKnifeIndex;
+	if (uniqueID == SkillPhysicalTrainingIcon)
+		skillIndex = SkillIndexPhysicalTraining;
+	else if (uniqueID == SkillDoubleThrowIcon)
+		skillIndex = SkillIndexDoubleThrow;
+	else if (uniqueID == SkillTripleThrowIcon)
+		skillIndex = SkillIndexTripleThrow;
+	else if (uniqueID == SkillLifeForceIcon)
+		skillIndex = SkillIndexLifeForce;
+	else if (uniqueID == SkillIronBodyIcon)
+		skillIndex = SkillIndexIronBody;
+	else if (uniqueID == SkillLifeRegenerationIcon)
+		skillIndex = SkillIndexLifeRegeneration;
+	else if (uniqueID == SkillMPBoostIcon)
+		skillIndex = SkillIndexMPBoost;
+	else if (uniqueID == SkillCriticalThrowIcon)
+		skillIndex = SkillIndexCriticalThrow;
+
+
 	InitSkillInfo();
 }
 
@@ -65,19 +83,56 @@ void SkillSlot::InitSkillInfo()
 	skillInfoTexts.push_back(new Textbox(position, skill->name, segoeui22, COLOR_BLUE, -1));
 	switch (skillIndex)
 	{
-	case HealingMagicIndex:
-		skillInfoTexts.push_back(new Textbox(position, "cast a mogic to heal", segoeui18, COLOR_GREY, -1));
-		skillInfoTexts.push_back(new Textbox(position, "yourself.", segoeui18, COLOR_GREY, -1));
+	case SkillIndexPhysicalTraining:
+		skillInfoTexts.push_back(new Textbox(position, "Improves ATT", segoeui18, COLOR_GREY, -1));
+		skillInfoTexts.push_back(new Textbox(position, "permanently through", segoeui18, COLOR_GREY, -1));
+		skillInfoTexts.push_back(new Textbox(position, "physical training.", segoeui18, COLOR_GREY, -1));
 		skillInfoTexts.push_back(new Textbox(position, "Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK, -1));
-		skillInfoTexts.push_back(new Textbox(position, "mp: " + to_string(skill->manaConsume), segoeui18, COLOR_BLACK, -1));
-		skillInfoTexts.push_back(new Textbox(position, "heal: " + to_string(skill->minATT) + "~" + to_string(skill->maxATT), segoeui18, COLOR_BLACK, -1));
+		skillInfoTexts.push_back(new Textbox(position, "ATT: " + to_string(skill->minATT) + "~" + to_string(skill->maxATT), segoeui18, COLOR_BLACK, -1));
 		break;
-	case DoubleIchorKnifeIndex:
-		skillInfoTexts.push_back(new Textbox(position, "quickly throw two", segoeui18, COLOR_GREY, -1));
-		skillInfoTexts.push_back(new Textbox(position, "ichor knives.", segoeui18, COLOR_GREY, -1));
+	case SkillIndexDoubleThrow:
+		skillInfoTexts.push_back(new Textbox(position, "Throws two darts at", segoeui18, COLOR_GREY, -1));
+		skillInfoTexts.push_back(new Textbox(position, "high speed.", segoeui18, COLOR_GREY, -1));
 		skillInfoTexts.push_back(new Textbox(position, "Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK, -1));
 		skillInfoTexts.push_back(new Textbox(position, "mp: " + to_string(skill->manaConsume), segoeui18, COLOR_BLACK, -1));
-		skillInfoTexts.push_back(new Textbox(position, "damage: " + to_string(skill->minATT) + "~" + to_string(skill->maxATT), segoeui18, COLOR_BLACK, -1));
+		break;
+	case SkillIndexTripleThrow:
+		skillInfoTexts.push_back(new Textbox(position, "Throws three darts at", segoeui18, COLOR_GREY, -1));
+		skillInfoTexts.push_back(new Textbox(position, "high speed.", segoeui18, COLOR_GREY, -1));
+		skillInfoTexts.push_back(new Textbox(position, "Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK, -1));
+		skillInfoTexts.push_back(new Textbox(position, "mp: " + to_string(skill->manaConsume), segoeui18, COLOR_BLACK, -1));
+		break;
+	case SkillIndexLifeForce:
+		skillInfoTexts.push_back(new Textbox(position, "Strengthen your body", segoeui18, COLOR_GREY, -1));
+		skillInfoTexts.push_back(new Textbox(position, "further using psychic", segoeui18, COLOR_GREY, -1));
+		skillInfoTexts.push_back(new Textbox(position, "reinforcement.", segoeui18, COLOR_GREY, -1));
+		skillInfoTexts.push_back(new Textbox(position, "Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK, -1));
+		skillInfoTexts.push_back(new Textbox(position, "Max HP: +" + to_string(skill->minATT), segoeui18, COLOR_BLACK, -1));
+		break;
+	case SkillIndexIronBody:
+		skillInfoTexts.push_back(new Textbox(position, "Boosts DEF by a set", segoeui18, COLOR_GREY, -1));
+		skillInfoTexts.push_back(new Textbox(position, "value.", segoeui18, COLOR_GREY, -1));
+		skillInfoTexts.push_back(new Textbox(position, "Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK, -1));
+		skillInfoTexts.push_back(new Textbox(position, "DEF: +" + to_string(skill->minATT), segoeui18, COLOR_BLACK, -1));
+		break;
+	case SkillIndexLifeRegeneration:
+		skillInfoTexts.push_back(new Textbox(position, "Decrease Life Regenerate", segoeui18, COLOR_GREY, -1));
+		skillInfoTexts.push_back(new Textbox(position, "Interval by percentage.", segoeui18, COLOR_GREY, -1));
+		skillInfoTexts.push_back(new Textbox(position, "Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK, -1));
+		skillInfoTexts.push_back(new Textbox(position, "HP Regen Interval: -" + to_string(skill->minATT) + "%", segoeui18, COLOR_BLACK, -1));
+		break;
+	case SkillIndexMPBoost:
+		skillInfoTexts.push_back(new Textbox(position, "Increase Max mana", segoeui18, COLOR_GREY, -1));
+		skillInfoTexts.push_back(new Textbox(position, "permanently through", segoeui18, COLOR_GREY, -1));
+		skillInfoTexts.push_back(new Textbox(position, "mental training.", segoeui18, COLOR_GREY, -1));
+		skillInfoTexts.push_back(new Textbox(position, "Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK, -1));
+		skillInfoTexts.push_back(new Textbox(position, "Max MP: +" + to_string(skill->minATT), segoeui18, COLOR_BLACK, -1));
+		break;
+	case SkillIndexCriticalThrow:
+		skillInfoTexts.push_back(new Textbox(position, "Increase Critical Hit", segoeui18, COLOR_GREY, -1));
+		skillInfoTexts.push_back(new Textbox(position, "Chance permanently.", segoeui18, COLOR_GREY, -1));
+		skillInfoTexts.push_back(new Textbox(position, "Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK, -1));
+		skillInfoTexts.push_back(new Textbox(position, "Crithit Chance: +" + to_string(skill->minATT), segoeui18, COLOR_BLACK, -1));
 		break;
 	}
 }
@@ -147,8 +202,14 @@ void SkillPanel::Load()
 
 	selectedSkillIndex = -1;
 	///load skills
-	skills.push_back(new Skill(HealingMagicSkill, 1));
-	skills.push_back(new Skill(IchorKnifeSkill, 0));
+	skills.push_back(new Skill(SkillPhysicalTraining, 0));
+	skills.push_back(new Skill(SkillDoubleThrow, 0));
+	skills.push_back(new Skill(SkillTripleThrow, 0));
+	skills.push_back(new Skill(SkillLifeForce, 0));
+	skills.push_back(new Skill(SkillIronBody, 0));
+	skills.push_back(new Skill(SkillLifeRegeneration, 0));
+	skills.push_back(new Skill(SkillMPBoost, 0));
+	skills.push_back(new Skill(SkillCriticalThrow, 0));
 	///register skill buttons
 	for (int i = 0; i < TOTALSKILLS; i++)
 	{
@@ -156,10 +217,16 @@ void SkillPanel::Load()
 		skillButtons.push_back(new Button(SkillPanelMinusSkillButton));
 	}
 	///register skill slots
-	skillslots.push_back(new SkillSlot(HealingMagicSkillIcon, skills[HealingMagicIndex]));
-	skillslots.push_back(new SkillSlot(IchorKnifeSkillIcon, skills[DoubleIchorKnifeIndex]));
+	skillslots.push_back(new SkillSlot(SkillPhysicalTrainingIcon, skills[SkillIndexPhysicalTraining]));
+	skillslots.push_back(new SkillSlot(SkillDoubleThrowIcon, skills[SkillIndexDoubleThrow]));
+	skillslots.push_back(new SkillSlot(SkillTripleThrowIcon, skills[SkillIndexTripleThrow]));
+	skillslots.push_back(new SkillSlot(SkillLifeForceIcon, skills[SkillIndexLifeForce]));
+	skillslots.push_back(new SkillSlot(SkillIronBodyIcon, skills[SkillIndexIronBody]));
+	skillslots.push_back(new SkillSlot(SkillLifeRegenerationIcon, skills[SkillIndexLifeRegeneration]));
+	skillslots.push_back(new SkillSlot(SkillMPBoostIcon, skills[SkillIndexMPBoost]));
+	skillslots.push_back(new SkillSlot(SkillCriticalThrowIcon, skills[SkillIndexCriticalThrow]));
 	///load skill points
-	skillPoints = 1;
+	skillPoints = 10;
 	skillPointsText = new Textbox(position, "sp: 1", arial28_bold, COLOR_BLACK, -1);
 }
 
@@ -171,6 +238,7 @@ void SkillPanel::update()
 	closeButton.update();
 	if (closeButton.outsideUpdate())
 	{
+		selectedSkillIndex = -1;
 		active = false;
 		player->mouseCooldown.start();
 	}
@@ -186,28 +254,19 @@ void SkillPanel::UpdateSkillButtons()
 		return;
 	Player* player = Camera::Inst()->getTarget_nonConst();
 	
-	switch (selectedSkillIndex)
-	{
-	case HealingMagicIndex:
-		skillButtons[selectedSkillIndex * 2]->setPosition(HealingMagicLButtonPos);
-		skillButtons[selectedSkillIndex * 2 + 1]->setPosition(HealingMagicRButtonPos);
-		break;
-	case DoubleIchorKnifeIndex:
-		skillButtons[selectedSkillIndex * 2]->setPosition(DoubleKnifeLButtonPos);
-		skillButtons[selectedSkillIndex * 2 + 1]->setPosition(DoubleKnifeRButtonPos);
-		break;
-	}
+	skillButtons[selectedSkillIndex * 2]->setPosition(skillslots[selectedSkillIndex]->getPosition().x - 14, skillslots[selectedSkillIndex]->getPosition().y + 38);
+	skillButtons[selectedSkillIndex * 2 + 1]->setPosition(skillslots[selectedSkillIndex]->getPosition().x + GRIDSIZE + 4, skillslots[selectedSkillIndex]->getPosition().y + 38);
 	skillButtons[selectedSkillIndex * 2]->update();
 	skillButtons[selectedSkillIndex * 2 + 1]->update();
 
-	if (skillPoints > 0 && skills[skills[selectedSkillIndex]->preSkillIndex]->level >= 0)
+	if (skillPoints > 0 && (skills[selectedSkillIndex]->preSkillIndex == -1 || skills[skills[selectedSkillIndex]->preSkillIndex]->level > 0))
 		if (skillButtons[selectedSkillIndex * 2]->outsideUpdate())
 		{
 			skills[selectedSkillIndex]->level++;
 			skillPoints--;
 			skillslots[selectedSkillIndex]->refresh();
 		}
-	if (skills[selectedSkillIndex]->level > 0)
+	if (skills[selectedSkillIndex]->level > 0 && (skills[selectedSkillIndex]->postSkillIndex == -1 || skills[skills[selectedSkillIndex]->postSkillIndex]->level == 0))
 		if (skillButtons[selectedSkillIndex * 2 + 1]->outsideUpdate())
 		{
 			skills[selectedSkillIndex]->level--;
@@ -218,8 +277,14 @@ void SkillPanel::UpdateSkillButtons()
 
 void SkillPanel::UpdateSkillSlots()
 {
-	skillslots[HealingMagicIndex]->setPosition(HealingMagicSkillSlotPos);
-	skillslots[DoubleIchorKnifeIndex]->setPosition(DoubleKnifeSkillSlotPos);
+	skillslots[SkillIndexPhysicalTraining]->setPosition(SkillPhysicalTrainingPos);
+	skillslots[SkillIndexDoubleThrow]->setPosition(SkillDoubleThrowPos);
+	skillslots[SkillIndexTripleThrow]->setPosition(SkillTripleThrowPos);
+	skillslots[SkillIndexLifeForce]->setPosition(SkillLifeForcePos);
+	skillslots[SkillIndexIronBody]->setPosition(SkillIronBodyPos);
+	skillslots[SkillIndexLifeRegeneration]->setPosition(SkillLifeRegenerationPos);
+	skillslots[SkillIndexMPBoost]->setPosition(SkillMPBoostPos);
+	skillslots[SkillIndexCriticalThrow]->setPosition(SkillCriticalThrowPos);
 	///select and hotkey assignment
 	for (int i = 0; i < TOTALSKILLS; i++)
 	{
@@ -230,7 +295,7 @@ void SkillPanel::UpdateSkillSlots()
 				selectCooldown.start();
 				selectedSkillIndex = i;
 			}
-			if (skills[i]->level > 0)
+			if (skills[i]->level > 0 && !skills[i]->passive)
 			{
 				if (Inputor::Inst()->isKeyDown(XmlParser::Inst()->key_skillHotkey1))
 					hotkeySkillIndexes[hotkey1] = i;
