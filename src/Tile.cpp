@@ -26,6 +26,12 @@ void Tile::Load()
 		height = 37;
 		return;
 	}
+    if (uniqueID == HealingMagicSkillbrick)
+    {
+        width = 46;
+        height = 46;
+        return;
+    }
 }
 
 void Tile::update()
