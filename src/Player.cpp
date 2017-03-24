@@ -22,15 +22,6 @@
 #define MIDAIR_LADDER 2
 #define MIDAIR_LADDER_JUMP 3
 
-const int Player::LvUpBonus[TOTALATTRIBUTES][MAXLEVEL] 
-{ 
-	{10,2,2,2,3,6,3,3,3,6},
-	{1,2,1,2,1,4,1,3,1,4},
-	{100,20,20,20,20,30,20,20,20,30},
-	{30,5,5,5,5,10,5,5,5,10},
-	{1,1,2,1,1,3,1,1,2,2} 
-};
-
 Player::Player(int id, int x, int y)
 {
 	name = "Who am I?";
@@ -81,11 +72,10 @@ void Player::Load()
 	life = XmlParser::Inst()->life;
 	mana = XmlParser::Inst()->mana;
 
-	baseMaxLife = LvUpBonus[HP][0];
-	baseMaxMana = LvUpBonus[MP][0];
-	baseATT = LvUpBonus[ATK][0];
-	baseDEF = LvUpBonus[DEF][0];
-  
+	baseMaxLife = 90 + 10 * level;
+	baseMaxMana = 20 + 10 * level;
+	baseATT = 10;
+	baseDEF = 2;
 	critChance = 10;
 
 	attackInterval = 30;
@@ -161,27 +151,16 @@ void Player::IsDead()
 
 void Player::IsLevelingup()
 {
-	while (exp >= expToNextLevel)
+	if (exp >= expToNextLevel)
 	{
-		SoundLoader::Inst()->playSound(LevelupSound);
-		LevelUpBonus( );
 		level++;
+		skillPanel->skillPoints++;
 		exp -= expToNextLevel;
+		SoundLoader::Inst()->playSound(LevelupSound);
+		life = maxlife;
+		mana = maxmana;
 		expToNextLevel = ExpSheet(level);
 	}
-}
-
-void Player::LevelUpBonus( ) {
-	baseATT += LvUpBonus[ATK][level];
-	baseDEF += LvUpBonus[DEF][level];
-	baseMaxLife += LvUpBonus[HP][level];
-	baseMaxMana += LvUpBonus[MP][level];
-	skillPanel->skillPoints += LvUpBonus[SP][level];
-
-	maxlife += LvUpBonus[HP][level];
-	maxmana += LvUpBonus[MP][level];
-	life = maxlife;
-	mana = maxmana;
 }
 
 void Player::UpdateAttributes()

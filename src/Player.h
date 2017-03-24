@@ -12,7 +12,6 @@
 
 #define PLAYERWIDTH 50
 #define PLAYERHEIGHT 100
-#define TOTALATTRIBUTES 5
 
 class Player : public Entity
 {
@@ -33,9 +32,6 @@ private:
 	int baseManaRegenInterval;
 	int baseManaRegenAmount;
 	int baseInvulnerableInterval;
-	static enum AttributesList { ATK, DEF, HP, MP, SP };
-	static const int LvUpBonus[TOTALATTRIBUTES][MAXLEVEL];
-
 
 	bool focused;
 	Vector2D display_pos;
@@ -44,7 +40,6 @@ private:
 	
 	void IsDead();
 	void IsLevelingup();
-	void LevelUpBonus( );
 	void UpdateAttributes();
 	void HandleInput();
 	void HandlePlayerPhysics( );

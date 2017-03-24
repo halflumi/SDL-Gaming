@@ -29,15 +29,15 @@ int ExpSheet(int level)
 {
 	switch (level)
 	{
-	case 1:			return 100;
-	case 2:			return 120;
-	case 3:			return 140;
-	case 4:			return 160;
-	case 5:			return 180;
-	case 6:			return 220;
-	case 7:			return 280;
-	case 8:			return 360;
-	case 9:			return 500;
+	case 1:			return 10;
+	case 2:			return 25;
+	case 3:			return 50;
+	case 4:			return 100;
+	case 5:			return 200;
+	case 6:			return 200;
+	case 7:			return 200;
+	case 8:			return 200;
+	case 9:			return 200;
 	case 10:		return 200;
 	case 11:		return 200;
 	case 12:		return 200;

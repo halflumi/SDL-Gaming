@@ -213,14 +213,6 @@ void World::changeMap(int mapID, MapChangeType form)
 		getLayer_entity().push_back(new NPC(MapleFlagNPC, 800, height - 177));
 		getLayer_entity().push_back(new Hostile(BlackBlock, 0, 2500, height - 200));
 		getLayer_entity().push_back(new Hostile(HostileGiantCat, 0, 2700, height - 200));
-		getLayer_entity( ).push_back(new Hostile(HostileSkeleton, 0, 2700, height - 200));
-		getLayer_entity( ).push_back(new Hostile(HostileSkeleton, 0, 2700, height - 200));
-		getLayer_entity( ).push_back(new Hostile(HostileSkeleton, 0, 2700, height - 200));
-		getLayer_entity( ).push_back(new Hostile(HostileWoodMob, 0, 2700, height - 200));
-		getLayer_entity( ).push_back(new Hostile(HostileWoodMob, 0, 2700, height - 200));
-		getLayer_entity( ).push_back(new Hostile(HostileWoodMob, 0, 2700, height - 200));
-		getLayer_entity( ).push_back(new Hostile(HostileWoodMob, 0, 2700, height - 200));
-		getLayer_entity( ).push_back(new Hostile(HostileWoodMob, 0, 2700, height - 200));
 		///items
 		return;
 	}
@@ -244,10 +236,6 @@ void World::changeMap(int mapID, MapChangeType form)
 		getLayer_foreground().push_back(new Sprite(MapGate2, width - 108, height - 154));
 		///entities
 		getLayer_entity().push_back(new NPC(SavePointNPC, 1600, height - 211));
-		getLayer_entity( ).push_back(new NPC(LeafNPC, 1200, height - 100));
-		getLayer_entity( ).push_back(new NPC(ShopNPC, 1600, height - 215));
-		getLayer_entity( ).push_back(new NPC(GhostNPC, 1400, height - 80));
-		getLayer_entity( ).push_back(new NPC(MapleFlagNPC, 800, height - 177));
 		///items
 		return;
 	}
