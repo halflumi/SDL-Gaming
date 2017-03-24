@@ -10,7 +10,6 @@ private:
 	bool CollisionCheck(Vector2D newpos);
 public:
 	int stack;
-	int maxStack;
 
 	//Item(int x, int y, string id);
 	Item(int id, int stack, int x, int y);

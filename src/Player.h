@@ -10,13 +10,15 @@
 #include "MyTimer.h"
 #include "Projectile.h"
 
+#define PLAYERWIDTH 50
+#define PLAYERHEIGHT 100
+
 class Player : public Entity
 {
 private:
 	bool onLadder;
 	bool movingUp;
 	bool movingDown;
-	Projectile* meleeProjectile;
 	int attackInterval;
 	int attackTick;
 	int lifeRegenInterval;
@@ -35,19 +37,21 @@ private:
 
 	void Load();
 	
-	void isLevelingup();
-	void updateAttributes();
-
+	void IsDead();
+	void IsLevelingup();
+	void UpdateAttributes();
 	void HandleInput();
+	void HandlePlayerPhysics( );
 	void HandleMovement();
 	void HandleDisplay();
 	void Attacking();
 
-	bool CheckCollision_tileX(float x);
-	bool CheckCollision_tileY(float y);
+	bool CheckCollision_tileX(float& x);
+	bool CheckCollision_tileY(float& y);
 	void CheckCollision_hostile(Vector2D newpos);
-	void CheckInteractive();
-	void DoInteractive(int id);
+	void CheckInteractive(short flag = 0);
+
+	void DoInteractive(Object*);
 	void CheckPickup();
 	void HitGround();
 public:
@@ -65,7 +69,7 @@ public:
 	int expToNextLevel;
 
 	Player(int id, int x, int y);
-	~Player() { delete inventory; }
+	~Player();
 
 	void setFocused() { focused = true; }
 	void removeFocused() { focused = false; }

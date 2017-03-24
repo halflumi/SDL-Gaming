@@ -80,7 +80,11 @@ void Sprite::draw()
 bool Sprite::outsideCheckPlayerWithin()
 {
 	Player* player = Camera::Inst()->getTarget_nonConst();
-	if (player->entityCenter.x <= position.x + width && player->entityCenter.x >= position.x && player->entityCenter.y >= position.y && player->entityCenter.y <= position.y + height)
+	if (player->entityCenter.x <= position.x + width && 
+		player->entityCenter.x >= position.x && 
+		player->entityCenter.y >= position.y && 
+		player->entityCenter.y <= position.y + height
+		)
 		return true;
 	return false;
 }

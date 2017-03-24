@@ -53,6 +53,12 @@
 #define ControlSkillHotkey3TestPos		MAINMENU_X + 400,MAINMENU_Y - 50
 #define ControlSkillHotkey3ButtonPos	MAINMENU_X + 650,MAINMENU_Y - 50
 
+#define GAMEMENU_X 50
+#define GAMEMENU_Y Main::Inst()->getWindowHeight()
+#define GameResumeButtonPos				GAMEMENU_X,GAMEMENU_Y - 175
+#define GameExittoMenuButtonPos			GAMEMENU_X,GAMEMENU_Y - 125
+#define GameExittoDesktopButtonPos		GAMEMENU_X,GAMEMENU_Y - 75
+#define GameOverTextPos					(Main::Inst()->getWindowWidth() - width)/2, (Main::Inst()->getWindowHeight() - height)/2
 
 Button::Button(int id) : clickCooldown(true)
 {
@@ -140,17 +146,14 @@ void Button::Load()
 		buttonText = new Textbox(position, "", arial28_bold, COLOR_WHITE, -1);
 		switch (XmlParser::Inst()->window_w)
 		{
-		case 800:
+		case 1024:
 			flag = 0;
 			break;
-		case 1024:
+		case 1280:
 			flag = 1;
 			break;
-		case 1280:
-			flag = 2;
-			break;
 		case 1600:
-			flag = 3;
+			flag = 2;
 			break;
 		}
 		return;
@@ -407,34 +410,36 @@ void Button::Load()
 	//game menu
 	if (uniqueID == GameMenuBackground)
 	{
-		buttonClass = ButtonTypeTextbox;
-		width = 600;
-		height = 400;
-		position.x = Main::Inst()->getWindowWidth() / 2 - width / 2;
-		position.y = Main::Inst()->getRenderHeight() / 2 - height / 2;
+		buttonClass = ButtonTypeBackground;
+		width = height = 10;
 	}
 	if (uniqueID == ResumeButton)
 	{
-		TTF_SizeText(Main::Inst()->getFont(arial48_bold), "Resume", &width, &height);
-		position.x = Main::Inst()->getWindowWidth() / 2 - width / 2;
-		position.y = Main::Inst()->getRenderHeight() / 2 - height / 2 - 50;
-		buttonText = new Textbox(position, "Resume", arial48_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), "Resume", &width, &height);
+		position.set(GameResumeButtonPos);
+		buttonText = new Textbox(position, "Resume", arial28_bold, COLOR_WHITE, -1);
 		return;
 	}
 	if (uniqueID == ExittoMainMenuButton)
 	{
-		TTF_SizeText(Main::Inst()->getFont(arial48_bold), "Exit to Main Menu", &width, &height);
-		position.x = Main::Inst()->getWindowWidth() / 2 - width / 2;
-		position.y = Main::Inst()->getRenderHeight() / 2 - height / 2 + 50;
-		buttonText = new Textbox(position, "Exit to Main Menu", arial48_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), "Exit to Main Menu", &width, &height);
+		position.set(GameExittoMenuButtonPos);
+		buttonText = new Textbox(position, "Exit to Main Menu", arial28_bold, COLOR_WHITE, -1);
 		return;
 	}
-	if (uniqueID == ExittoDestopButton)
+	if (uniqueID == ExittoDesktopButton)
 	{
-		TTF_SizeText(Main::Inst()->getFont(arial48_bold), "Exit to Desktop", &width, &height);
-		position.x = Main::Inst()->getWindowWidth() / 2 - width / 2;
-		position.y = Main::Inst()->getRenderHeight() / 2 - height / 2 + 150;
-		buttonText = new Textbox(position, "Exit to Desktop", arial48_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), "Exit to Desktop", &width, &height);
+		position.set(GameExittoDesktopButtonPos);
+		buttonText = new Textbox(position, "Exit to Desktop", arial28_bold, COLOR_WHITE, -1);
+		return;
+	}
+	if (uniqueID == GameOverText)
+	{
+		buttonClass = ButtonTypeTextbox;
+		TTF_SizeText(Main::Inst()->getFont(arial72_bold), "GAME OVER", &width, &height);
+		position.set(GameOverTextPos);
+		buttonText = new Textbox(position, "GAME OVER", arial72_bold, COLOR_WHITE, -1);
 		return;
 	}
 	//ui
@@ -449,6 +454,11 @@ void Button::Load()
 		height = 33;
 		return;
 	}
+	if (uniqueID == SkillPanelAddSkillButton || uniqueID == SkillPanelMinusSkillButton)
+	{
+		width = height = 10;
+		return;
+	}
 }
 
 void Button::update()
@@ -456,7 +466,7 @@ void Button::update()
 	//main menu
 	if (uniqueID == NewGameButton || uniqueID == ContinueButton)
 	{
-		if (CheckMouseOver())
+		if (checkMouseOver())
 			buttonText->changeColor(COLOR_RED);
 		else
 			buttonText->changeColor(COLOR_WHITE);
@@ -464,7 +474,7 @@ void Button::update()
 	}
 	if (uniqueID == OptionButton || uniqueID == BackButton || uniqueID == ControlSettingsButton)
 	{
-		if (CheckMouseOver())
+		if (checkMouseOver())
 			buttonText->changeColor(COLOR_ORANGE);
 		else
 			buttonText->changeColor(COLOR_WHITE);
@@ -472,7 +482,7 @@ void Button::update()
 	}
 	if (uniqueID == ExitButton)
 	{
-		if (CheckMouseOver())
+		if (checkMouseOver())
 			buttonText->changeColor(COLOR_BLUE);
 		else
 			buttonText->changeColor(COLOR_WHITE);
@@ -480,22 +490,14 @@ void Button::update()
 	}
 	if (uniqueID == ResolutionListbox)
 	{
-		if (CheckMouseOver())
+		if (checkMouseOver())
 			buttonText->changeColor(COLOR_RED);
 		else
 			buttonText->changeColor(COLOR_WHITE);
 
-		switch (flag % 4)
+		switch (flag % 3)
 		{
 		case 0:
-			if (buttonText->changeText("800x600"))
-			{
-				TTF_SizeText(Main::Inst()->getFont(arial28_bold), "800x600", &width, &height);
-				XmlParser::Inst()->window_w = 800;
-				XmlParser::Inst()->window_h = 600;
-			}
-			break;
-		case 1:
 			if (buttonText->changeText("1024x768"))
 			{
 				TTF_SizeText(Main::Inst()->getFont(arial28_bold), "1024x768", &width, &height);
@@ -503,7 +505,7 @@ void Button::update()
 				XmlParser::Inst()->window_h = 768;
 			}
 			break;
-		case 2:
+		case 1:
 			if (buttonText->changeText("1280x720"))
 			{
 				TTF_SizeText(Main::Inst()->getFont(arial28_bold), "1280x720", &width, &height);
@@ -511,7 +513,7 @@ void Button::update()
 				XmlParser::Inst()->window_h = 720;
 			}
 			break;
-		case 3:
+		case 2:
 			if (buttonText->changeText("1600x900"))
 			{
 				TTF_SizeText(Main::Inst()->getFont(arial28_bold), "1600x900", &width, &height);
@@ -524,7 +526,7 @@ void Button::update()
 	}
 	if (uniqueID == FullscreenCheckbox)
 	{
-		if (CheckMouseOver())
+		if (checkMouseOver())
 			currentFrame = 1;
 		else
 			currentFrame = 0;
@@ -537,7 +539,7 @@ void Button::update()
 	}
 	if (uniqueID == VolumnLButton || uniqueID == VolumnRButton)
 	{
-		if (CheckMouseOver())
+		if (checkMouseOver())
 			currentRow = 1;
 		else
 			currentRow = 0;
@@ -558,7 +560,7 @@ void Button::update()
 	//control menu
 	if (uniqueID == ControlMovingUpButton || uniqueID == ControlMovingDownButton || uniqueID == ControlMovingLeftButton || uniqueID == ControlMovingRightButton || uniqueID == ControlCharacterPanelButton || uniqueID == ControlSkillPanelButton || uniqueID == ControlInventoryButton)
 	{
-		if (CheckMouseOver())
+		if (checkMouseOver())
 			buttonText->changeColor(COLOR_PURPLE);
 		else
 			buttonText->changeColor(COLOR_WHITE);
@@ -566,18 +568,18 @@ void Button::update()
 
 	}
 	//game menu
-	if (uniqueID == ResumeButton || uniqueID == ExittoMainMenuButton || uniqueID == ExittoDestopButton)
+	if (uniqueID == ResumeButton || uniqueID == ExittoMainMenuButton || uniqueID == ExittoDesktopButton)
 	{
-		if (CheckMouseOver())
+		if (checkMouseOver())
 			buttonText->changeColor(COLOR_CLAN);
 		else
 			buttonText->changeColor(COLOR_WHITE);
 		return;
 	}
 	//ui
-	if (uniqueID == InventoryCloseButton || uniqueID == InventoryArrangeButton)
+	if (uniqueID == InventoryCloseButton || uniqueID == InventoryArrangeButton || uniqueID == SkillPanelAddSkillButton || uniqueID == SkillPanelMinusSkillButton)
 	{
-		if (CheckMouseOver())
+		if (checkMouseOver())
 			currentRow = 1;
 		else
 			currentRow = 0;
@@ -595,10 +597,10 @@ void Button::draw()
 		buttonText->draw();
 }
 
-bool Button::CheckMouseOver()
+bool Button::checkMouseOver()
 {
-	Vector2D* mousepos = Inputor::Inst()->getMouseRelativePosition();
-	if (mousepos->x <= position.x + width && mousepos->x >= position.x && mousepos->y >= position.y && mousepos->y <= position.y + height)
+	Vector2D mousepos = Inputor::Inst()->getMouseRelativePosition();
+	if (mousepos.x <= position.x + width && mousepos.x >= position.x && mousepos.y >= position.y && mousepos.y <= position.y + height)
 		return true;
 	return false;
 }
@@ -608,7 +610,7 @@ bool Button::outsideUpdate()
 	if (buttonClass != ButtonTypeButton)
 		return false;
 
-	if (CheckMouseOver() && Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && clickCooldown.getTicks() > CLICKCOOLDOWN)
+	if (checkMouseOver() && Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && clickCooldown.getTicks() > CLICKCOOLDOWN)
 	{
 		SoundLoader::Inst()->playSound(MenuMouseClick);
 		clickCooldown.start();

@@ -26,17 +26,10 @@ Item::Item(int id, int _stack, int x, int y, float velocity_x, float velocity_y)
 void Item::Load()
 {
 	acceleration.y = GRAVITY;
-	maxStack = 1;
-	if (uniqueID == WoodenSword)
+	if (uniqueID == IronDartItem)
 	{
-		width = 40;
-		height = 40;
-		return;
-	}
-	if (uniqueID == OrichalcumShortsword)
-	{
-		width = 38;
-		height = 38;
+		width = 256;
+		height = 256;
 		return;
 	}
 }

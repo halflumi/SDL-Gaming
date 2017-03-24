@@ -9,7 +9,7 @@ class Entity : public Object
 protected:
 	bool movingLeft, movingRight;
 	bool jumped;
-	bool midair;
+	short midair;
 	float maxSpeed;
 	Vector2D velocity;
 	Vector2D acceleration;

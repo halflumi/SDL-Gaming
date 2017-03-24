@@ -37,7 +37,7 @@ public:
 	void setPosition(float x, float y) { position.set(x, y); }
 	void setPosition(Vector2D pos) { position = pos; }
 	void setPosition(Vector2D* pos) { position = *pos; }
-	void addPosition(Vector2D* shift) { position += *shift; }
+	void addPosition(Vector2D shift) { position += shift; }
 
 	virtual void update() = 0;
 	virtual void draw() = 0;

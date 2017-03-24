@@ -7,11 +7,14 @@ std::string ScancodeToString(SDL_Scancode scannode);
 int ExpSheet(int level);
 ///const
 //global
+#define TOTALSKILLS 2
 #define INVENTORYSIZE 36
 #define CLICKCOOLDOWN 80
 #define PRESSCOOLDOWN 100
-#define UIHEIGHT 168
+#define UIHEIGHT 66
 //colors
+#define COLOR_BLACK		{0,0,0}
+#define COLOR_GREY		{192,192,192}
 #define COLOR_WHITE		{255,255,255}
 #define COLOR_RED		{255,0,0}
 #define COLOR_GREEN		{0,255,0}
@@ -22,6 +25,12 @@ int ExpSheet(int level);
 //savedata filepath
 #define SettingsFile "../save/settings.xm"
 #define SavedataFile "../save/savedata.xm"
+
+enum SkillIndex
+{
+	HealingMagicIndex,
+	DoubleIchorKnifeIndex
+};
 
 enum MapChangeType
 {
@@ -46,11 +55,13 @@ enum MapChangeType
 #define TypeItem						10010012
 #define TypeSkillPanel					10010013
 #define TypeSkillSlot					10010014
+#define TypeBuff						10010015
 //menuID 101
 #define MenuMain						10110000
 #define MenuOptions						10110001
 #define MenuGameMain					10110002
 #define MenuControlSettings				10110003
+#define MenuGameOver					10110004
 //mapID 102
 #define MapTest01						10210001
 #define MapTest02						10210002
@@ -106,13 +117,25 @@ enum MapChangeType
 #define GameMenuBackgroundFile			"../assets/GameMenuBackground.png"
 #define ResumeButton					10310101
 #define ExittoMainMenuButton			10310102
-#define ExittoDestopButton				10310103
+#define ExittoDesktopButton				10310103
+#define GameOverText					10310104
 //button typeID 104
 #define ButtonTypeTextbox				10410000
 #define ButtonTypeButton				10410001
 #define ButtonTypeBackground			10410002
 //ItemClass 105
-#define ItemClass_Weapon				10510000
+#define ItemClassWeapon					10510000
+//skillID 106
+#define HealingMagicSkill				10610000
+#define HealingMagicSkillIcon			10610001
+#define HealingMagicSkillIconFile		"../assets/HealingMagicSkill.png"
+#define IchorKnifeSkill					10610002
+#define IchorKnifeSkillIcon				10610003
+#define IchorKnifeSkillIconFile			"../assets/IchorKnifeSkill.png"
+//skilClass 107
+#define SkillClassHealingMagic			10710000
+#define SkillClassAttackingMagic		10710001
+
 ///fonts 200xxxxx
 #define segoeuiFile						"../fonts/segoeui.ttf"
 #define segoeui18						20010000
@@ -156,33 +179,44 @@ enum MapChangeType
 #define SkillPanelPicFile				"../assets/SkillPanelPic.png"
 #define InventoryArrangeButton			30210011
 #define InventoryArrangeButtonFile		"../assets/InventoryArrangeButton.png"
+#define SkillPanelAddSkillButton		30210012
+#define SkillPanelAddSkillButtonFile	"../assets/SkillPlusButton.png"
+#define SkillPanelMinusSkillButton		30210013
+#define SkillPanelMinusSkillButtonFile	"../assets/SkillMinusButton.png"
+#define xpBar							30210014
+#define xpBarFile						"../assets/expBar.png"
 //Hostile 303
-#define BlackBlock 30310000
-#define BlackBlockFile "../assets/BlackBlock.png"
+#define BlackBlock						30310000
+#define BlackBlockFile					"../assets/BlackBlock.png"
+#define DemonHostile					30310001
+#define DemonHostileFile				"../assets/Demon.png"
 //Item 304
-#define WoodenSword 30410000
-#define WoodenSwordName "Wooden Sword"
-#define WoodenSwordFile "../assets/WoodenSword.png"
-#define OrichalcumShortsword 30410001
-#define OrichalcumShortswordName "Orichalcum Shortsword"
-#define OrichalcumShortswordFile "../assets/OrichalcumShortsword.png"
+#define IronDartItem					30410000
+#define IronDartItemName				"Iron Dart"
+#define IronDartItemFile				"../assets/items/IronDartItem.png"
 //NPC 305
-#define LeafNPC 30510000
-#define LeafNPCFile "../assets/LeafNPC.png"
-#define GhostNPC 30510001
-#define GhostNPCFile "../assets/GhostNPC.png"
-#define MapleFlagNPC 30510003
-#define MapleFlagNPCFile "../assets/MapleFlagNPC.png"
-#define SavePointNPC 30510004
-#define SavePointNPCFile "../assets/SavePointNPC.png"
+#define LeafNPC							30510000
+#define LeafNPCFile						"../assets/LeafNPC.png"
+#define GhostNPC						30510001
+#define GhostNPCFile					"../assets/GhostNPC.png"
+#define MapleFlagNPC					30510003
+#define MapleFlagNPCFile				"../assets/MapleFlagNPC.png"
+#define SavePointNPC					30510004
+#define SavePointNPCFile				"../assets/SavePointNPC.png"
+#define ShopNPC							30510005
+#define ShopNPCFile						"../assets/ShopNPC.png"
 //player 306
-#define PlayerFrame 30610000
-#define PlayerFrameFile "../assets/PlayerFrame.png"
+#define PlayerFrame						30610000
+#define PlayerFrameFile					"../assets/PlayerFrame.png"
 //projectile 307
-#define IchorKnifeProjectile 30710000
-#define IchorKnifeProjectileFile "../assets/IchorKnifeProjectile.png"
-#define OrichalcumShortswordProjectile 30710001
+#define IchorKnifeProjectile			30710000
+#define IchorKnifeProjectileFile		"../assets/IchorKnifeProjectile.png"
+#define OrichalcumShortswordProjectile	30710001
 #define OrichalcumShortswordProjectileFile "../assets/OrichalcumShortsword.png"
+#define PurificationBulletProjectile	30710002
+#define PurificationBulletProjectileFile	"../assets/PurificationBulletProjectile.png"
+#define ChlorophyteTrackerProjectile	30710003
+#define ChlorophyteTrackerProjectileFile	"../assets/ChlorophyteTracker.png"
 //sprite 308
 #define WaterMushroomFrame 30810000
 #define WaterMushroomFrameFile "../assets/WaterMushroomFrame.png"
@@ -222,35 +256,39 @@ enum MapChangeType
 #define ControlKeyChangeSound5File "../sounds/MechanicalKey5.wav"
 
 //game sfxs 402
-#define WalkOnSnow1				40210001
-#define WalkOnSnow1File			"../sounds/Snow1.ogg"
-#define WalkOnSnow2				40210002
-#define WalkOnSnow2File			"../sounds/Snow2.ogg"
-#define WalkOnSnow3				40210003
-#define WalkOnSnow3File			"../sounds/Snow3.ogg"
-#define WalkOnSnow4				40210004
-#define WalkOnSnow4File			"../sounds/Snow4.ogg"
-#define AttackSound				40210005
-#define AttackSoundFile			"../sounds/barehands.Attack.mp3"
-#define CollisionSound			40210006
-#define CollisionSouldFile		"../sounds/dualBow.Attack2.mp3"
-#define DamageSound				40210007
-#define DamageSoundFile			"../sounds/0100131.Damage.mp3"
-#define DeathSound				40210008
-#define DeathSoundFile			"../sounds/0100131.Die.mp3"
-#define PortalNoise				40210009
-#define PortalNoiseFile			"../sounds/PortalNoise.wav"
-#define PickupSound				40210010
-#define PickupSoundFile			"../sounds/PickUpItem.mp3"
-#define LevelupSound			40210011
-#define LevelupSoundFile		"../sounds/LevelupSound.wav"
-#define JumpSound				40210012
-#define JumpSoundFile			"../sounds/Jump.mp3"
-#define PlayerDamageSound		40210013
-#define PlayerDamageSoundFile	"../sounds/0100100.Damage.mp3"
-#define WrapGateNoise			40210014
-#define WrapGateNoiseFile		"../sounds/Portal.mp3"
-#define HealingMagicSound		40210015
-#define HealingMagicSoundFile	"../sounds/0001004.Use.mp3"
-#define SpeedBuffSound			40210016
-#define SpeedBuffSoundFile		"../sounds/0001004.Use.mp3"
+#define WalkOnSnow1					40210001
+#define WalkOnSnow1File				"../sounds/Snow1.ogg"
+#define WalkOnSnow2					40210002
+#define WalkOnSnow2File				"../sounds/Snow2.ogg"
+#define WalkOnSnow3					40210003
+#define WalkOnSnow3File				"../sounds/Snow3.ogg"
+#define WalkOnSnow4					40210004
+#define WalkOnSnow4File				"../sounds/Snow4.ogg"
+#define AttackSound					40210005
+#define AttackSoundFile				"../sounds/barehands.Attack.mp3"
+#define CollisionSound				40210006
+#define CollisionSouldFile			"../sounds/dualBow.Attack2.mp3"
+#define DamageSound					40210007
+#define DamageSoundFile				"../sounds/0100131.Damage.mp3"
+#define DeathSound					40210008
+#define DeathSoundFile				"../sounds/0100131.Die.mp3"
+#define PortalNoise					40210009
+#define PortalNoiseFile				"../sounds/PortalNoise.wav"
+#define PickupSound					40210010
+#define PickupSoundFile				"../sounds/PickUpItem.mp3"
+#define LevelupSound				40210011
+#define LevelupSoundFile			"../sounds/LevelupSound.wav"
+#define JumpSound					40210012
+#define JumpSoundFile				"../sounds/Jump.mp3"
+#define PlayerDamageSound			40210013
+#define PlayerDamageSoundFile		"../sounds/0100100.Damage.mp3"
+#define WrapGateNoise				40210014
+#define WrapGateNoiseFile			"../sounds/Portal.mp3"
+#define HealingMagicSound			40210015
+#define HealingMagicSoundFile		"../sounds/0001004.Use.mp3"
+#define SpeedBuffSound				40210016
+#define SpeedBuffSoundFile			"../sounds/0001004.Use.mp3"
+#define DemonDamageSound			40210017
+#define DemonDamageSoundFile		"../sounds/DemonDamage.wav"
+#define DemonDeathSound				40210018
+#define DemonDeathSoundFile			"../sounds/DemonDie.wav"
