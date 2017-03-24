@@ -7,7 +7,7 @@
 #include "Inputor.h"
 #include "Dice.h"
 
-#define DAMAGETICK 15
+#define DAMAGETICK 10
 #define MIDAIR 1
 #define PLAYERACCERLATION 0.7f
 
@@ -25,6 +25,7 @@ void Hostile::Load()
 	color = COLOR_WHITE;
 	damageTick = 0;
 	midair = false;
+	stasis = false;
 	if (uniqueID == BlackBlock)
 	{
 		width = 80;
@@ -45,7 +46,6 @@ void Hostile::Load()
 		height = 163;
 		numFrames = 4;
 
-		stasis = false;
 		maxSpeed = 2.f;
 		acceleration.y = GRAVITY;
 		level = 1;
@@ -59,10 +59,9 @@ void Hostile::Load()
 	if (uniqueID == HostileGhostMob)
 	{
 		width = 71;
-		height = 163;
-		numFrames = 4;
+		height = 64;
+		numFrames = 3;
 
-		stasis = false;
 		maxSpeed = 2.f;
 		acceleration.y = GRAVITY;
 		level = 1;
@@ -295,12 +294,18 @@ void Hostile::kill()
 	if (uniqueID == BlackBlock)
 	{
 		SoundLoader::Inst()->playSound(DeathSound);
-		if(Dice::Inst()->rand(3) == 0)
+		if (Dice::Inst()->rand(3) == 0)
 			World::Inst()->newItem(IronDartItem, 1, position.x + width / 2, position.y + height / 2);
 		if (Dice::Inst()->rand(3) == 0)
 			World::Inst()->newItem(CrystalDartItem, 1, position.x + width / 2, position.y + height / 2);
 		if (Dice::Inst()->rand(3) == 0)
 			World::Inst()->newItem(MokbiDartItem, 1, position.x + width / 2, position.y + height / 2);
+		return;
+	}
+	if (uniqueID == DemonHostile)
+	{
+		SoundLoader::Inst()->playSound(DemonDeathSound);
+		color = COLOR_WHITE;
 		return;
 	}
 	if (uniqueID == DemonHostile)
@@ -337,10 +342,12 @@ void Hostile::onHit(int damage, int critChance)
 		World::Inst()->createText(textShift, 0, -0.1f, to_string(actualDamage), segoeui22, COLOR_WHITE, 60);
 	}
 	if (uniqueID == BlackBlock)
-	{
 		SoundLoader::Inst()->playSound(DamageSound);
+	else if (uniqueID == DemonHostile)
+	{
+		SoundLoader::Inst()->playSound(DemonDamageSound);
 	}
-	if (uniqueID == DemonHostile)
+	else if (uniqueID == HostileGhostMob)
 	{
 		SoundLoader::Inst()->playSound(DemonDamageSound);
 	}
