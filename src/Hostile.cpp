@@ -7,9 +7,12 @@
 #include "Inputor.h"
 #include "Dice.h"
 
-#define DAMAGETICK 15
+#define DAMAGETICK 10
 #define MIDAIR 1
 #define PLAYERACCERLATION 0.7f
+#define SPEED_SLOW 1.5f
+#define SPEED_MEDIUM 3.f
+#define SPEED_FAST 6.f
 
 Hostile::Hostile(int id, int _worldID, int x, int y) : timer(true)
 {
@@ -25,6 +28,7 @@ void Hostile::Load()
 	color = COLOR_WHITE;
 	damageTick = 0;
 	midair = false;
+	stasis = false;
 	if (uniqueID == BlackBlock)
 	{
 		width = 80;
@@ -45,15 +49,81 @@ void Hostile::Load()
 		height = 163;
 		numFrames = 4;
 
-		stasis = false;
-		maxSpeed = 2.f;
+		maxSpeed = SPEED_SLOW;
 		acceleration.y = GRAVITY;
-		level = 1;
-		exp = 20;
+		level = 5;
+		exp = 100;
+		life = 500;
+		minATT = 45;
+		maxATT = 55;
+		defense = 10;
+		return;
+	}
+	if (uniqueID == HostileGhostMob)
+	{
+		width = 71;
+		height = 64;
+		numFrames = 3;
+
+		maxSpeed = SPEED_MEDIUM;
+		acceleration.y = GRAVITY;
+		level = 4;
+		exp = 75;
 		life = 300;
+		minATT = 35;
+		maxATT = 45;
+		defense = 5;
+		return;
+	}
+	if (uniqueID == HostileSkeleton)
+	{
+		width = 84;
+		height = 95;
+		numFrames = 4;
+		animatedSpeed = 350;
+
+		maxSpeed = SPEED_MEDIUM;
+		acceleration.y = GRAVITY;
+		level = 2;
+		exp = 20;
+		life = 150;
 		minATT = 20;
 		maxATT = 40;
-		defense = 5;
+		defense = 2;
+		return;
+	}
+	if (uniqueID == HostileWoodMob)
+	{
+		width = 74;
+		height = 77;
+		numFrames = 4;
+		animatedSpeed = 350;
+
+		maxSpeed = SPEED_SLOW;
+		acceleration.y = GRAVITY;
+		level = 1;
+		exp = 10;
+		life = 50;
+		minATT = 5;
+		maxATT = 15;
+		defense = 1;
+		return;
+	}
+	if (uniqueID == HostileGiantCat)
+	{
+		width = 165;
+		height = 96;
+		numFrames = 5;
+		animatedSpeed = 150;
+
+		maxSpeed = SPEED_FAST;
+		acceleration.y = GRAVITY;
+		level = 3;
+		exp = 50;
+		life = 100;
+		minATT = 35;
+		maxATT = 45;
+		defense = 0;
 		return;
 	}
 }
@@ -274,11 +344,12 @@ void Hostile::kill()
 {
 	active = false;
 	timer.start();
-	Camera::Inst()->getTarget_nonConst()->exp += exp;
+	if(Camera::Inst( )->getTarget_nonConst( )->level < MAXLEVEL)
+		Camera::Inst()->getTarget_nonConst()->exp += exp;
 	if (uniqueID == BlackBlock)
 	{
 		SoundLoader::Inst()->playSound(DeathSound);
-		if(Dice::Inst()->rand(3) == 0)
+		if (Dice::Inst()->rand(3) == 0)
 			World::Inst()->newItem(IronDartItem, 1, position.x + width / 2, position.y + height / 2);
 		if (Dice::Inst()->rand(3) == 0)
 			World::Inst()->newItem(CrystalDartItem, 1, position.x + width / 2, position.y + height / 2);
@@ -287,11 +358,17 @@ void Hostile::kill()
 		return;
 	}
 	if (uniqueID == DemonHostile)
-	{
 		SoundLoader::Inst()->playSound(DemonDeathSound);
-		color = COLOR_WHITE;
-		return;
-	}
+	else if (uniqueID == HostileGhostMob)
+		SoundLoader::Inst()->playSound(DemonDeathSound);
+	else if (uniqueID == HostileSkeleton)
+		SoundLoader::Inst()->playSound(DemonDeathSound);
+	else if (uniqueID == HostileWoodMob)
+		SoundLoader::Inst()->playSound(DemonDeathSound);
+	else if (uniqueID == HostileGiantCat)
+		SoundLoader::Inst()->playSound(DemonDeathSound);
+
+	color = COLOR_WHITE;
 }
 
 void Hostile::onHit(int damage, int critChance)
@@ -317,13 +394,27 @@ void Hostile::onHit(int damage, int critChance)
 		life -= actualDamage;
 
 		Vector2D textShift(entityCenter.x + Dice::Inst()->randInverse(20), position.y + Dice::Inst()->randInverse(20));
-		World::Inst()->createText(textShift, 0, -0.1f, to_string(actualDamage), segoeui22, COLOR_GREEN, 60);
+		World::Inst()->createText(textShift, 0, -0.1f, to_string(actualDamage), segoeui22, COLOR_WHITE, 60);
 	}
 	if (uniqueID == BlackBlock)
-	{
 		SoundLoader::Inst()->playSound(DamageSound);
+	else if (uniqueID == DemonHostile)
+	{
+		SoundLoader::Inst()->playSound(DemonDamageSound);
 	}
-	if (uniqueID == DemonHostile)
+	else if (uniqueID == HostileGhostMob)
+	{
+		SoundLoader::Inst()->playSound(DemonDamageSound);
+	}
+	else if (uniqueID == HostileSkeleton)
+	{
+		SoundLoader::Inst()->playSound(DemonDamageSound);
+	}
+	else if (uniqueID == HostileWoodMob)
+	{
+		SoundLoader::Inst()->playSound(DemonDamageSound);
+	}
+	else if (uniqueID == HostileGiantCat)
 	{
 		SoundLoader::Inst()->playSound(DemonDamageSound);
 	}

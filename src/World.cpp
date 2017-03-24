@@ -47,19 +47,21 @@ void World::initialize()
 	TextureLoader::Inst()->load(SkillPanelAddSkillButtonFile, SkillPanelAddSkillButton);
 	TextureLoader::Inst()->load(SkillPanelMinusSkillButtonFile, SkillPanelMinusSkillButton);
 	///Load skill icons
-	TextureLoader::Inst()->load(HealingMagicSkillIconFile, HealingMagicSkillIcon);
-	TextureLoader::Inst()->load(IchorKnifeSkillIconFile, IchorKnifeSkillIcon);
+	TextureLoader::Inst()->load(SkillPhysicalTrainingIconFile, SkillPhysicalTrainingIcon);
+	TextureLoader::Inst()->load(SkillDoubleThrowIconFile, SkillDoubleThrowIcon);
+	TextureLoader::Inst()->load(SkillTripleThrowIconFile, SkillTripleThrowIcon);
+	TextureLoader::Inst()->load(SkillLifeForceIconFile, SkillLifeForceIcon);
+	TextureLoader::Inst()->load(SkillIronBodyIconFile, SkillIronBodyIcon);
+	TextureLoader::Inst()->load(SkillLifeRegenerationIconFile, SkillLifeRegenerationIcon);
+	TextureLoader::Inst()->load(SkillMPBoostIconFile, SkillMPBoostIcon);
+	TextureLoader::Inst()->load(SkillCriticalThrowIconFile, SkillCriticalThrowIcon);
 	///Load tiles
 	TextureLoader::Inst()->load(Tile01File, Tile01);
 	TextureLoader::Inst()->load(BrickFile, Brick);
-  TextureLoader::Inst()->load(HealingMagicSkillbrickFile,HealingMagicSkillbrick);
-
 	///Load sprites
-	TextureLoader::Inst()->load(FlockFile, Flock);
 	TextureLoader::Inst()->load(WaterMushroomFrameFile, WaterMushroomFrame);
 	TextureLoader::Inst()->load(TestPortalFile, TestPortal);
 	TextureLoader::Inst()->load(LadderSpriteFile, LadderSprite);
-	TextureLoader::Inst()->load(LadderSpriteFile, HalfLadder);
 	TextureLoader::Inst()->load(MapGateFile, MapGate);
 	TextureLoader::Inst()->load(MapGate2File, MapGate2);
 	///Load entities
@@ -71,11 +73,13 @@ void World::initialize()
 	TextureLoader::Inst()->load(ShopNPCFile, ShopNPC);
 	TextureLoader::Inst()->load(BlackBlockFile, BlackBlock);
 	TextureLoader::Inst()->load(DemonHostileFile, DemonHostile);
+	TextureLoader::Inst()->load(HostileGhostMobFile, HostileGhostMob);
+	TextureLoader::Inst()->load(HostileSkeletonFile, HostileSkeleton);
+	TextureLoader::Inst()->load(HostileGhostMobFile, HostileGhostMob);
+	TextureLoader::Inst()->load(HostileWoodMobFile, HostileWoodMob);
+	TextureLoader::Inst()->load(HostileGiantCatFile, HostileGiantCat);
 	///Load Projectiles
-	TextureLoader::Inst()->load(IchorKnifeProjectileFile, IchorKnifeProjectile);
-	TextureLoader::Inst()->load(OrichalcumShortswordProjectileFile, OrichalcumShortswordProjectile);
-	TextureLoader::Inst()->load(PurificationBulletProjectileFile, PurificationBulletProjectile);
-	TextureLoader::Inst()->load(ChlorophyteTrackerProjectileFile, ChlorophyteTrackerProjectile);
+	TextureLoader::Inst()->load(SubiDartProjectileFile, SubiDartProjectile);
 	TextureLoader::Inst()->load(IronDartProjectileFile, IronDartProjectile);
 	TextureLoader::Inst()->load(CrystalDartProjectileFile, CrystalDartProjectile);
 	TextureLoader::Inst()->load(MokbiDartProjectileFile, MokbiDartProjectile);
@@ -168,63 +172,26 @@ void World::changeMap(int mapID, MapChangeType form)
 		///tiles
 		for (int i = 10; i < 20; i++)
 			getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 244));
-    
-		for (int i = 10; i < 14; i++)
-			getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 244 * 2));
-		for (int i = 17; i < 19; i++)
-			getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 244 * 2.3));
-		for (int i = 22; i < 28; i++)
-			getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 244 * 2));
-		for (int i = 30; i < 60; i += rand() % 7)
-			getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 244 * 2));
-		for (int i = 60; i < 65; i++)
-			getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 244 * 2.2));
-		for (int i = 63; i < 65; i++)
-			getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 244 * 3.2));
-        
-        for (int i = 5; i < 20; i++)
-            getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 488));
-        
-        for (int i = 40; i < 50; i++)
-            getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 200));
-        
-        for (int i = 45; i < 52; i++)
-            getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 450));
-        
-        for (int i = 35; i < 42; i++)
-            getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 600));
-        
-        for (int i = 25; i < 27; i++)
-            for(int j = 0; j <= 4; j++)
-            getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 110 + j * 37));
-        
-        getLayer_tile().push_back(new Tile (HealingMagicSkillbrick, 500, height - 536));
-
 		///sprites
 		getLayer_background().push_back(new Sprite(WaterMushroomFrame, 1000, height - 136));
-		getLayer_foreground().push_back(new Sprite(TestPortal, 1645, height - 700));
-        getLayer_foreground().push_back(new Sprite(TestPortal, 470, height - 348));
-
+		getLayer_foreground().push_back(new Sprite(TestPortal, 1200, height - 105));
 		getLayer_foreground().push_back(new Sprite(LadderSprite, 19 * 47, height - 244));
-    getLayer_foreground().push_back(new Sprite(LadderSprite, 12 * 47, height - 488));
-        
-    getLayer_foreground().push_back(new Sprite(LadderSprite, 49 * 47, height - 450));
-
-      
 		getLayer_foreground().push_back(new Sprite(MapGate, 0, height - 154));
-		//getLayer_foreground().push_back(new Sprite(Flock, 500, height - 154));
 		///entities
 		getLayer_entity().push_back(new NPC(LeafNPC, 2000, height - 100));
-       
 		getLayer_entity().push_back(new NPC(ShopNPC, 1600, height - 215));
 		getLayer_entity().push_back(new NPC(GhostNPC, 1400, height - 80));
-        getLayer_entity().push_back(new NPC(GhostNPC, 1000, height - 312));
-        getLayer_entity().push_back(new NPC(GhostNPC, 1600, height - 412));
 		getLayer_entity().push_back(new NPC(MapleFlagNPC, 800, height - 177));
-        getLayer_entity().push_back(new NPC(MapleFlagNPC, 300, height - 300));
-        getLayer_entity().push_back(new NPC(MapleFlagNPC, 1800, height - 400));
 		getLayer_entity().push_back(new Hostile(BlackBlock, 0, 2500, height - 200));
-		getLayer_entity().push_back(new Hostile(DemonHostile, 0, 2700, height - 200));
+		getLayer_entity().push_back(new Hostile(HostileGiantCat, 0, 2700, height - 200));
+		getLayer_entity( ).push_back(new Hostile(HostileSkeleton, 0, 2700, height - 200));
+		getLayer_entity( ).push_back(new Hostile(HostileSkeleton, 0, 2700, height - 200));
+		getLayer_entity( ).push_back(new Hostile(HostileSkeleton, 0, 2700, height - 200));
+		getLayer_entity( ).push_back(new Hostile(HostileWoodMob, 0, 2700, height - 200));
+		getLayer_entity( ).push_back(new Hostile(HostileWoodMob, 0, 2700, height - 200));
+		getLayer_entity( ).push_back(new Hostile(HostileWoodMob, 0, 2700, height - 200));
+		getLayer_entity( ).push_back(new Hostile(HostileWoodMob, 0, 2700, height - 200));
+		getLayer_entity( ).push_back(new Hostile(HostileWoodMob, 0, 2700, height - 200));
 		///items
 		return;
 	}
@@ -244,19 +211,37 @@ void World::changeMap(int mapID, MapChangeType form)
 			Camera::Inst()->getTarget_nonConst()->setPosition(width - 50, height - 100);
 			break;
 		}
-        ///tiles
-        for (int i = 10; i < 20; i++)
-            getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 244));
-        for (int i = 15; i < 30; i++)
-            getLayer_tile().push_back(new Tile(Brick, 47 * i, height - 488));
-
 		///sprites
 		getLayer_foreground().push_back(new Sprite(MapGate2, width - 108, height - 154));
-        getLayer_foreground().push_back(new Sprite(LadderSprite, 29 * 47, height - 488));
 		///entities
 		getLayer_entity().push_back(new NPC(SavePointNPC, 1600, height - 211));
-          getLayer_entity().push_back(new NPC(MapleFlagNPC, 300, height - 300));
+		getLayer_entity( ).push_back(new NPC(LeafNPC, 1200, height - 100));
+		getLayer_entity( ).push_back(new NPC(ShopNPC, 1600, height - 215));
+		getLayer_entity( ).push_back(new NPC(GhostNPC, 1400, height - 80));
+		getLayer_entity( ).push_back(new NPC(MapleFlagNPC, 800, height - 177));
 		///items
+		return;
+	}
+	if (mapID == MapDemo)
+	{
+		width = 3072;
+		height = 1000;
+		backgroundID = MapBackground;
+		///Spawn point
+		switch (form)
+		{
+		case MAPCHANGE_LOAD:
+			Camera::Inst()->getTarget_nonConst()->setPosition(500, height - 100);
+			break;
+		}
+		///tiles
+
+		///sprites
+
+		///entities
+		getLayer_entity().push_back(new Hostile(DemonHostile, 0, 2700, height - 200));
+		///items
+		return;
 	}
 }
 

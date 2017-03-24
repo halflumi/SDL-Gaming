@@ -34,12 +34,6 @@ void Sprite::Load()
 		height = 244;
 		return;
 	}
-	if (uniqueID == HalfLadder)
-	{
-		width = 54;
-		height = 244 / 2;
-		return;
-	}
 	if (uniqueID == MapGate)
 	{
 		width = 109;
@@ -50,12 +44,6 @@ void Sprite::Load()
 	{
 		width = 108;
 		height = 154;
-		return;
-	}
-	if (uniqueID == Flock)
-	{
-		width = 87;
-		height = 76;
 		return;
 	}
 }

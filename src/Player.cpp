@@ -22,6 +22,15 @@
 #define MIDAIR_LADDER 2
 #define MIDAIR_LADDER_JUMP 3
 
+const int Player::LvUpBonus[TOTALATTRIBUTES][MAXLEVEL] 
+{ 
+	{10,2,2,2,3,6,3,3,3,6},
+	{1,2,1,2,1,4,1,3,1,4},
+	{100,20,20,20,20,30,20,20,20,30},
+	{30,5,5,5,5,10,5,5,5,10},
+	{1,1,2,1,1,3,1,1,2,2} 
+};
+
 Player::Player(int id, int x, int y)
 {
 	name = "Who am I?";
@@ -58,28 +67,32 @@ void Player::Load()
 {
 	width = PLAYERWIDTH;
 	height = PLAYERHEIGHT;
-	//rpg properties
 	maxSpeed = DEFAULTMAXSPEED;
 	acceleration.y = GRAVITY;
+	//rpg properties
+	attackTick = 0;
+	lifeRegenTick = 0;
+	manaRegenTick = 0;
+	invulnerableTick = 0;
+
 	level = XmlParser::Inst()->level;
 	exp = XmlParser::Inst()->xp;
 	expToNextLevel = ExpSheet(level);
 	life = XmlParser::Inst()->life;
-	maxlife = 90 + 10 * level;
 	mana = XmlParser::Inst()->mana;
-	maxmana = 20 + 10 * level;
-	baseATT = 10;
-	baseDEF = 2;
+
+	baseMaxLife = LvUpBonus[HP][0];
+	baseMaxMana = LvUpBonus[MP][0];
+	baseATT = LvUpBonus[ATK][0];
+	baseDEF = LvUpBonus[DEF][0];
 	critChance = 10;
 
-	attackInterval = 15;
-	attackTick = 0;
-	lifeRegenInterval = 300;
-	lifeRegenTick = 0;
-	manaRegenInterval = 180;
-	manaRegenTick = 0;
-	invulnerableInterval = 60;
-	invulnerableTick = 0;
+	attackInterval = 30;
+	baseLifeRegenInterval = 600;
+	baseLifeRegenAmount = 1;
+	baseManaRegenInterval = 300;
+	baseManaRegenAmount = 1;
+	baseInvulnerableInterval = 60;
 }
 
 void Player::update()
@@ -147,16 +160,27 @@ void Player::IsDead()
 
 void Player::IsLevelingup()
 {
-	if (exp >= expToNextLevel)
+	while (exp >= expToNextLevel)
 	{
-		level++;
-		skillPanel->skillPoints++;
-		exp -= expToNextLevel;
 		SoundLoader::Inst()->playSound(LevelupSound);
-		life = maxlife;
-		mana = maxmana;
+		LevelUpBonus( );
+		level++;
+		exp -= expToNextLevel;
 		expToNextLevel = ExpSheet(level);
 	}
+}
+
+void Player::LevelUpBonus( ) {
+	baseATT += LvUpBonus[ATK][level];
+	baseDEF += LvUpBonus[DEF][level];
+	baseMaxLife += LvUpBonus[HP][level];
+	baseMaxMana += LvUpBonus[MP][level];
+	skillPanel->skillPoints += LvUpBonus[SP][level];
+
+	maxlife += LvUpBonus[HP][level];
+	maxmana += LvUpBonus[MP][level];
+	life = maxlife;
+	mana = maxmana;
 }
 
 void Player::UpdateAttributes()
@@ -173,6 +197,13 @@ void Player::UpdateAttributes()
 		maxATT = baseATT + 5 + rightHand_equ->maxATT;
 	}
 	defense = baseDEF;
+	maxlife = baseMaxLife;
+	maxmana = baseMaxMana;
+	lifeRegenInterval = baseLifeRegenInterval;
+	lifeRegenAmount = baseLifeRegenAmount;
+	manaRegenInterval = baseManaRegenInterval;
+	manaRegenAmount = baseManaRegenAmount;
+	invulnerableInterval = baseInvulnerableInterval;
 	///skill cooldown
 	skillPanel->outsideUpdateSkills();
 	///attack speed
@@ -186,22 +217,22 @@ void Player::UpdateAttributes()
 	if (lifeRegenTick >= 0)
 	{
 		lifeRegenTick++;
-		if (lifeRegenTick == lifeRegenInterval)
+		if (lifeRegenTick >= lifeRegenInterval)
 		{
 			lifeRegenTick = 0;
 			if (life < maxlife)
-				life++;
+				life += lifeRegenAmount;
 		}
 	}
 	///mana regen speed
 	if (manaRegenTick >= 0)
 	{
 		manaRegenTick++;
-		if (manaRegenTick == manaRegenInterval)
+		if (manaRegenTick >= manaRegenInterval)
 		{
 			manaRegenTick = 0;
 			if (mana < maxmana)
-				mana++;
+				mana += manaRegenAmount;
 		}
 	}
 	///invulnerable tick
@@ -377,7 +408,7 @@ void Player::HandleInput()
 	{
 		if (!attackTick && Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && mouseCooldown.getTicks() > CLICKCOOLDOWN)
 		{
-			Attacking();
+			attacking();
 		}
 		if (!attackTick && mana > 0 && Inputor::Inst()->getMouseButtonState(MOUSE_RIGHT))
 		{
@@ -396,7 +427,7 @@ void Player::HandleInput()
 			skillPanel->skills[skillPanel->hotkeySkillIndexes[2]]->castSkill();
 }
 
-void Player::Attacking()
+void Player::attacking()
 {
 	if (rightHand_equ == NULL || !rightHand_equ->active)
 	{
@@ -406,7 +437,8 @@ void Player::Attacking()
 		direction.normalize();
 		direction.x *= 10;
 		direction.y *= 5;
-		World::Inst()->newProjectile(ChlorophyteTrackerProjectile, entityCenter, direction.x, direction.y, this);
+		Vector2D randpos(entityCenter.x + Dice::Inst()->randInverse(15), entityCenter.y + Dice::Inst()->randInverse(15));
+		World::Inst()->newProjectile(SubiDartProjectile, randpos, direction.x, direction.y, this);
 		SoundLoader::Inst()->playSound(AttackSound);
 	}
 	else if (rightHand_equ->getUniqueID() == IronDartItem)
@@ -417,7 +449,8 @@ void Player::Attacking()
 		direction.normalize();
 		direction.x *= 10;
 		direction.y *= 5;
-		World::Inst()->newProjectile(IronDartProjectile, entityCenter, direction.x, direction.y, this);
+		Vector2D randpos(entityCenter.x + Dice::Inst()->randInverse(15), entityCenter.y + Dice::Inst()->randInverse(15));
+		World::Inst()->newProjectile(IronDartProjectile, randpos, direction.x, direction.y, this);
 		SoundLoader::Inst()->playSound(AttackSound);
 	}
 	else if (rightHand_equ->getUniqueID() == CrystalDartItem)
@@ -428,7 +461,8 @@ void Player::Attacking()
 		direction.normalize();
 		direction.x *= 10;
 		direction.y *= 5;
-		World::Inst()->newProjectile(CrystalDartProjectile, entityCenter, direction.x, direction.y, this);
+		Vector2D randpos(entityCenter.x + Dice::Inst()->randInverse(15), entityCenter.y + Dice::Inst()->randInverse(15));
+		World::Inst()->newProjectile(CrystalDartProjectile, randpos, direction.x, direction.y, this);
 		SoundLoader::Inst()->playSound(AttackSound);
 	}
 	else if (rightHand_equ->getUniqueID() == MokbiDartItem)
@@ -439,7 +473,8 @@ void Player::Attacking()
 		direction.normalize();
 		direction.x *= 10;
 		direction.y *= 5;
-		World::Inst()->newProjectile(MokbiDartProjectile, entityCenter, direction.x, direction.y, this);
+		Vector2D randpos(entityCenter.x + Dice::Inst()->randInverse(15), entityCenter.y + Dice::Inst()->randInverse(15));
+		World::Inst()->newProjectile(MokbiDartProjectile, randpos, direction.x, direction.y, this);
 		SoundLoader::Inst()->playSound(AttackSound);
 	}
 }
