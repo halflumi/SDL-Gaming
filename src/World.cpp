@@ -139,6 +139,7 @@ void World::initialize()
 	if (!newGame)
 		XmlParser::Inst()->loadCharacter();
 	changeMap(XmlParser::Inst()->mapID, MAPCHANGE_LOAD);
+	timer = MyTimer(true);
 	///load UI
 	const Player* player = Camera::Inst()->getTarget();
 	Vector2D healthNumTextpos(HealthTextPos);
@@ -212,7 +213,15 @@ void World::changeMap(int mapID, MapChangeType form)
 		getLayer_entity().push_back(new NPC(GhostNPC, 1400, height - 80));
 		getLayer_entity().push_back(new NPC(MapleFlagNPC, 800, height - 177));
 		getLayer_entity().push_back(new Hostile(BlackBlock, 0, 2500, height - 200));
-		getLayer_entity().push_back(new Hostile(HostileGiantCat, 0, 2700, height - 200));
+		getLayer_entity().push_back(new Hostile(HostileGiantCat, 0, 2700, height - 200));	
+		getLayer_entity( ).push_back(new Hostile(HostileSkeleton, 0, 2700, height - 200));
+		getLayer_entity( ).push_back(new Hostile(HostileSkeleton, 0, 2700, height - 200));
+		getLayer_entity( ).push_back(new Hostile(HostileSkeleton, 0, 2700, height - 200));
+		getLayer_entity( ).push_back(new Hostile(HostileWoodMob, 0, 2700, height - 200));
+		getLayer_entity( ).push_back(new Hostile(HostileWoodMob, 0, 2700, height - 200));
+		getLayer_entity( ).push_back(new Hostile(HostileWoodMob, 0, 2700, height - 200));
+		getLayer_entity( ).push_back(new Hostile(HostileWoodMob, 0, 2700, height - 200));
+		getLayer_entity( ).push_back(new Hostile(HostileWoodMob, 0, 2700, height - 200));
 		///items
 		return;
 	}
@@ -284,10 +293,57 @@ void World::changeMap(int mapID, MapChangeType form)
 		getLayer_background().push_back(new Sprite(Sprite07, 300, height - 280));
 		getLayer_background().push_back(new Sprite(Sprite05, 400, height - 140));
 		getLayer_background().push_back(new Sprite(Sprite06, 456, height - 721));
+		getLayer_background().push_back(new Sprite(Sprite08, 756, height - 123));
+		getLayer_background().push_back(new Sprite(Sprite10, 786, height - 123));
+		getLayer_background().push_back(new Sprite(Sprite09, 806, height - 123));
+		getLayer_background().push_back(new Sprite(Sprite10, 856, height - 123));
+		getLayer_background().push_back(new Sprite(Sprite08, 886, height - 123));
+		getLayer_foreground().push_back(new Sprite(LadderSprite, 553, 704));
 		///entities
 		getLayer_entity().push_back(new Hostile(HostilePigNPC, 0, 200, height - 200));
 		///items
 		return;
+	}
+}
+
+void World::AttackWave()
+{
+	int time = timer.getTicks();
+	if (time > 500 && time < 530)
+	{
+		newHostile(HostileWoodMob, width - 10, 0);
+	}
+	else if (time > 10500 && time < 10530)
+	{
+		newHostile(HostileWoodMob, width - 10, 0);
+	}
+	else if (time > 20500 && time < 20530)
+	{
+		newHostile(HostileWoodMob, width - 10, 0);
+	}
+	else if (time > 30500 && time < 30530)
+	{
+		newHostile(HostileWoodMob, width - 10, 0);
+	}
+	else if (time > 40500 && time < 40530)
+	{
+		newHostile(HostileSkeleton, width - 10, 0);
+	}
+	else if (time > 60500 && time < 60530)
+	{
+		newHostile(HostileSkeleton, width - 10, 0);
+	}
+	else if (time > 80500 && time < 80530)
+	{
+		newHostile(HostileGiantCat, width - 10, 0);
+	}
+	else if (time > 120500 && time < 120530)
+	{
+		newHostile(HostileGhostMob, width - 10, 0);
+	}
+	else if (time > 245500 && time < 245530)
+	{
+		newHostile(DemonHostile, width - 10, 0);
 	}
 }
 
@@ -296,6 +352,7 @@ void World::updating()
 	int k, i;
 	int len;
 
+	AttackWave();
 	//update background
 	len = layer_background.size();
 	for (i = 0; i < len; i++)

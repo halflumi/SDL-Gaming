@@ -10,6 +10,9 @@
 #define DAMAGETICK 10
 #define MIDAIR 1
 #define PLAYERACCERLATION 0.7f
+#define SPEED_SLOW 1.5f
+#define SPEED_MEDIUM 3.f
+#define SPEED_FAST 6.f
 
 Hostile::Hostile(int id, int _worldID, int x, int y) : timer(true)
 {
@@ -56,14 +59,14 @@ void Hostile::Load()
 		damageSoundID = DemonDamageSound;
 		dieSoundID = DemonDieSound;
 
-		maxSpeed = 2.f;
+		maxSpeed = SPEED_SLOW;
 		acceleration.y = GRAVITY;
-		level = 1;
-		exp = 20;
-		life = 300;
-		minATT = 20;
-		maxATT = 40;
-		defense = 5;
+		level = 5;
+		exp = 100;
+		life = 500;
+		minATT = 45;
+		maxATT = 55;
+		defense = 10;
 		return;
 	}
 	if (uniqueID == HostileGhostMob)
@@ -74,13 +77,13 @@ void Hostile::Load()
 		damageSoundID = GhostMobDamageSound;
 		dieSoundID = GhostMobDieSound;
 
-		maxSpeed = 2.f;
+		maxSpeed = SPEED_MEDIUM;
 		acceleration.y = GRAVITY;
-		level = 1;
-		exp = 20;
+		level = 4;
+		exp = 75;
 		life = 300;
-		minATT = 20;
-		maxATT = 40;
+		minATT = 35;
+		maxATT = 45;
 		defense = 5;
 		return;
 	}
@@ -93,14 +96,14 @@ void Hostile::Load()
 		damageSoundID = SkeletonDamageSound;
 		dieSoundID = SkeletonDieSound;
 
-		maxSpeed = 1.f;
+		maxSpeed = SPEED_MEDIUM;
 		acceleration.y = GRAVITY;
-		level = 1;
+		level = 2;
 		exp = 20;
-		life = 300;
+		life = 150;
 		minATT = 20;
 		maxATT = 40;
-		defense = 5;
+		defense = 2;
 		return;
 	}
 	if (uniqueID == HostileWoodMob)
@@ -112,14 +115,14 @@ void Hostile::Load()
 		damageSoundID = WoodMobDamageSound;
 		dieSoundID = WoodMobDieSound;
 
-		maxSpeed = 1.f;
+		maxSpeed = SPEED_SLOW;
 		acceleration.y = GRAVITY;
 		level = 1;
-		exp = 20;
-		life = 300;
-		minATT = 20;
-		maxATT = 40;
-		defense = 5;
+		exp = 10;
+		life = 50;
+		minATT = 5;
+		maxATT = 15;
+		defense = 1;
 		return;
 	}
 	if (uniqueID == HostileGiantCat)
@@ -131,14 +134,14 @@ void Hostile::Load()
 		damageSoundID = GiantCatDamageSound;
 		dieSoundID = GiantCatDieSound;
 
-		maxSpeed = 4.f;
+		maxSpeed = SPEED_FAST;
 		acceleration.y = GRAVITY;
-		level = 1;
-		exp = 20;
-		life = 300;
-		minATT = 20;
-		maxATT = 40;
-		defense = 5;
+		level = 3;
+		exp = 50;
+		life = 100;
+		minATT = 35;
+		maxATT = 45;
+		defense = 0;
 		return;
 	}
 	if (uniqueID == HostilePigNPC)
@@ -155,7 +158,7 @@ void Hostile::Load()
 		acceleration.y = GRAVITY;
 		level = 1;
 		exp = 20;
-		life = 300;
+		life = 10;
 		minATT = 20;
 		maxATT = 40;
 		defense = 5;
@@ -177,6 +180,23 @@ void Hostile::update()
 		if (!stasis)
 		{
 			MovingAI();
+
+			///invulnerable tick
+			if (invulnerableTick)
+			{
+				invulnerableTick++;
+				if (invulnerableTick == invulnerableInterval)
+					invulnerableTick = 0;
+				if (invulnerableTick % 5 == 0)
+				{
+					if (alpha == 255)
+						alpha = 50;
+					else
+						alpha = 255;
+				}
+			}
+			else
+				alpha = 255;
 
 			if (movingLeft || movingRight)
 				currentFrame = int(((timer.getTicks() / animatedSpeed) % numFrames));
@@ -213,6 +233,7 @@ void Hostile::update()
 void Hostile::MovingAI()
 {
 	int player_x = Camera::Inst()->getTarget_nonConst()->getPosition().x;
+	acceleration.y = GRAVITY;
 	if (!friendly)
 	{
 		if (position.x < player_x)
@@ -228,35 +249,46 @@ void Hostile::MovingAI()
 	}
 	else
 	{
-		if (ai[0] > 0)
-		{
-			ai[0]--;
-			//cout << ai[0] << ' ';
-			if (ai[1] == 1)
-				currentRow = 2;
-			if (ai[1] == 2)
-				currentRow = 3;
+		if (!(movingLeft || movingRight)) {
+			movingLeft = true;
 			movingRight = false;
-			movingLeft = false;
-			velocity.x = 0;
 		}
-		else
-		{
-			cout << "shit" << endl;
-			if (ai[1] == 1)
-			{
-				movingLeft = false;
-				movingRight = true;
-			}
-			else
-			{
-				movingLeft = true;
-				movingRight = false;
-			}
-			ai[1] = 0;
+		//if (ai[0] > 0)
+		//{
+		//	ai[0]--;
+		//	//cout << ai[0] << ' ';
+		//	if (ai[1] == 1)
+		//		currentRow = 2;
+		//	if (ai[1] == 2)
+		//		currentRow = 3;
+		//	movingRight = false;
+		//	movingLeft = false;
+		//	velocity.x = 0;
+		//}
+		//else
+		//{
+		//	std::cout << "???" << endl;
+		//	if (ai[1] == 1)
+		//	{
+		//		movingLeft = false;
+		//		movingRight = true;
+		//	}
+		//	else
+		//	{
+		//		movingLeft = true;
+		//		movingRight = false;
+		//	}
+		//	ai[1] = 0;
+		//}
+		static int start = SDL_GetTicks();
+		if (SDL_GetTicks() - start > 2000) {
+			swap(movingLeft, movingRight);
+			velocity.x *= -1;
+			start = SDL_GetTicks();
 		}
+
 	}
-	cout << ai[1];
+	//std::cout << ai[1];
 	//calculate speed
 	if (!midair)
 	{
@@ -282,20 +314,20 @@ void Hostile::MovingAI()
 	}
 	//calculate position
 	Vector2D newposition = position + velocity;
-	cout << newposition.x << endl;
-	if (friendly || !ai[1])
-	{
-		if (newposition.x < 0)
-		{
-			ai[0] = Dice::Inst()->rand(60, 60);
-			ai[1] = 1;
-		}
-		else if (newposition.x > 400)
-		{
-			ai[0] = Dice::Inst()->rand(60, 60);
-			ai[1] = 2;
-		}
-	}
+	//std::cout << newposition.x << endl;
+	//if (friendly || !ai[1])
+	//{
+	//	if (newposition.x < 0)
+	//	{
+	//		ai[0] = Dice::Inst()->rand(60, 60);
+	//		ai[1] = 1;
+	//	}
+	//	else if (newposition.x > 400)
+	//	{
+	//		ai[0] = Dice::Inst()->rand(60, 60);
+	//		ai[1] = 2;
+	//	}
+	//}
 
 	if (!CheckCollision_tileX(newposition.x)) {
 		position.x = newposition.x;
@@ -304,7 +336,8 @@ void Hostile::MovingAI()
 		position.y = newposition.y;
 	}
 
-	CheckCollision_hostile(newposition);
+	if(friendly)
+		CheckCollision_hostile(newposition);
 }
 
 bool Hostile::CheckCollision_tileX(float& x)
@@ -479,22 +512,24 @@ void Hostile::kill()
 {
 	active = false;
 	timer.start();
-	Camera::Inst()->getTarget_nonConst()->exp += exp;
-	///drop
-	if (uniqueID == BlackBlock)
-	{
-		SoundLoader::Inst()->playSound(DeathSound);
-		if (Dice::Inst()->rand(3) == 0)
-			World::Inst()->newItem(IronDartItem, 1, position.x + width / 2, position.y + height / 2);
-		if (Dice::Inst()->rand(3) == 0)
-			World::Inst()->newItem(CrystalDartItem, 1, position.x + width / 2, position.y + height / 2);
-		if (Dice::Inst()->rand(3) == 0)
-			World::Inst()->newItem(MokbiDartItem, 1, position.x + width / 2, position.y + height / 2);
-		return;
-	}
+	if(Camera::Inst( )->getTarget_nonConst( )->level < MAXLEVEL)
+		Camera::Inst()->getTarget_nonConst()->exp += exp;
 
+	///drop
+	if (Dice::Inst()->rand(5) == 0)
+		World::Inst()->newItem(IronDartItem, 1, position.x + width / 2, position.y + height / 2);
+	if (Dice::Inst()->rand(15) == 0)
+		World::Inst()->newItem(CrystalDartItem, 1, position.x + width / 2, position.y + height / 2);
+	if (Dice::Inst()->rand(25) == 0)
+		World::Inst()->newItem(MokbiDartItem, 1, position.x + width / 2, position.y + height / 2);
+	
 	SoundLoader::Inst()->playSound(dieSoundID);
 	color = COLOR_WHITE;
+
+	if (uniqueID == HostilePigNPC)
+	{
+		Main::Inst()->changeMenu(MenuGameOver);
+	}
 }
 
 void Hostile::onHit(int damage, int critChance)

@@ -16,7 +16,7 @@ protected:
 	int invulnerableInterval;
 	int invulnerableTick;
 
-	Entity() : maxSpeed(5.0f), velocity(0.0f, 0.0f), acceleration(0.0f, 0.0f), entityCenter(0.f,0.f), life(0), maxlife(0), minATT(0), maxATT(0), defense(0)
+	Entity() : maxSpeed(5.0f), velocity(0.0f, 0.0f), acceleration(0.0f, 0.0f), entityCenter(0.f,0.f), life(0), maxlife(0), minATT(0), maxATT(0), defense(0), invulnerableTick(0), invulnerableInterval(60)
 	{
 		dead = false;
 

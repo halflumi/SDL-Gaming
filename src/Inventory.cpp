@@ -54,8 +54,8 @@ void InventoryItem::Load()
 		width = 48;
 		height = 48;
 		minATT = 1;
-		maxATT = 10;
-	}
+		maxATT = 5;
+	} 
 	else if (uniqueID == CrystalDartItem)
 	{
 		name = CrystalDartName;
@@ -63,9 +63,9 @@ void InventoryItem::Load()
 
 		width = 48;
 		height = 48;
-		minATT = 1;
-		maxATT = 40;
-	}
+		minATT = 15;
+		maxATT = 20;
+	} 
 	else if (uniqueID == MokbiDartItem)
 	{
 		name = MokbiDartName;
@@ -73,8 +73,8 @@ void InventoryItem::Load()
 
 		width = 48;
 		height = 48;
-		minATT = 10;
-		maxATT = 20;
+		minATT = 5;
+		maxATT = 10;
 	}
 	InitItemInfo();
 }

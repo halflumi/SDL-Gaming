@@ -31,7 +31,7 @@ void Sprite::Load()
 	if (uniqueID == LadderSprite)
 	{
 		width = 54;
-		height = 244;
+		height = 167;
 		return;
 	}
 	if (uniqueID == MapGate)
@@ -106,6 +106,12 @@ void Sprite::Load()
 		height = 38;
 		return;
 	}
+	//if (uniqueID == LadderSprite2)
+	//{
+	//	width = 54;
+	//	height = 167;
+	//	return;
+	//}
 }
 
 void Sprite::update()

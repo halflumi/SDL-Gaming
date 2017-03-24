@@ -26,33 +26,32 @@ void Skill::Load()
 		passive = true;
 		name = "Physical Training";
 		sp = 1;
-		maxLevel = 5;
-		minATT = level * 5;
-		maxATT = level * 10;
+		maxLevel = 3;
+		percentATT = level * 10;
 		return;
 	}
 	if (skillID == SkillDoubleThrow)
 	{
 		preSkillIndex = SkillIndexPhysicalTraining;
 		postSkillIndex = SkillIndexTripleThrow;
-		name = "Double Throw";
+		name = "Double Dart";
 		sp = 1;
-		maxLevel = 5;
+		maxLevel = 3;
 		cooldownInterval = 240;
-		minATT = level * 5;
-		maxATT = level * 10;
+		minATT = level * level * 5;
+		maxATT = level * level * 10;
 		manaConsume = 2 + level * 1;
 		return;
 	}
 	if (skillID == SkillTripleThrow)
 	{
 		preSkillIndex = SkillIndexDoubleThrow;
-		name = "Triple Throw";
+		name = "Triple Star";
 		sp = 1;
-		maxLevel = 5;
+		maxLevel = 3;
 		cooldownInterval = 300;
-		minATT = level * 5;
-		maxATT = level * 10;
+		minATT = level * level * 5;
+		maxATT = level * level * 10;
 		manaConsume = 5 + level * 1;
 		return;
 	}
@@ -62,7 +61,7 @@ void Skill::Load()
 		passive = true;
 		name = "Life Force";
 		sp = 1;
-		maxLevel = 5;
+		maxLevel = 3;
 		minATT = level * 20;
 		return;
 	}
@@ -73,7 +72,7 @@ void Skill::Load()
 		passive = true;
 		name = "Iron Body";
 		sp = 1;
-		maxLevel = 5;
+		maxLevel = 3;
 		minATT = level;
 		return;
 	}
@@ -81,27 +80,27 @@ void Skill::Load()
 	{
 		preSkillIndex = SkillIndexIronBody;
 		passive = true;
-		name = "Life Regenaration";
+		name = "Second Spring";
 		sp = 1;
-		maxLevel = 5;
+		maxLevel = 3;
 		minATT = level * 5;
 		return;
 	}
 	if (skillID == SkillMPBoost)
 	{
 		passive = true;
-		name = "MP Boost";
+		name = "Mana Regeneration";
 		sp = 1;
-		maxLevel = 5;
+		maxLevel = 3;
 		minATT = level * 10;
 		return;
 	}
 	if (skillID == SkillCriticalThrow)
 	{
 		passive = true;
-		name = "Critical Throw";
+		name = "Critical Shoot";
 		sp = 1;
-		maxLevel = 5;
+		maxLevel = 3;
 		minATT = level * 3;
 		return;
 	}
@@ -125,8 +124,8 @@ void Skill::update()
 	///update passive effects
 	if (skillID == SkillPhysicalTraining)
 	{
-		player->minATT += minATT;
-		player->maxATT += maxATT;
+		player->minATT += player->minATT * percentATT / 100.f;
+		player->maxATT += player->minATT * percentATT / 100.f;
 		return;
 	}
 	if (skillID == SkillLifeForce)

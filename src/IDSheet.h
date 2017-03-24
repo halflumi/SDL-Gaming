@@ -8,6 +8,7 @@ int ExpSheet(int level);
 ///const
 //global
 #define TOTALSKILLS 8
+#define MAXLEVEL 10
 #define INVENTORYSIZE 36
 #define CLICKCOOLDOWN 80
 #define PRESSCOOLDOWN 100
@@ -82,11 +83,11 @@ enum MapChangeType
 #define ResolutionListbox					10310004
 #define FullscreenText						10310005
 #define FullscreenCheckbox					10310006
-#define FullscreenCheckboxFile				"../assets/FullscreenCheckbox.png"
+#define FullscreenCheckboxFile				"../assets/UI/FullscreenCheckbox.png"
 #define VolumnLButton						10310007
-#define VolumnLButtonFile					"../assets/VolumnLButton.png"
+#define VolumnLButtonFile					"../assets/UI/VolumnLButton.png"
 #define VolumnRButton						10310008
-#define VolumnRButtonFile					"../assets/VolumnRButton.png"
+#define VolumnRButtonFile					"../assets/UI/VolumnRButton.png"
 #define VolumnMasterText					10310009
 #define VolumnMasterNumber					10310010
 #define VolumnMusicText						10310011
@@ -97,9 +98,9 @@ enum MapChangeType
 #define ContinueButton						10310016
 #define ControlSettingsButton				10310017
 #define MainMenuBackgroundView				10310018
-#define MainMenuBackgroundViewFile			"../assets/MainMenuBackgroundView.png"
+#define MainMenuBackgroundViewFile			"../assets/UI/MainMenuBackgroundView.png"
 #define OptionsMenuView						10310019
-#define OptionsMenuViewFile					"../assets/OptionsMenuView.png"
+#define OptionsMenuViewFile					"../assets/UI/OptionsMenuView.png"
 
 #define ControlMovingUpText					10310200
 #define ControlMovingUpButton				10310201
@@ -123,7 +124,7 @@ enum MapChangeType
 #define ControlSkillHotkey3Button			10310219
 
 #define GameMenuBackground					10310100
-#define GameMenuBackgroundFile				"../assets/GameMenuBackground.png"
+#define GameMenuBackgroundFile				"../assets/UI/GameMenuBackground.png"
 #define ResumeButton						10310101
 #define ExittoMainMenuButton				10310102
 #define ExittoDesktopButton					10310103
@@ -175,7 +176,7 @@ enum MapChangeType
 ///texture res 300xxxxx
 //menu res
 #define MainMenuPic							30010000
-#define MainMenuPicFile						"../assets/MainMenuBackground.png"
+#define MainMenuPicFile						"../assets/UI/MainMenuBackground.png"
 //background 301
 #define MapBackground						30110000
 #define MapBackgroundFile					"../assets/Background.png"
@@ -183,38 +184,38 @@ enum MapChangeType
 #define MapBackground2File					"../assets/background2.png"
 //panel and UIs 302
 #define UIpic								30210000
-#define UIpicFile							"../assets/UIpic.png"
+#define UIpicFile							"../assets/UI/UIpic.png"
 #define HealthBar							30210001
-#define HealthBarFile						"../assets/HealthBar.png"
+#define HealthBarFile						"../assets/UI/HealthBar.png"
 #define ManaBar								30210002
-#define ManaBarFile							"../assets/ManaBar.png"
+#define ManaBarFile							"../assets/UI/ManaBar.png"
 #define InventoryGrid						30210003
-#define InventoryGridFile					"../assets/InventoryGrid.png"
+#define InventoryGridFile					"../assets/UI/InventoryGrid.png"
 #define InventoryGridMask					30210004
-#define InventoryGridMaskFile				"../assets/InventoryGridMask.png"
+#define InventoryGridMaskFile				"../assets/UI/InventoryGridMask.png"
 #define InventoryCloseButton				30210005
-#define InventoryCloseButtonFile			"../assets/InventoryCloseButton.png"
+#define InventoryCloseButtonFile			"../assets/UI/InventoryCloseButton.png"
 #define CharacterPanelPic					30210006
-#define CharacterPanelPicFile				"../assets/CharacterPanel.png"
+#define CharacterPanelPicFile				"../assets/UI/CharacterPanel.png"
 #define ExpBar								30210007
-#define ExpBarFile							"../assets/ExpBar.png"
+#define ExpBarFile							"../assets/UI/ExpBar.png"
 #define DialogBackground					30210008
-#define DialogBackgroundFile				"../assets/DialogBackground.png"
+#define DialogBackgroundFile				"../assets/UI/DialogBackground.png"
 #define MessageboxMask						30210009
-#define MessageboxMaskFile					"../assets/MessageboxMask.png"
+#define MessageboxMaskFile					"../assets/UI/MessageboxMask.png"
 #define SkillPanelPic						30210010
-#define SkillPanelPicFile					"../assets/SkillPanelPic.png"
+#define SkillPanelPicFile					"../assets/UI/SkillPanelPic.png"
 #define InventoryArrangeButton				30210011
-#define InventoryArrangeButtonFile			"../assets/InventoryArrangeButton.png"
+#define InventoryArrangeButtonFile			"../assets/UI/InventoryArrangeButton.png"
 #define SkillPanelAddSkillButton			30210012
-#define SkillPanelAddSkillButtonFile		"../assets/SkillPlusButton.png"
+#define SkillPanelAddSkillButtonFile		"../assets/UI/SkillPlusButton.png"
 #define SkillPanelMinusSkillButton			30210013
-#define SkillPanelMinusSkillButtonFile		"../assets/SkillMinusButton.png"
+#define SkillPanelMinusSkillButtonFile		"../assets/UI/SkillMinusButton.png"
 #define xpBar								30210014
-#define xpBarFile							"../assets/expBar.png"
+#define xpBarFile							"../assets/UI/expBar.png"
 //Hostile 303
 #define BlackBlock							30310000
-#define BlackBlockFile						"../assets/BlackBlock.png"
+#define BlackBlockFile						"../assets/entities/BlackBlock.png"
 #define DemonHostile						30310001
 #define DemonHostileFile					"../assets/entities/Demon.png"
 #define HostileGhostMob						30310002
@@ -264,7 +265,7 @@ enum MapChangeType
 #define WaterMushroomFrame					30810000
 #define WaterMushroomFrameFile				"../assets/WaterMushroomFrame.png"
 #define LadderSprite						30810001
-#define LadderSpriteFile					"../assets/LadderSprite.png"
+#define LadderSpriteFile					"../assets/sprites/LadderSprite2.png"
 #define MapGate								30810002
 #define MapGateFile							"../assets/MapGate.png"
 #define MapGate2							30810003
@@ -291,6 +292,8 @@ enum MapChangeType
 #define Sprite09File						"../assets/sprites/Sprite09.png"
 #define Sprite10							30810014
 #define Sprite10File						"../assets/sprites/Sprite09.png"
+//#define LadderSprite2						30810015
+//#define LadderSprite2File					"../assets/sprites/LadderSprite2.png"
 //Tile 309
 #define Brick								30910000
 #define BrickFile							"../assets/Brick.png"
@@ -316,6 +319,8 @@ enum MapChangeType
 //musics 400
 #define Music01								40010000
 #define Music01File							"../sounds/GoPicnic.mp3"
+#define Music02								40010001
+#define Music02File							"../sounds/music/AboveTheTreetops.mp3"
 //menu sfxs 401
 #define MenuMouseClick						40110000
 #define MenuMouseClickFile					"../sounds/MenuMouseClick.mp3"

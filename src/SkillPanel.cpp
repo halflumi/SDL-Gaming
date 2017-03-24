@@ -88,7 +88,7 @@ void SkillSlot::InitSkillInfo()
 		skillInfoTexts.push_back(new Textbox(position, "permanently through", segoeui18, COLOR_GREY, -1));
 		skillInfoTexts.push_back(new Textbox(position, "physical training.", segoeui18, COLOR_GREY, -1));
 		skillInfoTexts.push_back(new Textbox(position, "Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK, -1));
-		skillInfoTexts.push_back(new Textbox(position, "ATT: " + to_string(skill->minATT) + "~" + to_string(skill->maxATT), segoeui18, COLOR_BLACK, -1));
+		skillInfoTexts.push_back(new Textbox(position, "ATT: " + to_string(skill->percentATT) + "%", segoeui18, COLOR_BLACK, -1));
 		break;
 	case SkillIndexDoubleThrow:
 		skillInfoTexts.push_back(new Textbox(position, "Throws two darts at", segoeui18, COLOR_GREY, -1));
@@ -226,7 +226,7 @@ void SkillPanel::Load()
 	skillslots.push_back(new SkillSlot(SkillMPBoostIcon, skills[SkillIndexMPBoost]));
 	skillslots.push_back(new SkillSlot(SkillCriticalThrowIcon, skills[SkillIndexCriticalThrow]));
 	///load skill points
-	skillPoints = 10;
+	skillPoints = 2;
 	skillPointsText = new Textbox(position, "sp: 1", arial28_bold, COLOR_BLACK, -1);
 }
 

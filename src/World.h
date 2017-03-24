@@ -25,8 +25,8 @@ private:
 	static World* INSTANCE;
 	World() : newGame(false) {};
 	World(const World&);
-	World& operator=(const World&) {};
 
+	MyTimer timer;
 	bool newGame;
 	int backgroundID;
 	int width;
@@ -45,6 +45,7 @@ private:
 
 	void RenderBackground();
 	void RenderUI();
+	void AttackWave();
 public:
 	int currentMapID;
 

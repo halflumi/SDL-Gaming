@@ -9,7 +9,6 @@ private:
 	static Dice* INSTANCE;
 	Dice() {};
 	Dice(const Dice&);
-	Dice& operator=(const Dice&) {};
 
 	random_device random_generator;
 public:
