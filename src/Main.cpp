@@ -24,7 +24,7 @@ bool Main::initialize(const char* title, int xpos, int ypos, int width, int heig
 		return false;
 	}
 	///init sdl_mixer
-	if (Mix_OpenAudio(22050, AUDIO_S16, 2, (4096 / 2)) < 0)
+	if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
 	{
 		printf("SDL_MIXER_ERROR opening audio: %s\n", Mix_GetError());
 		return false;
@@ -114,16 +114,18 @@ bool Main::initialize(const char* title, int xpos, int ypos, int width, int heig
 	///load menu music and sounds
 	//SoundLoader::Inst()->load(Music01File, Music01, SOUND_MUSIC);
 	//SoundLoader::Inst()->playMusic(Music01, 2);
-	SoundLoader::Inst()->load(Music02File, Music02, SOUND_MUSIC);
-	SoundLoader::Inst()->playMusic(Music02, 2);
+	//SoundLoader::Inst()->load(Music02File, Music02, SOUND_MUSIC);
+	//SoundLoader::Inst()->playMusic(Music02, 2);
 	SoundLoader::Inst()->load(MenuMouseClickFile, MenuMouseClick, SOUND_SFX);
 	SoundLoader::Inst()->load(ControlKeyChangeSound1File, ControlKeyChangeSound1, SOUND_SFX);
 	SoundLoader::Inst()->load(ControlKeyChangeSound2File, ControlKeyChangeSound2, SOUND_SFX);
 	SoundLoader::Inst()->load(ControlKeyChangeSound3File, ControlKeyChangeSound3, SOUND_SFX);
 	SoundLoader::Inst()->load(ControlKeyChangeSound4File, ControlKeyChangeSound4, SOUND_SFX);
 	SoundLoader::Inst()->load(ControlKeyChangeSound5File, ControlKeyChangeSound5, SOUND_SFX);
+	///actual game starts
+	frameTick = 0;
+	keyCooldown = new MyTimer(true);
 	changeMenu(MenuMain);
-
 	_running = true;
 	inMainMenu = true;
 	inGameMenu = false;
@@ -132,6 +134,7 @@ bool Main::initialize(const char* title, int xpos, int ypos, int width, int heig
 
 void Main::prossessing()
 {
+	frameTick++; // 1 prossession = 1 frame
 	renderWidth = windowWidth;
 	renderHeight = windowHeight - UIHEIGHT;
 	
@@ -158,7 +161,7 @@ void Main::prossessing()
 bool Main::HandleMenuEvents()
 {
 	Player* player = Camera::Inst()->getTarget_nonConst();
-	if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_ESCAPE) && keyCooldown.getTicks() > PRESSCOOLDOWN)
+	if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_ESCAPE) && keyCooldown->getTicks() > PRESSCOOLDOWN)
 	{
 		switch (currentMenu)
 		{
@@ -333,6 +336,105 @@ bool Main::HandleMenuEvents()
 				menuButtons[i]->buttonText->changeText(ScancodeToString(XmlParser::Inst()->key_movingRight));
 				return false;
 			}
+			if (menuButtons[i]->getUniqueID() == ControlCharacterPanelButton)
+			{
+				SDL_Scancode key;
+				menuButtons[i]->buttonText->changeText("_");
+				RefreshMenu();
+				key = ChangeControlKey();
+				if (key != SDL_SCANCODE_ESCAPE)
+					XmlParser::Inst()->key_movingRight = key;
+				menuButtons[i]->buttonText->changeText(ScancodeToString(XmlParser::Inst()->key_openCharacter));
+				return false;
+			}
+			if (menuButtons[i]->getUniqueID() == ControlInventoryButton)
+			{
+				SDL_Scancode key;
+				menuButtons[i]->buttonText->changeText("_");
+				RefreshMenu();
+				key = ChangeControlKey();
+				if (key != SDL_SCANCODE_ESCAPE)
+					XmlParser::Inst()->key_movingDown = key;
+				menuButtons[i]->buttonText->changeText(ScancodeToString(XmlParser::Inst()->key_openCharacter));
+				return false;
+			}
+			if (menuButtons[i]->getUniqueID() == ControlSkillPanelButton)
+			{
+				SDL_Scancode key;
+				menuButtons[i]->buttonText->changeText("_");
+				RefreshMenu();
+				key = ChangeControlKey();
+				if (key != SDL_SCANCODE_ESCAPE)
+					XmlParser::Inst()->key_movingLeft = key;
+				menuButtons[i]->buttonText->changeText(ScancodeToString(XmlParser::Inst()->key_openSkill));
+				return false;
+			}
+			if (menuButtons[i]->getUniqueID() == ControlSkillHotkey1Button)
+			{
+				SDL_Scancode key;
+				menuButtons[i]->buttonText->changeText("_");
+				RefreshMenu();
+				key = ChangeControlKey();
+				if (key != SDL_SCANCODE_ESCAPE)
+					XmlParser::Inst()->key_movingRight = key;
+				menuButtons[i]->buttonText->changeText(ScancodeToString(XmlParser::Inst()->key_skillHotkey1));
+				return false;
+			}
+			if (menuButtons[i]->getUniqueID() == ControlSkillHotkey2Button)
+			{
+				SDL_Scancode key;
+				menuButtons[i]->buttonText->changeText("_");
+				RefreshMenu();
+				key = ChangeControlKey();
+				if (key != SDL_SCANCODE_ESCAPE)
+					XmlParser::Inst()->key_movingRight = key;
+				menuButtons[i]->buttonText->changeText(ScancodeToString(XmlParser::Inst()->key_skillHotkey2));
+				return false;
+			}
+			if (menuButtons[i]->getUniqueID() == ControlSkillHotkey3Button)
+			{
+				SDL_Scancode key;
+				menuButtons[i]->buttonText->changeText("_");
+				RefreshMenu();
+				key = ChangeControlKey();
+				if (key != SDL_SCANCODE_ESCAPE)
+					XmlParser::Inst()->key_movingRight = key;
+				menuButtons[i]->buttonText->changeText(ScancodeToString(XmlParser::Inst()->key_skillHotkey3));
+				return false;
+			}
+			if (menuButtons[i]->getUniqueID() == ControlSkillHotkey4Button)
+			{
+				SDL_Scancode key;
+				menuButtons[i]->buttonText->changeText("_");
+				RefreshMenu();
+				key = ChangeControlKey();
+				if (key != SDL_SCANCODE_ESCAPE)
+					XmlParser::Inst()->key_movingRight = key;
+				menuButtons[i]->buttonText->changeText(ScancodeToString(XmlParser::Inst()->key_skillHotkey4));
+				return false;
+			}
+			if (menuButtons[i]->getUniqueID() == ControlSkillHotkey5Button)
+			{
+				SDL_Scancode key;
+				menuButtons[i]->buttonText->changeText("_");
+				RefreshMenu();
+				key = ChangeControlKey();
+				if (key != SDL_SCANCODE_ESCAPE)
+					XmlParser::Inst()->key_movingRight = key;
+				menuButtons[i]->buttonText->changeText(ScancodeToString(XmlParser::Inst()->key_skillHotkey5));
+				return false;
+			}
+			if (menuButtons[i]->getUniqueID() == ControlSkillHotkey6Button)
+			{
+				SDL_Scancode key;
+				menuButtons[i]->buttonText->changeText("_");
+				RefreshMenu();
+				key = ChangeControlKey();
+				if (key != SDL_SCANCODE_ESCAPE)
+					XmlParser::Inst()->key_movingRight = key;
+				menuButtons[i]->buttonText->changeText(ScancodeToString(XmlParser::Inst()->key_skillHotkey6));
+				return false;
+			}
 			///game menu
 			if (menuButtons[i]->getUniqueID() == ResumeButton)
 			{
@@ -362,7 +464,7 @@ bool Main::HandleMenuEvents()
 
 void Main::changeMenu(int menuID)
 {
-	keyCooldown.start();
+	keyCooldown->start();
 
 	menuButtons.clear();
 	currentMenu = menuID;
@@ -426,6 +528,12 @@ void Main::changeMenu(int menuID)
 		menuButtons.push_back(new Button(ControlSkillHotkey2Button));
 		menuButtons.push_back(new Button(ControlSkillHotkey3Text));
 		menuButtons.push_back(new Button(ControlSkillHotkey3Button));
+		menuButtons.push_back(new Button(ControlSkillHotkey4Text));
+		menuButtons.push_back(new Button(ControlSkillHotkey4Button));
+		menuButtons.push_back(new Button(ControlSkillHotkey5Text));
+		menuButtons.push_back(new Button(ControlSkillHotkey5Button));
+		menuButtons.push_back(new Button(ControlSkillHotkey6Text));
+		menuButtons.push_back(new Button(ControlSkillHotkey6Button));
 
 		menuButtons.push_back(new Button(BackButton));
 		break;

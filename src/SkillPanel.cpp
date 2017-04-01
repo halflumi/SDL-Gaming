@@ -16,18 +16,19 @@
 
 #define CloseButtonPos				position.x + 460, position.y + 2
 
-#define SkillPhysicalTrainingPos	position.x + 40, position.y + 118
-#define SkillDoubleThrowPos			position.x + 40, position.y + 193
-#define SkillTripleThrowPos			position.x + 40, position.y + 267
-#define SkillLifeForcePos			position.x + 130, position.y + 118
-#define SkillIronBodyPos			position.x + 130, position.y + 193
-#define SkillLifeRegenerationPos	position.x + 130, position.y + 267
-#define SkillMPBoostPos				position.x + 220, position.y + 118
-#define SkillCriticalThrowPos		position.x + 220, position.y + 193
+#define SkillPhysicalTrainingPos	position.x + 40 , position.y + 73
+#define SkillDoubleThrowPos			position.x + 40 , position.y + 148
+#define SkillTripleThrowPos			position.x + 40 , position.y + 223
+#define SkillLifeForcePos			position.x + 130, position.y + 73
+#define SkillIronBodyPos			position.x + 130, position.y + 148
+#define SkillLifeRegenerationPos	position.x + 130, position.y + 223
+#define SkillMPBoostPos				position.x + 220, position.y + 73
+#define SkillCriticalThrowPos		position.x + 40 , position.y + 298
+#define SkillSummonAttackPos		position.x + 220, position.y + 148
+#define SkillSpeedupPos				position.x + 220, position.y + 223
 
-#define SkillPointsTextPos			position.x + 5, position.y + height - skillPointsText->getHeight() - 5
-#define SkillInfoPos_X				pos.x + 309
-#define SkillInfoPos_Y				pos.y + 58
+#define SkillPointsTextPos			position.x + 5, position.y + height - skillPointsText->height - 5
+#define SkillInfoPos				pos.x + 309, pos.y + 58
 #define SkillHotkeySlot1Pos_X		750
 #define SkillHotkeySlot1Pos_Y		Main::Inst()->getRenderHeight() + 7
 #define SkillHotkeySlot2Pos_X		782								  
@@ -35,7 +36,7 @@
 #define SkillHotkeySlot3Pos_X		814								  
 #define SkillHotkeySlot3Pos_Y		Main::Inst()->getRenderHeight() + 7
 
-SkillSlot::SkillSlot(int skillID, Skill* _skill)
+SkillSlot::SkillSlot(int skillID, Skill* _skill) : skillInfoTexts(-1, TextSkillInfo)
 {
 	if (skillID == NULL)
 		active = false;	
@@ -73,85 +74,112 @@ void SkillSlot::Load()
 		skillIndex = SkillIndexMPBoost;
 	else if (uniqueID == SkillCriticalThrowIcon)
 		skillIndex = SkillIndexCriticalThrow;
-
+	else if (uniqueID == SkillSummonAttackIcon)
+		skillIndex = SkillIndexSummonAttack;
+	else if (uniqueID == SkillSpeedupIcon)
+		skillIndex = SkillIndexSpeedupSkill;
 
 	InitSkillInfo();
 }
 
 void SkillSlot::InitSkillInfo()
 {
-	skillInfoTexts.push_back(new Textbox(position, skill->name, segoeui22, COLOR_BLUE, -1));
+	skillInfoTexts.newLine(skill->name, segoeui22, COLOR_BLUE);
 	switch (skillIndex)
 	{
 	case SkillIndexPhysicalTraining:
-		skillInfoTexts.push_back(new Textbox(position, "Improves ATT", segoeui18, COLOR_GREY, -1));
-		skillInfoTexts.push_back(new Textbox(position, "permanently through", segoeui18, COLOR_GREY, -1));
-		skillInfoTexts.push_back(new Textbox(position, "physical training.", segoeui18, COLOR_GREY, -1));
-		skillInfoTexts.push_back(new Textbox(position, "Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK, -1));
-		skillInfoTexts.push_back(new Textbox(position, "ATT: " + to_string(skill->percentATT) + "%", segoeui18, COLOR_BLACK, -1));
+		skillInfoTexts.newLine("Improves ATT", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("permanently through", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("physical training.", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK);
+		skillInfoTexts.newLine("ATT: " + to_string(skill->percentATT) + "%", segoeui18, COLOR_BLACK);
 		break;
 	case SkillIndexDoubleThrow:
-		skillInfoTexts.push_back(new Textbox(position, "Throws two darts at", segoeui18, COLOR_GREY, -1));
-		skillInfoTexts.push_back(new Textbox(position, "high speed.", segoeui18, COLOR_GREY, -1));
-		skillInfoTexts.push_back(new Textbox(position, "Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK, -1));
-		skillInfoTexts.push_back(new Textbox(position, "mp: " + to_string(skill->manaConsume), segoeui18, COLOR_BLACK, -1));
+		skillInfoTexts.newLine("Throws two darts at", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("high speed.", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("requires:", segoeui18, COLOR_RED);
+		skillInfoTexts.newLine("[Physical Traning] Lv1", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK);
+		skillInfoTexts.newLine("mp: " + to_string(skill->manaConsume), segoeui18, COLOR_BLACK);
+		skillInfoTexts.newLine("cd: " + to_string(skill->cooldownInterval / 60) + "s", segoeui18, COLOR_BLACK);
 		break;
 	case SkillIndexTripleThrow:
-		skillInfoTexts.push_back(new Textbox(position, "Throws three darts at", segoeui18, COLOR_GREY, -1));
-		skillInfoTexts.push_back(new Textbox(position, "high speed.", segoeui18, COLOR_GREY, -1));
-		skillInfoTexts.push_back(new Textbox(position, "Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK, -1));
-		skillInfoTexts.push_back(new Textbox(position, "mp: " + to_string(skill->manaConsume), segoeui18, COLOR_BLACK, -1));
+		skillInfoTexts.newLine("Throws three darts at", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("high speed.", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("requires:", segoeui18, COLOR_RED);
+		skillInfoTexts.newLine("[Double Throw] Lv2", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK);
+		skillInfoTexts.newLine("mp: " + to_string(skill->manaConsume), segoeui18, COLOR_BLACK);
+		skillInfoTexts.newLine("cd: " + to_string(skill->cooldownInterval / 60) + "s", segoeui18, COLOR_BLACK);
 		break;
 	case SkillIndexLifeForce:
-		skillInfoTexts.push_back(new Textbox(position, "Strengthen your body", segoeui18, COLOR_GREY, -1));
-		skillInfoTexts.push_back(new Textbox(position, "further using psychic", segoeui18, COLOR_GREY, -1));
-		skillInfoTexts.push_back(new Textbox(position, "reinforcement.", segoeui18, COLOR_GREY, -1));
-		skillInfoTexts.push_back(new Textbox(position, "Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK, -1));
-		skillInfoTexts.push_back(new Textbox(position, "Max HP: +" + to_string(skill->minATT), segoeui18, COLOR_BLACK, -1));
+		skillInfoTexts.newLine("Strengthen your body", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("further using psychic", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("reinforcement.", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK);
+		skillInfoTexts.newLine("Max HP: +" + to_string(skill->minATT), segoeui18, COLOR_BLACK);
 		break;
 	case SkillIndexIronBody:
-		skillInfoTexts.push_back(new Textbox(position, "Boosts DEF by a set", segoeui18, COLOR_GREY, -1));
-		skillInfoTexts.push_back(new Textbox(position, "value.", segoeui18, COLOR_GREY, -1));
-		skillInfoTexts.push_back(new Textbox(position, "Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK, -1));
-		skillInfoTexts.push_back(new Textbox(position, "DEF: +" + to_string(skill->minATT), segoeui18, COLOR_BLACK, -1));
+		skillInfoTexts.newLine("Boosts DEF by a set", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("value.", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("requires:", segoeui18, COLOR_RED);
+		skillInfoTexts.newLine("[Life Force] Lv1", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK);
+		skillInfoTexts.newLine("DEF: +" + to_string(skill->minATT), segoeui18, COLOR_BLACK);
 		break;
 	case SkillIndexLifeRegeneration:
-		skillInfoTexts.push_back(new Textbox(position, "Decrease Life Regenerate", segoeui18, COLOR_GREY, -1));
-		skillInfoTexts.push_back(new Textbox(position, "Interval by percentage.", segoeui18, COLOR_GREY, -1));
-		skillInfoTexts.push_back(new Textbox(position, "Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK, -1));
-		skillInfoTexts.push_back(new Textbox(position, "HP Regen Interval: -" + to_string(skill->minATT) + "%", segoeui18, COLOR_BLACK, -1));
+		skillInfoTexts.newLine("Decrease Life Regen", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("Interval by percentage.", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("requires:", segoeui18, COLOR_RED);
+		skillInfoTexts.newLine("[Iron Body] Lv1", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK);
+		skillInfoTexts.newLine("HP Regen Interval: -" + to_string(skill->minATT) + "%", segoeui18, COLOR_BLACK);
 		break;
 	case SkillIndexMPBoost:
-		skillInfoTexts.push_back(new Textbox(position, "Increase Max mana", segoeui18, COLOR_GREY, -1));
-		skillInfoTexts.push_back(new Textbox(position, "permanently through", segoeui18, COLOR_GREY, -1));
-		skillInfoTexts.push_back(new Textbox(position, "mental training.", segoeui18, COLOR_GREY, -1));
-		skillInfoTexts.push_back(new Textbox(position, "Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK, -1));
-		skillInfoTexts.push_back(new Textbox(position, "Max MP: +" + to_string(skill->minATT), segoeui18, COLOR_BLACK, -1));
+		skillInfoTexts.newLine("Increase Max mana", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("permanently through", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("mental training.", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK);
+		skillInfoTexts.newLine("Max MP: +" + to_string(skill->minATT), segoeui18, COLOR_BLACK);
 		break;
 	case SkillIndexCriticalThrow:
-		skillInfoTexts.push_back(new Textbox(position, "Increase Critical Hit", segoeui18, COLOR_GREY, -1));
-		skillInfoTexts.push_back(new Textbox(position, "Chance permanently.", segoeui18, COLOR_GREY, -1));
-		skillInfoTexts.push_back(new Textbox(position, "Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK, -1));
-		skillInfoTexts.push_back(new Textbox(position, "Crithit Chance: +" + to_string(skill->minATT), segoeui18, COLOR_BLACK, -1));
+		skillInfoTexts.newLine("Increase Critical Hit", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("Chance permanently.", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK);
+		skillInfoTexts.newLine("Crithit Chance: +" + to_string(skill->minATT), segoeui18, COLOR_BLACK);
+		break;
+	case SkillIndexSummonAttack:
+		skillInfoTexts.newLine("Summon a soul to blast", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("the ground for you.", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("requires:", segoeui18, COLOR_RED);
+		skillInfoTexts.newLine("sp " + to_string(skill->sp), segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("[MP Boost] Lv1", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK);
+		skillInfoTexts.newLine("mp: " + to_string(skill->manaConsume), segoeui18, COLOR_BLACK);
+		skillInfoTexts.newLine("cd: " + to_string(skill->cooldownInterval / 60) + "s", segoeui18, COLOR_BLACK);
+		skillInfoTexts.newLine("ATT: " + to_string(skill->minATT) + "~" + to_string(skill->maxATT), segoeui18, COLOR_BLACK);
+		break;
+	case SkillIndexSpeedupSkill:
+		skillInfoTexts.newLine("Use mogic to lighten", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("the step.", segoeui18, COLOR_GREY);
+		skillInfoTexts.newLine("Lv. " + to_string(skill->level), segoeui18, COLOR_BLACK);
+		skillInfoTexts.newLine("mp: " + to_string(skill->manaConsume), segoeui18, COLOR_BLACK);
+		skillInfoTexts.newLine("cd: " + to_string(skill->cooldownInterval / 60) + "s", segoeui18, COLOR_BLACK);
+		skillInfoTexts.newLine("mov speed: +" + to_string(skill->minATT) + "%", segoeui18, COLOR_BLACK);
+		skillInfoTexts.newLine("duration: " + to_string(skill->maxATT / 60) + "s", segoeui18, COLOR_BLACK);
 		break;
 	}
 }
 
 void SkillSlot::updateSkillInfo(Vector2D pos)
 {
-	Vector2D infopos(SkillInfoPos_X, SkillInfoPos_Y);
-	int lineIndent = TTF_FontLineSkip(Main::Inst()->getFont(segoeui18));
-	int i, len = skillInfoTexts.size();
-	skillInfoTexts[0]->setPosition(infopos);
-	for (i = 1; i < len; i++)
-		skillInfoTexts[i]->setPosition(SkillInfoPos_X, SkillInfoPos_Y + i * lineIndent);
+	skillInfoTexts.setPosition(SkillInfoPos);
+	skillInfoTexts.update();
 }
 
 void SkillSlot::renderSkillInfo()
 {
-	int i, len = skillInfoTexts.size();
-	for (i = 0; i < len; i++)
-		skillInfoTexts[i]->draw();
+	skillInfoTexts.draw();
 }
 
 void SkillSlot::update()
@@ -210,6 +238,8 @@ void SkillPanel::Load()
 	skills.push_back(new Skill(SkillLifeRegeneration, 0));
 	skills.push_back(new Skill(SkillMPBoost, 0));
 	skills.push_back(new Skill(SkillCriticalThrow, 0));
+	skills.push_back(new Skill(SkillSummonAttack, 0));
+	skills.push_back(new Skill(SkillSpeedup, 0));
 	///register skill buttons
 	for (int i = 0; i < TOTALSKILLS; i++)
 	{
@@ -225,8 +255,10 @@ void SkillPanel::Load()
 	skillslots.push_back(new SkillSlot(SkillLifeRegenerationIcon, skills[SkillIndexLifeRegeneration]));
 	skillslots.push_back(new SkillSlot(SkillMPBoostIcon, skills[SkillIndexMPBoost]));
 	skillslots.push_back(new SkillSlot(SkillCriticalThrowIcon, skills[SkillIndexCriticalThrow]));
+	skillslots.push_back(new SkillSlot(SkillSummonAttackIcon, skills[SkillIndexSummonAttack]));
+	skillslots.push_back(new SkillSlot(SkillSpeedupIcon, skills[SkillIndexSpeedupSkill]));
 	///load skill points
-	skillPoints = 2;
+	skillPoints = 10;
 	skillPointsText = new Textbox(position, "sp: 1", arial28_bold, COLOR_BLACK, -1);
 }
 
@@ -252,27 +284,30 @@ void SkillPanel::UpdateSkillButtons()
 {
 	if (selectedSkillIndex == -1)
 		return;
-	Player* player = Camera::Inst()->getTarget_nonConst();
+	Skill* theskill = skills[selectedSkillIndex];
 	
-	skillButtons[selectedSkillIndex * 2]->setPosition(skillslots[selectedSkillIndex]->getPosition().x - 14, skillslots[selectedSkillIndex]->getPosition().y + 38);
-	skillButtons[selectedSkillIndex * 2 + 1]->setPosition(skillslots[selectedSkillIndex]->getPosition().x + GRIDSIZE + 4, skillslots[selectedSkillIndex]->getPosition().y + 38);
+	skillButtons[selectedSkillIndex * 2]->setPosition(skillslots[selectedSkillIndex]->position.x - 14, skillslots[selectedSkillIndex]->position.y + 38);
+	skillButtons[selectedSkillIndex * 2 + 1]->setPosition(skillslots[selectedSkillIndex]->position.x + GRIDSIZE + 4, skillslots[selectedSkillIndex]->position.y + 38);
 	skillButtons[selectedSkillIndex * 2]->update();
 	skillButtons[selectedSkillIndex * 2 + 1]->update();
 
-	if (skillPoints > 0 && (skills[selectedSkillIndex]->preSkillIndex == -1 || skills[skills[selectedSkillIndex]->preSkillIndex]->level > 0))
-		if (skillButtons[selectedSkillIndex * 2]->outsideUpdate())
-		{
-			skills[selectedSkillIndex]->level++;
-			skillPoints--;
-			skillslots[selectedSkillIndex]->refresh();
-		}
-	if (skills[selectedSkillIndex]->level > 0 && (skills[selectedSkillIndex]->postSkillIndex == -1 || skills[skills[selectedSkillIndex]->postSkillIndex]->level == 0))
-		if (skillButtons[selectedSkillIndex * 2 + 1]->outsideUpdate())
-		{
-			skills[selectedSkillIndex]->level--;
-			skillPoints++;
-			skillslots[selectedSkillIndex]->refresh();
-		}
+	if (skillButtons[selectedSkillIndex * 2]->outsideUpdate()) // plus button being clicked
+		if (skillPoints >= theskill->sp) // sufficient sp
+			if (theskill->preSkillIndex == -1 || skills[theskill->preSkillIndex]->level >= theskill->preSkillLevel) // qualified prerequisite
+				if(theskill->level < theskill->maxLevel) // not top yet
+				{
+					theskill->level++;
+					skillPoints -= theskill->sp;
+					skillslots[selectedSkillIndex]->refresh();
+				}
+	if (skillButtons[selectedSkillIndex * 2 + 1]->outsideUpdate()) // minus button being clicked
+		if (theskill->level > 0) // sufficient level
+			if (theskill->postSkillIndex == -1 || skills[theskill->postSkillIndex]->level == 0 || theskill->level > skills[theskill->postSkillIndex]->preSkillLevel) // qualified necessary conditions
+			{
+				theskill->level--;
+				skillPoints += theskill->sp;
+				skillslots[selectedSkillIndex]->refresh();
+			}
 }
 
 void SkillPanel::UpdateSkillSlots()
@@ -285,6 +320,8 @@ void SkillPanel::UpdateSkillSlots()
 	skillslots[SkillIndexLifeRegeneration]->setPosition(SkillLifeRegenerationPos);
 	skillslots[SkillIndexMPBoost]->setPosition(SkillMPBoostPos);
 	skillslots[SkillIndexCriticalThrow]->setPosition(SkillCriticalThrowPos);
+	skillslots[SkillIndexSummonAttack]->setPosition(SkillSummonAttackPos);
+	skillslots[SkillIndexSpeedupSkill]->setPosition(SkillSpeedupPos);
 	///select and hotkey assignment
 	for (int i = 0; i < TOTALSKILLS; i++)
 	{
@@ -309,7 +346,7 @@ void SkillPanel::UpdateSkillSlots()
 	///fresh skillslots
 	for (int i = 0; i < TOTALSKILLS; i++)
 		skillslots[i]->update();
-	///update chosen
+	///update chosen skillslot
 	if (selectedSkillIndex != -1)
 		skillslots[selectedSkillIndex]->updateSkillInfo(position);
 	skillPointsText->setPosition(SkillPointsTextPos);
@@ -361,19 +398,19 @@ void SkillPanel::outsideDrawHotkeys()
 {
 	if (hotkeySkillIndexes[hotkey1] != -1)
 	{
-		TextureLoader::Inst()->drawEx2(skillslots[hotkeySkillIndexes[hotkey1]]->getUniqueID(), SkillHotkeySlot1Pos_X, SkillHotkeySlot1Pos_Y, skillslots[hotkeySkillIndexes[hotkey1]]->getWidth(), skillslots[hotkeySkillIndexes[hotkey1]]->getHeight(), SKILLGRIDSIZE, SKILLGRIDSIZE);
+		TextureLoader::Inst()->drawEx2(skillslots[hotkeySkillIndexes[hotkey1]]->getUniqueID(), SkillHotkeySlot1Pos_X, SkillHotkeySlot1Pos_Y, skillslots[hotkeySkillIndexes[hotkey1]]->width, skillslots[hotkeySkillIndexes[hotkey1]]->height, SKILLGRIDSIZE, SKILLGRIDSIZE);
 		if (skills[hotkeySkillIndexes[hotkey1]]->cooldownTick)
 			TextureLoader::Inst()->drawEx2(GameMenuBackground, SkillHotkeySlot1Pos_X, SkillHotkeySlot1Pos_Y, 10, 10, SKILLGRIDSIZE, SKILLGRIDSIZE * (float)(skills[hotkeySkillIndexes[hotkey1]]->cooldownInterval - skills[hotkeySkillIndexes[hotkey1]]->cooldownTick) / skills[hotkeySkillIndexes[hotkey1]]->cooldownInterval);
 	}
 	if (hotkeySkillIndexes[hotkey2] != -1)
 	{
-		TextureLoader::Inst()->drawEx2(skillslots[hotkeySkillIndexes[hotkey2]]->getUniqueID(), SkillHotkeySlot2Pos_X, SkillHotkeySlot2Pos_Y, skillslots[hotkeySkillIndexes[hotkey2]]->getWidth(), skillslots[hotkeySkillIndexes[hotkey2]]->getHeight(), SKILLGRIDSIZE, SKILLGRIDSIZE);
+		TextureLoader::Inst()->drawEx2(skillslots[hotkeySkillIndexes[hotkey2]]->getUniqueID(), SkillHotkeySlot2Pos_X, SkillHotkeySlot2Pos_Y, skillslots[hotkeySkillIndexes[hotkey2]]->width, skillslots[hotkeySkillIndexes[hotkey2]]->height, SKILLGRIDSIZE, SKILLGRIDSIZE);
 		if (skills[hotkeySkillIndexes[hotkey2]]->cooldownTick)
 			TextureLoader::Inst()->drawEx2(GameMenuBackground, SkillHotkeySlot2Pos_X, SkillHotkeySlot2Pos_Y, 10, 10, SKILLGRIDSIZE, SKILLGRIDSIZE * (float)(skills[hotkeySkillIndexes[hotkey2]]->cooldownInterval - skills[hotkeySkillIndexes[hotkey2]]->cooldownTick) / skills[hotkeySkillIndexes[hotkey2]]->cooldownInterval);
 	}
 	if (hotkeySkillIndexes[hotkey3] != -1)
 	{
-		TextureLoader::Inst()->drawEx2(skillslots[hotkeySkillIndexes[hotkey3]]->getUniqueID(), SkillHotkeySlot3Pos_X, SkillHotkeySlot3Pos_Y, skillslots[hotkeySkillIndexes[hotkey3]]->getWidth(), skillslots[hotkeySkillIndexes[hotkey3]]->getHeight(), SKILLGRIDSIZE, SKILLGRIDSIZE);
+		TextureLoader::Inst()->drawEx2(skillslots[hotkeySkillIndexes[hotkey3]]->getUniqueID(), SkillHotkeySlot3Pos_X, SkillHotkeySlot3Pos_Y, skillslots[hotkeySkillIndexes[hotkey3]]->width, skillslots[hotkeySkillIndexes[hotkey3]]->height, SKILLGRIDSIZE, SKILLGRIDSIZE);
 		if (skills[hotkeySkillIndexes[hotkey3]]->cooldownTick)
 			TextureLoader::Inst()->drawEx2(GameMenuBackground, SkillHotkeySlot3Pos_X, SkillHotkeySlot3Pos_Y, 10, 10, SKILLGRIDSIZE, SKILLGRIDSIZE * (float)(skills[hotkeySkillIndexes[hotkey3]]->cooldownInterval - skills[hotkeySkillIndexes[hotkey3]]->cooldownTick) / skills[hotkeySkillIndexes[hotkey3]]->cooldownInterval);
 	}

@@ -7,17 +7,21 @@
 #include "XmlParser.h"
 
 #define GRIDSIZE 48
+#define ITEMSIZE 32
+#define SIZEDIFF 8
 #define GRIDGAP 2
 #define GRIDNUM 6
 #define TITLEHEIGHT 53
 
+#define GoldNumTextPos		position.x + 33, position.y + 357
 #define CloseButtonPos		position.x + 260, position.y + 2
 #define RearrangeButtonPos	position.x + 261, position.y + 355
 
-InventoryItem::InventoryItem(int id, int _stack) : slotpos(0, 0)
+InventoryItem::InventoryItem(int id, int _stack) : itemInfoTexts(-1, TextEquipmentDescription)
 {
 	if (id == NULL)
 		active = false;
+	slotpos.set(0, 0);
 	selectCooldown = NULL;
 	uniqueID = id;
 	stack = _stack;
@@ -51,8 +55,8 @@ void InventoryItem::Load()
 		name = IronDartItemName;
 		itemClass = ItemClassWeapon;
 
-		width = 48;
-		height = 48;
+		width = 27;
+		height = 27;
 		minATT = 1;
 		maxATT = 5;
 	} 
@@ -61,8 +65,8 @@ void InventoryItem::Load()
 		name = CrystalDartName;
 		itemClass = ItemClassWeapon;
 
-		width = 48;
-		height = 48;
+		width = 27;
+		height = 27;
 		minATT = 15;
 		maxATT = 20;
 	} 
@@ -71,8 +75,18 @@ void InventoryItem::Load()
 		name = MokbiDartName;
 		itemClass = ItemClassWeapon;
 
-		width = 48;
-		height = 48;
+		width = 28;
+		height = 28;
+		minATT = 5;
+		maxATT = 10;
+	}
+	else if (uniqueID == SteelyThrowingKnivesItem)
+	{
+		name = SteelyThrowingKnivesItemName;
+		itemClass = ItemClassWeapon;
+
+		width = 29;
+		height = 29;
 		minATT = 5;
 		maxATT = 10;
 	}
@@ -81,25 +95,15 @@ void InventoryItem::Load()
 
 void InventoryItem::InitItemInfo()
 {
-	itemInfoTexts.push_back(new Textbox(position, name, segoeui22, COLOR_BLUE, -1));
-	itemInfoTexts.push_back(new Textbox(position, "attack: " + to_string(minATT) + "~" + to_string(maxATT), segoeui18, COLOR_GREEN, -1));
-}
+	itemInfoTexts.newLine(name, segoeui22, COLOR_WHITE);
 
-void InventoryItem::UpdateItemInfo()
-{
-	Vector2D infopos(position.x, position.y + GRIDSIZE);
-	int lineIndent = TTF_FontLineSkip(Main::Inst()->getFont(segoeui18));
-	int i, len = itemInfoTexts.size();
-	itemInfoTexts[0]->setPosition(infopos);
-	for (i = 1; i < len; i++)
-		itemInfoTexts[i]->setPosition(position.x, infopos.y + i * lineIndent);
-}
-
-void InventoryItem::RenderItemInfo()
-{
-	int i, len = itemInfoTexts.size();
-	for (i = 0; i < len; i++)
-		itemInfoTexts[i]->draw();
+	itemInfoTexts.newLine("attack: " + to_string(minATT) + "~" + to_string(maxATT), segoeui18, COLOR_WHITE);
+	itemInfoTexts.newLine("attack Interval: 40", segoeui18, COLOR_WHITE);
+	if (uniqueID == MokbiDartItem || uniqueID == SteelyThrowingKnivesItem)
+	{
+		itemInfoTexts.newLine("can penetrate 2 enemies", segoeui18, COLOR_WHITE);
+		return;
+	}
 }
 
 void InventoryItem::update()
@@ -113,7 +117,8 @@ void InventoryItem::update()
 	if (CheckMouseOver_slot())
 	{
 		mouseAbove = true;
-		UpdateItemInfo();
+		itemInfoTexts.setPosition(position.x, position.y + GRIDSIZE);
+		itemInfoTexts.update();
 		if (Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && selectCooldown->getTicks() > CLICKCOOLDOWN)
 		{
 			selectCooldown->start();
@@ -157,8 +162,8 @@ void InventoryItem::update()
 					int tempStack = player->selectingItem->stack;
 					player->selectingItem->init(uniqueID, stack);
 					init(tempID, tempStack);
-					player->selectingItem = this;
-					beingPicked = true;
+					player->selectingItem = NULL;
+					beingPicked = false;
 				}
 				else //put down one item
 				{
@@ -199,11 +204,11 @@ void InventoryItem::draw()
 {
 	if (active)
 	{
-		TextureLoader::Inst()->drawFrameEx(uniqueID, position.x, position.y, width, height, GRIDSIZE, GRIDSIZE, currentRow, currentFrame, angle, alpha);
+		TextureLoader::Inst()->drawFrameEx(uniqueID, position.x + SIZEDIFF, position.y + SIZEDIFF, width, height, ITEMSIZE, ITEMSIZE, currentRow, currentFrame, angle, alpha);
 		if (maxStack > 1)
 			stackNumText->draw();
 		if (!beingPicked && mouseAbove)
-			RenderItemInfo();
+			itemInfoTexts.draw();
 	}
 	if (mouseAbove)
 		TextureLoader::Inst()->drawFrameEx(InventoryGridMask, slotpos.x, slotpos.y, 10, 10, GRIDSIZE, GRIDSIZE, 0, 0, 0, 255);
@@ -241,12 +246,15 @@ void Inventory::Load()
 	position.x = Main::Inst()->getRenderWidth() - 100 - width;
 	position.y = 100;
 
+	gold = XmlParser::Inst()->gold;
+	goldNumText = new Textbox(position, to_string(gold), arial28_bold, COLOR_BLACK, -1);
 	for (int i = 0; i < INVENTORYSIZE * 2; i += 2)
 		items.push_back(new InventoryItem(XmlParser::Inst()->inventory[i], XmlParser::Inst()->inventory[i + 1]));
 }
 
 void Inventory::update()
 {
+	///update close button
 	if (closeButton.outsideUpdate())
 	{
 		active = false;
@@ -254,11 +262,15 @@ void Inventory::update()
 	}
 	closeButton.setPosition(CloseButtonPos);
 	closeButton.update();
+	///update rearrange button
 	if (rearrangeButton.outsideUpdate())
 		rearrangeItems();
 	rearrangeButton.setPosition(RearrangeButtonPos);
 	rearrangeButton.update();
-
+	///update gold text
+	goldNumText->setPosition(GoldNumTextPos); 
+	goldNumText->changeText(to_string(gold));
+	///update inventory items
 	for (int i = 0; i < INVENTORYSIZE; i++)
 	{
 		if (!items[i]->beingPicked)
@@ -274,6 +286,7 @@ void Inventory::draw()
 	TextureLoader::Inst()->draw(uniqueID, position.x, position.y, width, height);
 	closeButton.draw();
 	rearrangeButton.draw();
+	goldNumText->draw();
 
 	int i, len = items.size();
 	for (i = 0; i < len; i++)
@@ -298,6 +311,12 @@ bool Inventory::outsideCheckMouseOver()
 
 bool Inventory::addItem(int itemID, int stack)
 {
+	if (itemID == GoldCoinItem)
+	{
+		gold += stack;
+		return true;
+	}
+
 	int i;
 	for (i = 0; i < INVENTORYSIZE; i++)
 	{
@@ -328,6 +347,12 @@ bool Inventory::addItem(int itemID, int stack)
 
 bool Inventory::addItem(Item* item)
 {
+	if (item->getUniqueID() == GoldCoinItem)
+	{
+		gold += item->stack;
+		return true;
+	}
+
 	int i;
 	for (i = 0; i < INVENTORYSIZE; i++)
 	{

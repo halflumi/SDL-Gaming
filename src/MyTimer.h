@@ -1,25 +1,16 @@
 #pragma once
-#include <SDL.h>
 
 class MyTimer
 {
 private:
-	Uint32 startTicks;
-	Uint32 pausedTicks;
+	int startTick;
 
-	bool paused;
-	bool started;
 public:
 	MyTimer();
 	MyTimer(bool defaultStarted);
 
-	bool isStarted() { return started; }
-	bool isPaused() { return paused; }
 	int getTicks();
 
 	void start();
 	void start(int shift);
-	void stop();
-	void pause();
-	void unpause();
 };

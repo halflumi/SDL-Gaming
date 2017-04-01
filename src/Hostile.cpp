@@ -7,14 +7,16 @@
 #include "Inputor.h"
 #include "Dice.h"
 
-#define DAMAGETICK 10
+#define DAMAGETICK 15
 #define MIDAIR 1
-#define PLAYERACCERLATION 0.7f
 #define SPEED_SLOW 1.5f
 #define SPEED_MEDIUM 3.f
 #define SPEED_FAST 6.f
+#define MOBMOVINGACCELERATION 0.7f
+#define KNOCKBACKSPEED 2.f
+#define KNOCKBACKACCELERATION 0.2f
 
-Hostile::Hostile(int id, int _worldID, int x, int y) : timer(true)
+Hostile::Hostile(int id, int _worldID, int x, int y) : frameTimer(true)
 {
 	position.x = x;
 	position.y = y;
@@ -26,7 +28,6 @@ Hostile::Hostile(int id, int _worldID, int x, int y) : timer(true)
 void Hostile::Load()
 {
 	friendly = false;
-	color = COLOR_WHITE;
 	damageTick = 0;
 	ai[0] = 0;
 	ai[1] = 0;
@@ -54,8 +55,8 @@ void Hostile::Load()
 	if (uniqueID == DemonHostile)
 	{
 		width = 177;
-		height = 163;
-		numFrames = 4;
+		height = 170;
+		numFrames = 5;
 		damageSoundID = DemonDamageSound;
 		dieSoundID = DemonDieSound;
 
@@ -71,8 +72,8 @@ void Hostile::Load()
 	}
 	if (uniqueID == HostileGhostMob)
 	{
-		width = 71;
-		height = 64;
+		width = 70;
+		height = 63;
 		numFrames = 3;
 		damageSoundID = GhostMobDamageSound;
 		dieSoundID = GhostMobDieSound;
@@ -92,7 +93,7 @@ void Hostile::Load()
 		width = 84;
 		height = 95;
 		numFrames = 4;
-		animatedSpeed = 350;
+		animatedSpeed = 20;
 		damageSoundID = SkeletonDamageSound;
 		dieSoundID = SkeletonDieSound;
 
@@ -111,7 +112,7 @@ void Hostile::Load()
 		width = 74;
 		height = 77;
 		numFrames = 4;
-		animatedSpeed = 350;
+		animatedSpeed = 20;
 		damageSoundID = WoodMobDamageSound;
 		dieSoundID = WoodMobDieSound;
 
@@ -130,7 +131,7 @@ void Hostile::Load()
 		width = 165;
 		height = 96;
 		numFrames = 5;
-		animatedSpeed = 150;
+		animatedSpeed = 6;
 		damageSoundID = GiantCatDamageSound;
 		dieSoundID = GiantCatDieSound;
 
@@ -150,7 +151,6 @@ void Hostile::Load()
 		width = 69;
 		height = 50;
 		numFrames = 3;
-		animatedSpeed = 250;
 		damageSoundID = PigDamageSound;
 		dieSoundID = PigDieSound;
 
@@ -166,7 +166,6 @@ void Hostile::Load()
 		ai[1] = 1;
 		return;
 	}
-
 }
 
 void Hostile::update()
@@ -179,29 +178,51 @@ void Hostile::update()
 		///update living mob
 		if (!stasis)
 		{
-			MovingAI();
-
-			///invulnerable tick
-			if (invulnerableTick)
+			if (damageTick == 0)
 			{
-				invulnerableTick++;
-				if (invulnerableTick == invulnerableInterval)
-					invulnerableTick = 0;
-				if (invulnerableTick % 5 == 0)
-				{
-					if (alpha == 255)
-						alpha = 50;
-					else
-						alpha = 255;
-				}
+				///moving behaviors
+				MovingAI();
+				///moving frame
+				if (movingLeft || movingRight)
+					currentFrame = int(((frameTimer.getTicks() / animatedSpeed) % numFrames));
+				else
+					currentFrame = 0;
 			}
 			else
-				alpha = 255;
-
-			if (movingLeft || movingRight)
-				currentFrame = int(((timer.getTicks() / animatedSpeed) % numFrames));
-			else
+			{
 				currentFrame = 0;
+				frameTimer.start();
+			}
+			///calculate position
+			Vector2D newposition = position + velocity;
+
+			if (!CheckCollision_tileX(newposition.x)) {
+				position.x = newposition.x;
+			}
+			if (!CheckCollision_tileY(newposition.y)) {
+				position.y = newposition.y;
+			}
+
+			if (friendly) // currently only friend npc can be hit by objects other than player
+			{
+				CheckCollision_hostile(newposition);
+				//invulnerable tick
+				if (invulnerableTick)
+				{
+					invulnerableTick++;
+					if (invulnerableTick == invulnerableInterval)
+						invulnerableTick = 0;
+					if (invulnerableTick % 5 == 0)
+					{
+						if (alpha == 255)
+							alpha = 50;
+						else
+							alpha = 255;
+					}
+				}
+				else
+					alpha = 255;
+			}
 		}
 		///death check
 		if (life <= 0)
@@ -212,11 +233,6 @@ void Hostile::update()
 		///damage updating
 		if (damageTick)
 			damageTick--;
-		else
-		{
-			color = COLOR_WHITE;
-			currentFrame = int((timer.getTicks() / animatedSpeed) % numFrames);
-		}
 	}
 	///dying
 	else
@@ -232,7 +248,7 @@ void Hostile::update()
 
 void Hostile::MovingAI()
 {
-	int player_x = Camera::Inst()->getTarget_nonConst()->getPosition().x;
+	int player_x = Camera::Inst()->getTarget_nonConst()->position.x;
 	acceleration.y = GRAVITY;
 	if (!friendly)
 	{
@@ -241,10 +257,15 @@ void Hostile::MovingAI()
 			movingRight = true;
 			movingLeft = false;
 		}
-		else
+		else if(position.x > player_x)
 		{
 			movingRight = false;
 			movingLeft = true;
+		}
+		else
+		{
+			movingRight = false;
+			movingLeft = false;
 		}
 	}
 	else
@@ -253,33 +274,6 @@ void Hostile::MovingAI()
 			movingLeft = true;
 			movingRight = false;
 		}
-		//if (ai[0] > 0)
-		//{
-		//	ai[0]--;
-		//	//cout << ai[0] << ' ';
-		//	if (ai[1] == 1)
-		//		currentRow = 2;
-		//	if (ai[1] == 2)
-		//		currentRow = 3;
-		//	movingRight = false;
-		//	movingLeft = false;
-		//	velocity.x = 0;
-		//}
-		//else
-		//{
-		//	std::cout << "???" << endl;
-		//	if (ai[1] == 1)
-		//	{
-		//		movingLeft = false;
-		//		movingRight = true;
-		//	}
-		//	else
-		//	{
-		//		movingLeft = true;
-		//		movingRight = false;
-		//	}
-		//	ai[1] = 0;
-		//}
 		static int start = SDL_GetTicks();
 		if (SDL_GetTicks() - start > 2000) {
 			swap(movingLeft, movingRight);
@@ -288,21 +282,19 @@ void Hostile::MovingAI()
 		}
 
 	}
-	//std::cout << ai[1];
-	//calculate speed
 	if (!midair)
 	{
 		if (movingLeft)
 		{
 			currentRow = 0;
-			acceleration.x = -PLAYERACCERLATION;
+			acceleration.x = -MOBMOVINGACCELERATION;
 			if (velocity.x > 0) //turn around from right
 				velocity.x = 0;
 		}
 		else if (movingRight)
 		{
 			currentRow = 1;
-			acceleration.x = PLAYERACCERLATION;
+			acceleration.x = MOBMOVINGACCELERATION;
 			if (velocity.x < 0) //turn around from left
 				velocity.x = 0;
 		}
@@ -312,32 +304,21 @@ void Hostile::MovingAI()
 			acceleration.x = 0;
 		}
 	}
-	//calculate position
-	Vector2D newposition = position + velocity;
-	//std::cout << newposition.x << endl;
-	//if (friendly || !ai[1])
-	//{
-	//	if (newposition.x < 0)
-	//	{
-	//		ai[0] = Dice::Inst()->rand(60, 60);
-	//		ai[1] = 1;
-	//	}
-	//	else if (newposition.x > 400)
-	//	{
-	//		ai[0] = Dice::Inst()->rand(60, 60);
-	//		ai[1] = 2;
-	//	}
-	//}
+}
 
-	if (!CheckCollision_tileX(newposition.x)) {
-		position.x = newposition.x;
+void Hostile::KnockBack()
+{
+	currentRow += 2;
+	if (velocity.x > 0)
+	{
+		velocity.x = -KNOCKBACKSPEED - Dice::Inst()->rand(100) / 100.f;
+		acceleration.x = -KNOCKBACKACCELERATION;
 	}
-	if (!CheckCollision_tileY(newposition.y)) {
-		position.y = newposition.y;
+	else
+	{
+		velocity.x = KNOCKBACKSPEED + Dice::Inst()->rand(100) / 100.f;
+		acceleration.x = KNOCKBACKACCELERATION;
 	}
-
-	if(friendly)
-		CheckCollision_hostile(newposition);
 }
 
 bool Hostile::CheckCollision_tileX(float& x)
@@ -363,10 +344,10 @@ bool Hostile::CheckCollision_tileX(float& x)
 		if (objects[i]->type() != TypeTile)
 			continue;
 
-		float& objectLeft = objects[i]->getPosition().x;
-		float objectRight = objectLeft + objects[i]->getWidth();
-		float& objectTop = objects[i]->getPosition().y;
-		float objectBottom = objectTop + objects[i]->getHeight();
+		float& objectLeft = objects[i]->position.x;
+		float objectRight = objectLeft + objects[i]->width;
+		float& objectTop = objects[i]->position.y;
+		float objectBottom = objectTop + objects[i]->height;
 
 
 		if (!(position.y >= objectBottom || position.y + height <= objectTop))
@@ -415,10 +396,10 @@ bool Hostile::CheckCollision_tileY(float& y)
 		if (objects[i]->type() != TypeTile)
 			continue;
 
-		float& objectLeft = objects[i]->getPosition().x;
-		float objectRight = objectLeft + objects[i]->getWidth();
-		float& objectTop = objects[i]->getPosition().y;
-		float objectBottom = objectTop + objects[i]->getHeight();
+		float& objectLeft = objects[i]->position.x;
+		float objectRight = objectLeft + objects[i]->width;
+		float& objectTop = objects[i]->position.y;
+		float objectBottom = objectTop + objects[i]->height;
 
 		if (!(position.x + width <= objectLeft || position.x >= objectRight))
 		{
@@ -462,13 +443,13 @@ void Hostile::CheckCollision_hostile(Vector2D newpos)
 		if (!entities[i]->active || entities[i]->friendly)
 			continue;
 
-		if (pBottom <= entities[i]->getPosition().y)
+		if (pBottom <= entities[i]->position.y)
 			continue;
-		if (newpos.y >= entities[i]->getPosition().y + entities[i]->getHeight())
+		if (newpos.y >= entities[i]->position.y + entities[i]->height)
 			continue;
-		if (pRight <= entities[i]->getPosition().x)
+		if (pRight <= entities[i]->position.x)
 			continue;
-		if (newpos.x >= entities[i]->getPosition().x + entities[i]->getWidth())
+		if (newpos.x >= entities[i]->position.x + entities[i]->width)
 			continue;
 
 		//onhit
@@ -479,7 +460,7 @@ void Hostile::CheckCollision_hostile(Vector2D newpos)
 		World::Inst()->createText(textShift, 0, -0.1f, to_string(damage), segoeui22, COLOR_RED, 60);
 		velocity.y = -10.f;
 		//acceleration.y = -GRAVITY;
-		if (entities[i]->getPosition().x > position.x) {
+		if (entities[i]->position.x > position.x) {
 			velocity.x = -5.f;
 			acceleration.x = 0;
 		}
@@ -504,27 +485,29 @@ void Hostile::draw()
 {
 	if (visiable)
 	{
-		TextureLoader::Inst()->drawFrameSp(uniqueID, position.x - Camera::Inst()->getPosition().x + Main::Inst()->getRenderWidth() / 2, position.y - Camera::Inst()->getPosition().y + Main::Inst()->getRenderHeight() / 2, width, height, currentRow, currentFrame, angle, alpha, color);
+		TextureLoader::Inst()->drawFrame(uniqueID, position.x - Camera::Inst()->getPosition().x + Main::Inst()->getRenderWidth() / 2, position.y - Camera::Inst()->getPosition().y + Main::Inst()->getRenderHeight() / 2, width, height, currentRow, currentFrame, angle, alpha);
 	}
 }
 
 void Hostile::kill()
 {
 	active = false;
-	timer.start();
+	currentFrame = 0;
 	if(Camera::Inst( )->getTarget_nonConst( )->level < MAXLEVEL)
 		Camera::Inst()->getTarget_nonConst()->exp += exp;
 
 	///drop
-	if (Dice::Inst()->rand(5) == 0)
-		World::Inst()->newItem(IronDartItem, 1, position.x + width / 2, position.y + height / 2);
-	if (Dice::Inst()->rand(15) == 0)
-		World::Inst()->newItem(CrystalDartItem, 1, position.x + width / 2, position.y + height / 2);
-	if (Dice::Inst()->rand(25) == 0)
-		World::Inst()->newItem(MokbiDartItem, 1, position.x + width / 2, position.y + height / 2);
-	
+	World::Inst()->newItem(GoldCoinItem, Dice::Inst()->rand(100), entityCenter.x + Dice::Inst()->randInverse(20), entityCenter.y);
+	if (Dice::Inst()->rand(10) == 0)
+		World::Inst()->newItem(IronDartItem, 1, entityCenter.x + Dice::Inst()->randInverse(20), entityCenter.y);
+	else if (Dice::Inst()->rand(15) == 0)
+		World::Inst()->newItem(CrystalDartItem, 1, entityCenter.x + Dice::Inst()->randInverse(20), entityCenter.y);
+	else if (Dice::Inst()->rand(25) == 0)
+		World::Inst()->newItem(MokbiDartItem, 1, entityCenter.x + Dice::Inst()->randInverse(20), entityCenter.y);
+	else if (Dice::Inst()->rand(25) == 0)
+		World::Inst()->newItem(SteelyThrowingKnivesItem, 1, entityCenter.x + Dice::Inst()->randInverse(20), entityCenter.y);
+
 	SoundLoader::Inst()->playSound(dieSoundID);
-	color = COLOR_WHITE;
 
 	if (uniqueID == HostilePigNPC)
 	{
@@ -544,7 +527,7 @@ void Hostile::onHit(int damage, int critChance)
 		life -= actualDamage;
 
 		Vector2D textShift(entityCenter.x + Dice::Inst()->randInverse(20), position.y + Dice::Inst()->randInverse(20));
-		World::Inst()->createText(textShift, 0, -0.1f, to_string(actualDamage) + "!", segoeui28, COLOR_RED, 60);
+		World::Inst()->createText(textShift, 0, -0.15f, to_string(actualDamage) + "!", segoeui28, COLOR_RED, 60);
 	}
 	else
 	{
@@ -558,6 +541,13 @@ void Hostile::onHit(int damage, int critChance)
 		World::Inst()->createText(textShift, 0, -0.1f, to_string(actualDamage), segoeui22, COLOR_WHITE, 60);
 	}
 	SoundLoader::Inst()->playSound(damageSoundID);
-	color = COLOR_RED;
-	damageTick = DAMAGETICK;
+	//color = COLOR_RED;
+	if(damageTick == 0)
+		damageTick = DAMAGETICK;
+
+	if (!stasis)
+	{
+		movingLeft = movingRight = false;
+		KnockBack();
+	}
 }

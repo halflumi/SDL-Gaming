@@ -6,8 +6,8 @@
 class Hostile : public Entity
 {
 private:
-	MyTimer timer;
-	SDL_Color color;
+	MyTimer frameTimer;
+	//SDL_Color color;
 	bool beingHit;
 	int damageTick;
 	bool stasis;
@@ -18,6 +18,7 @@ private:
 	void Load();
 
 	void MovingAI();
+	void KnockBack();
 	bool CheckCollision_tileX(float& x);
 	bool CheckCollision_tileY(float& y);
 	void CheckCollision_hostile(Vector2D newpos);

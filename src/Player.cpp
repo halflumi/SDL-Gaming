@@ -36,7 +36,7 @@ Player::Player(int id, int x, int y)
 	name = "Who am I?";
 	position.set(x, y);
 	uniqueID = id;
-	display_pos = position;
+	//display_pos = position;
 	onLadder = false;
 	movingUp = false;
 	movingDown = false;
@@ -51,13 +51,13 @@ Player::Player(int id, int x, int y)
 	rightHand_equ = NULL;
 	leftHand_equ = NULL;
 	helmet_equ = NULL;
-	timer = MyTimer(true);
+	frameTimer = MyTimer(true);
 	keyCooldown = MyTimer(true);
 	mouseCooldown = MyTimer(true);
 	Load();
 }
 
-Player::~Player() 
+Player::~Player()
 {
 	delete characterPanel;
 	delete skillPanel;
@@ -69,8 +69,9 @@ void Player::Load()
 	width = 46;
 	height = 70;
 	numFrames = 5;
-	maxSpeed = DEFAULTMAXSPEED;
 	acceleration.y = GRAVITY;
+	footstepTick = 0;
+	attackingFrameTick = 0;
 	//rpg properties
 	attackTick = 0;
 	lifeRegenTick = 0;
@@ -83,13 +84,14 @@ void Player::Load()
 	life = XmlParser::Inst()->life;
 	mana = XmlParser::Inst()->mana;
 
+	baseMaxSpeed = DEFAULTMAXSPEED;
 	baseMaxLife = LvUpBonus[HP][0];
 	baseMaxMana = LvUpBonus[MP][0];
 	baseATT = LvUpBonus[ATK][0];
 	baseDEF = LvUpBonus[DEF][0];
 	critChance = 10;
 
-	attackInterval = 30;
+	attackInterval = 45;
 	baseLifeRegenInterval = 600;
 	baseLifeRegenAmount = 1;
 	baseManaRegenInterval = 300;
@@ -106,7 +108,7 @@ void Player::update()
 	HandleMovement();
 	HandleDisplay();
 	///update character panel
- 	if (characterPanel->active)
+	if (characterPanel->active)
 		characterPanel->update();
 	///update skill panel
 	if (skillPanel->active)
@@ -134,8 +136,13 @@ void Player::update()
 void Player::draw()
 {
 	///draw player
-	TextureLoader::Inst()->drawFrame(uniqueID, display_pos.x, display_pos.y, width, height, currentRow, currentFrame, angle, alpha);
-	
+	TextureLoader::Inst()->drawFrame(uniqueID, position.x - Camera::Inst()->getPosition().x + Main::Inst()->getRenderWidth() / 2, position.y - Camera::Inst()->getPosition().y + Main::Inst()->getRenderHeight() / 2, width, height, currentRow, currentFrame, angle, alpha);
+
+	///draw buffs
+	int len = buffs.size();
+	for (int i = 0; i < len; i++)
+		if (buffs[i]->active)
+			buffs[i]->draw();
 	///draw dialog
 	if (dialog != NULL)
 		dialog->draw();
@@ -160,18 +167,20 @@ void Player::IsDead()
 		Main::Inst()->changeMenu(MenuGameOver);
 }
 
-void Player::IsLevelingup( ) {
+void Player::IsLevelingup()
+{
 	while (exp >= expToNextLevel)
 	{
-		SoundLoader::Inst( )->playSound(LevelupSound);
-		LevelUpBonus( );
+		SoundLoader::Inst()->playSound(LevelupSound);
+		LevelUpBonus();
 		level++;
 		exp -= expToNextLevel;
 		expToNextLevel = ExpSheet(level);
 	}
 }
 
-void Player::LevelUpBonus( ) {
+void Player::LevelUpBonus()
+{
 	baseATT += LvUpBonus[ATK][level];
 	baseDEF += LvUpBonus[DEF][level];
 	baseMaxLife += LvUpBonus[HP][level];
@@ -197,6 +206,7 @@ void Player::UpdateAttributes()
 		minATT = baseATT + rightHand_equ->minATT;
 		maxATT = baseATT + 5 + rightHand_equ->maxATT;
 	}
+	maxSpeed = baseMaxSpeed;
 	defense = baseDEF;
 	maxlife = baseMaxLife;
 	maxmana = baseMaxMana;
@@ -205,6 +215,12 @@ void Player::UpdateAttributes()
 	manaRegenInterval = baseManaRegenInterval;
 	manaRegenAmount = baseManaRegenAmount;
 	invulnerableInterval = baseInvulnerableInterval;
+	///apply buff effects
+	int len = buffs.size();
+	for (int i = 0; i < len; i++)
+		if(buffs[i]->active)
+			buffs[i]->update();
+
 	///skill cooldown
 	skillPanel->outsideUpdateSkills();
 	///attack speed
@@ -288,13 +304,12 @@ void Player::HandleInput()
 	}
 	if (Inputor::Inst()->isKeyDown(XmlParser::Inst()->key_movingUp))
 	{
-		if(!onLadder)
+		if (!onLadder)
 			CheckInteractive();
 		else
 		{
 			movingUp = true;
 			movingDown = false;
-			currentRow = 2;
 		}
 	}
 	else if (Inputor::Inst()->isKeyDown(XmlParser::Inst()->key_movingDown))
@@ -303,7 +318,6 @@ void Player::HandleInput()
 		{
 			movingDown = true;
 			movingUp = false;
-			currentRow = 2;
 		}
 		else {
 			CheckInteractive(SEARCH_LADDER);
@@ -334,20 +348,26 @@ void Player::HandleInput()
 		keyCooldown.start();
 	}
 
-	if (Inputor::Inst()->isKeyDown(XmlParser::Inst()->key_movingLeft) && !Inputor::Inst()->isKeyDown(XmlParser::Inst()->key_movingRight))
+	if (attackingFrameTick)
 	{
+		movingLeft = false;
+		movingRight = false;
+	}
+	else if (Inputor::Inst()->isKeyDown(XmlParser::Inst()->key_movingLeft) && !Inputor::Inst()->isKeyDown(XmlParser::Inst()->key_movingRight))
+	{
+		facingLeft = true;
+		facingRight = false;
 		movingLeft = true;
 		movingRight = false;
-		currentRow = 0;
-
 
 		acceleration.x = -PLAYERACCERLATION;
 	}
 	else if (Inputor::Inst()->isKeyDown(XmlParser::Inst()->key_movingRight) && !Inputor::Inst()->isKeyDown(XmlParser::Inst()->key_movingLeft))
 	{
+		facingRight = true;
+		facingLeft = false;
 		movingRight = true;
 		movingLeft = false;
-		currentRow = 1;
 
 		acceleration.x = -MIDAIRACCERLATION;
 	}
@@ -359,8 +379,6 @@ void Player::HandleInput()
 
 	if (Inputor::Inst()->isKeyDown(SDL_SCANCODE_SPACE) && keyCooldown.getTicks() > PRESSCOOLDOWN)
 	{
-		if (!midair)
-			SoundLoader::Inst()->playSound(JumpSound);
 		jumped = true;
 		onLadder = false;
 	}
@@ -370,7 +388,7 @@ void Player::HandleInput()
 		if (Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && skillPanel->outsideCheckMouseTitle())
 		{
 			Vector2D motion = Inputor::Inst()->getMouseMotionVector();
-			if(motion.length() > 1.5)
+			if (motion.length() > 1.5)
 				skillPanel->addPosition(Inputor::Inst()->getMouseMotionVector()); // **********motion is too sensitive
 		}
 	}
@@ -418,7 +436,7 @@ void Player::HandleInput()
 	}
 
 	if (Inputor::Inst()->isKeyDown(XmlParser::Inst()->key_skillHotkey1) && keyCooldown.getTicks() > PRESSCOOLDOWN)
-		if(skillPanel->hotkeySkillIndexes[0] != -1)
+		if (skillPanel->hotkeySkillIndexes[0] != -1)
 			skillPanel->skills[skillPanel->hotkeySkillIndexes[0]]->castSkill();
 	if (Inputor::Inst()->isKeyDown(XmlParser::Inst()->key_skillHotkey2) && keyCooldown.getTicks() > PRESSCOOLDOWN)
 		if (skillPanel->hotkeySkillIndexes[1] != -1)
@@ -430,6 +448,9 @@ void Player::HandleInput()
 
 void Player::attacking()
 {
+	ChangeFacingDirection();
+	attackingFrameTick = 20;
+
 	if (rightHand_equ == NULL || !rightHand_equ->active)
 	{
 		attackTick = 1;
@@ -439,7 +460,7 @@ void Player::attacking()
 		direction.x *= 10;
 		direction.y *= 5;
 		Vector2D randpos(entityCenter.x + Dice::Inst()->randInverse(15), entityCenter.y + Dice::Inst()->randInverse(15));
-		World::Inst()->newProjectile(SubiDartProjectile, randpos, direction.x, direction.y, this);
+		World::Inst()->newProjectile(SubiDartProjectile, randpos, direction.x, direction.y, minATT, maxATT, critChance, true);
 		SoundLoader::Inst()->playSound(AttackSound);
 	}
 	else if (rightHand_equ->getUniqueID() == IronDartItem)
@@ -451,7 +472,7 @@ void Player::attacking()
 		direction.x *= 10;
 		direction.y *= 5;
 		Vector2D randpos(entityCenter.x + Dice::Inst()->randInverse(15), entityCenter.y + Dice::Inst()->randInverse(15));
-		World::Inst()->newProjectile(IronDartProjectile, randpos, direction.x, direction.y, this);
+		World::Inst()->newProjectile(IronDartProjectile, randpos, direction.x, direction.y, minATT, maxATT, critChance, true);
 		SoundLoader::Inst()->playSound(AttackSound);
 	}
 	else if (rightHand_equ->getUniqueID() == CrystalDartItem)
@@ -463,7 +484,7 @@ void Player::attacking()
 		direction.x *= 10;
 		direction.y *= 5;
 		Vector2D randpos(entityCenter.x + Dice::Inst()->randInverse(15), entityCenter.y + Dice::Inst()->randInverse(15));
-		World::Inst()->newProjectile(CrystalDartProjectile, randpos, direction.x, direction.y, this);
+		World::Inst()->newProjectile(CrystalDartProjectile, randpos, direction.x, direction.y, minATT, maxATT, critChance, true);
 		SoundLoader::Inst()->playSound(AttackSound);
 	}
 	else if (rightHand_equ->getUniqueID() == MokbiDartItem)
@@ -475,17 +496,29 @@ void Player::attacking()
 		direction.x *= 10;
 		direction.y *= 5;
 		Vector2D randpos(entityCenter.x + Dice::Inst()->randInverse(15), entityCenter.y + Dice::Inst()->randInverse(15));
-		World::Inst()->newProjectile(MokbiDartProjectile, randpos, direction.x, direction.y, this);
+		World::Inst()->newProjectile(MokbiDartProjectile, randpos, direction.x, direction.y, minATT, maxATT, critChance, true);
+		SoundLoader::Inst()->playSound(AttackSound);
+	}
+	else if (rightHand_equ->getUniqueID() == SteelyThrowingKnivesItem)
+	{
+		attackTick = 1;
+		Vector2D mousepos = Inputor::Inst()->getMouseDefinitePosition();
+		Vector2D direction = mousepos - entityCenter;
+		direction.normalize();
+		direction.x *= 10;
+		direction.y *= 5;
+		Vector2D randpos(entityCenter.x + Dice::Inst()->randInverse(15), entityCenter.y + Dice::Inst()->randInverse(15));
+		World::Inst()->newProjectile(SteelyThrowingKnivesProjectile, randpos, direction.x, direction.y, minATT, maxATT, critChance, true);
 		SoundLoader::Inst()->playSound(AttackSound);
 	}
 }
 
-void Player::HandlePlayerPhysics( ) 
+void Player::HandlePlayerPhysics()
 {
-	/* 
+	/*
 		water judge
 	*/
-//	int status = CheckCollision_tileX( );
+	//	int status = CheckCollision_tileX( );
 
 }
 
@@ -511,14 +544,11 @@ void Player::HandleMovement()
 		float newposition_y = position.y + velocity.y;
 		if (CheckCollision_tileY(newposition_y)) {
 			position.y = newposition_y;
-			//HitGround( );
 			onLadder = false;
-			currentRow = 2;
-			//velocity.y = LADDERSPEED;
-			//cout << "here";
 			midair = MIDAIR;
 
-		} else {
+		}
+		else {
 			position.y += velocity.y;
 			entityCenter.set(position.x + width / 2, position.y + height / 2);
 			return;
@@ -559,7 +589,7 @@ void Player::HandleMovement()
 
 	if (jumped && !midair)
 	{
-		midair = true;
+		midair = MIDAIR;
 		velocity.y = JUMPSPEED;
 	}
 	if (jumped && (midair == MIDAIR_LADDER))
@@ -581,90 +611,74 @@ void Player::HandleMovement()
 	Vector2D newposition = position + velocity;
 
 	if (midair == MIDAIR_LADDER_JUMP || !CheckCollision_tileX(newposition.x)) {
-		position.x = newposition.x; 
+		position.x = newposition.x;
 	}
 	if (!CheckCollision_tileY(newposition.y)) {
 		position.y = newposition.y;
 	}
-	
+
 	CheckCollision_hostile(newposition);
 }
 
 void Player::HandleDisplay()
 {
-	float x, y;
-	//x centeralized view
-	if (position.x - Main::Inst()->getRenderWidth() / 2 < 0)
+	///calculate frame status
+	if (!onLadder)
 	{
-		display_pos.x = position.x;
-		if (focused)
-			x = Main::Inst()->getRenderWidth() / 2;
-	}
-	else if (position.x + Main::Inst()->getRenderWidth() / 2 - World::Inst()->getWorldWidth() > 0)
-	{
-		display_pos.x = Main::Inst()->getRenderWidth() - (World::Inst()->getWorldWidth() - position.x);
-		if (focused)
-			x = World::Inst()->getWorldWidth() - Main::Inst()->getRenderWidth() / 2;
-	}
-	else if (Camera::Inst( ) && (abs(position.x - Camera::Inst( )->getPosition( ).x) < width)) {
-		x = position.x;
-	}
-	else
-	{
-		display_pos.x = Main::Inst()->getRenderWidth() / 2;
-		if (focused)
-			x = position.x;
-	}
-	//y centeralized view
-	if (position.y - Main::Inst()->getRenderHeight() / 2 < 0)
-	{
-		display_pos.y = position.y;
-		if (focused)
-			y = Main::Inst()->getRenderHeight() / 2;
-	}
-	else if (position.y + Main::Inst()->getRenderHeight() / 2 - World::Inst()->getWorldHeight() > 0)
-	{
-		display_pos.y = Main::Inst()->getRenderHeight() - (World::Inst()->getWorldHeight() - position.y);
-		if (focused)
-			y = World::Inst()->getWorldHeight() - Main::Inst()->getRenderHeight() / 2;
-	}
-	else
-	{
-		display_pos.y = Main::Inst()->getRenderHeight() / 2;
-		if (focused)
-			y = position.y;
-	}
-
-
-	if (focused)
-		Camera::Inst()->setPosition(x, y);
-	//cout << Camera::Inst()->getPosition().x << ' ' << Camera::Inst()->getPosition().y << endl;
-
-
-	if (movingLeft || movingRight || movingUp || movingDown)
-	{
-		if (!Dice::Inst()->rand(20))
+		if (attackingFrameTick)
 		{
-			switch (Dice::Inst()->rand(4))
-			{
-			case 0:
-				SoundLoader::Inst()->playSound(WalkOnSnow1);
-				break;
-			case 1:
-				SoundLoader::Inst()->playSound(WalkOnSnow2);
-				break;
-			case 2:
-				SoundLoader::Inst()->playSound(WalkOnSnow3);
-				break;
-			case 3:
-				SoundLoader::Inst()->playSound(WalkOnSnow4);
-				break;
-			}
+			currentFrame = 0;
+			attackingFrameTick--;
+			if (facingLeft)
+				currentRow = 5;
+			else
+				currentRow = 6;
 		}
-		currentFrame = int(((timer.getTicks() / animatedSpeed) % (numFrames - 1))) + 1;
+		else if (!jumped)
+		{
+			if (facingLeft)
+				currentRow = 0;
+			else
+				currentRow = 1;
+			if (movingLeft || movingRight || movingUp || movingDown)
+			{
+				if(frameTimer.getTicks() % 20 == 0)
+					switch (footstepTick++ % 3)
+					{
+					case 0:
+						SoundLoader::Inst()->playSound(WalkOnSnow1);
+						break;
+					case 1:
+						SoundLoader::Inst()->playSound(WalkOnSnow2);
+						break;
+					case 2:
+						SoundLoader::Inst()->playSound(WalkOnSnow3);
+						break;
+					case 3:
+						SoundLoader::Inst()->playSound(WalkOnSnow4);
+						break;
+					}
+				currentFrame = int(((frameTimer.getTicks() / animatedSpeed) % (numFrames - 1))) + 1;
+			}
+			else
+				currentFrame = 0;
+		}
+		else
+		{
+			if (facingLeft)
+				currentRow = 3;
+			else
+				currentRow = 4;
+			currentFrame = 0;
+		}
 	}
 	else
-		currentFrame = 0;
+	{
+		if(movingUp || movingDown)
+			currentFrame = int(((frameTimer.getTicks() / animatedSpeed) % (numFrames - 1))) + 1;
+		else
+			currentFrame = 0;
+	}
 }
 
 bool Player::CheckCollision_tileX(float& x)
@@ -690,10 +704,10 @@ bool Player::CheckCollision_tileX(float& x)
 		if (objects[i]->type() != TypeTile)
 			continue;
 
-		float& objectLeft = objects[i]->getPosition().x;
-		float objectRight = objectLeft + objects[i]->getWidth();
-		float& objectTop = objects[i]->getPosition().y;
-		float objectBottom = objectTop + objects[i]->getHeight();
+		float& objectLeft = objects[i]->position.x;
+		float objectRight = objectLeft + objects[i]->width;
+		float& objectTop = objects[i]->position.y;
+		float objectBottom = objectTop + objects[i]->height;
 
 
 		if (!(position.y >= objectBottom || position.y + height <= objectTop))
@@ -706,7 +720,7 @@ bool Player::CheckCollision_tileX(float& x)
 				velocity.x = 0;
 				acceleration.x = 0;
 				return true;
-			} 
+			}
 			else if (x <= objectRight && position.x >= objectRight)
 			{
 				position.x = objectRight;
@@ -743,10 +757,10 @@ bool Player::CheckCollision_tileY(float& y)
 		if (objects[i]->type() != TypeTile)
 			continue;
 
-		float& objectLeft = objects[i]->getPosition().x;
-		float objectRight = objectLeft + objects[i]->getWidth();
-		float& objectTop = objects[i]->getPosition().y;
-		float objectBottom = objectTop + objects[i]->getHeight();
+		float& objectLeft = objects[i]->position.x;
+		float objectRight = objectLeft + objects[i]->width;
+		float& objectTop = objects[i]->position.y;
+		float objectBottom = objectTop + objects[i]->height;
 
 		if (!(position.x + width <= objectLeft || position.x >= objectRight))
 		{
@@ -755,31 +769,33 @@ bool Player::CheckCollision_tileY(float& y)
 				//cout << "onladder";
 				if (y + height <= objectTop && position.y + height >= objectTop)
 				{
-				//	cout << "true";
+					//	cout << "true";
 					return true;
 				}
 			}
-			else if (y >= objectBottom || y + height <= objectTop) 
+			else if (y >= objectBottom || y + height <= objectTop)
 			{
 				continue;
-			} else {
-					if (y + height >= objectTop && position.y + height <= objectTop)
-					{
-						position.y = objectTop - height;
-						HitGround( );
-						return true;
-					} else if (midair != MIDAIR_LADDER_JUMP && y <= objectBottom && position.y >= objectBottom) {
-						position.y = objectBottom + 1;
-						velocity.y = -velocity.y * 0.6;
-						return true;
-					}
+			}
+			else {
+				if (y + height >= objectTop && position.y + height <= objectTop)
+				{
+					position.y = objectTop - height;
+					HitGround();
+					return true;
+				}
+				else if (midair != MIDAIR_LADDER_JUMP && y <= objectBottom && position.y >= objectBottom) {
+					position.y = objectBottom + 1;
+					velocity.y = -velocity.y * 0.6;
+					return true;
 				}
 			}
-		
+		}
+
 	}
 	if (onLadder)
 		midair = MIDAIR_LADDER;
-	else if(midair != MIDAIR_LADDER_JUMP)
+	else if (midair != MIDAIR_LADDER_JUMP)
 		midair = MIDAIR;
 	return false;
 }
@@ -801,13 +817,13 @@ void Player::CheckCollision_hostile(Vector2D newpos)
 		if (!entities[i]->active || entities[i]->friendly)
 			continue;
 
-		if (pBottom <= entities[i]->getPosition().y)
+		if (pBottom <= entities[i]->position.y)
 			continue;
-		if (newpos.y >= entities[i]->getPosition().y + entities[i]->getHeight())
+		if (newpos.y >= entities[i]->position.y + entities[i]->height)
 			continue;
-		if (pRight <= entities[i]->getPosition().x)
+		if (pRight <= entities[i]->position.x)
 			continue;
-		if (newpos.x >= entities[i]->getPosition().x + entities[i]->getWidth())
+		if (newpos.x >= entities[i]->position.x + entities[i]->width)
 			continue;
 
 		//onhit
@@ -818,7 +834,7 @@ void Player::CheckCollision_hostile(Vector2D newpos)
 		World::Inst()->createText(textShift, 0, -0.1f, to_string(damage), segoeui22, COLOR_RED, 60);
 		velocity.y = -10.f;
 		//acceleration.y = -GRAVITY;
-		if (entities[i]->getPosition( ).x > position.x) {
+		if (entities[i]->position.x > position.x) {
 			velocity.x = -5.f;
 			acceleration.x = 0;
 		}
@@ -838,7 +854,11 @@ void Player::HitGround()
 	jumped = false;
 	velocity.y = 0;
 	acceleration.y = 0;
-	maxSpeed = DEFAULTMAXSPEED;
+
+	if (facingLeft)
+		currentRow = 0;
+	else
+		currentRow = 1;
 }
 
 void Player::CheckInteractive(short flag)
@@ -849,19 +869,19 @@ void Player::CheckInteractive(short flag)
 	for (i = 0; i < len; i++)
 	{
 		float pRight = position.x + width;
-		float& oLeft = entities[i]->getPosition().x;
+		float& oLeft = entities[i]->position.x;
 		if (pRight < oLeft)
 			continue;
 		float& pLeft = position.x;
-		float oRight = entities[i]->getPosition().x + entities[i]->getWidth();
+		float oRight = entities[i]->position.x + entities[i]->width;
 		if (pLeft > oRight)
 			continue;
 		float pBottom = position.y + height;
-		float& oTop = entities[i]->getPosition().y;
+		float& oTop = entities[i]->position.y;
 		if (pBottom < oTop)
 			continue;
 		float& pTop = position.y;
-		float oBottom = entities[i]->getPosition().y + entities[i]->getHeight();
+		float oBottom = entities[i]->position.y + entities[i]->height;
 		if (pTop > oBottom)
 			continue;
 
@@ -870,7 +890,7 @@ void Player::CheckInteractive(short flag)
 		if (entities[i]->getUniqueID() == TestPortal)
 		{
 
-			
+
 			if (entityCenter.x <= oRight && entityCenter.x >= oLeft && entityCenter.y >= oTop && entityCenter.y <= oBottom)
 			{
 				DoInteractive(entities[i]);
@@ -885,11 +905,11 @@ void Player::CheckInteractive(short flag)
 	for (i = 0; i < len; i++)
 	{
 		if (flag == SEARCH_LADDER && objects[i]->getUniqueID() == LadderSprite) {
-			Player* player = Camera::Inst( )->getTarget_nonConst( );
-			if (player->entityCenter.x <= objects[i]->getPosition( ).x + objects[i]->getWidth( ) &&
-				player->entityCenter.x >= objects[i]->getPosition( ).x &&
-				player->entityCenter.y <= objects[i]->getPosition( ).y &&
-				player->entityCenter.y >= objects[i]->getPosition( ).y - player->getHeight( ) / 2
+			Player* player = Camera::Inst()->getTarget_nonConst();
+			if (player->entityCenter.x <= objects[i]->position.x + objects[i]->width &&
+				player->entityCenter.x >= objects[i]->position.x &&
+				player->entityCenter.y <= objects[i]->position.y &&
+				player->entityCenter.y >= objects[i]->position.y - player->height / 2
 				) {
 				DoInteractive(objects[i]);
 				position.y -= LADDERSPEED;
@@ -903,34 +923,35 @@ void Player::CheckInteractive(short flag)
 		}
 	}
 }
-void Player::DoInteractive(Object * obj) {
+void Player::DoInteractive(Object * obj)
+{
 	int id = obj->getUniqueID();
 
 	if (id == TestPortal)
 	{
-		SoundLoader::Inst( )->playSound(PortalNoise);
+		SoundLoader::Inst()->playSound(PortalNoise);
 		position.x = 2500;
-		position.y = World::Inst( )->getWorldHeight( ) - height;
+		position.y = World::Inst()->getWorldHeight() - height;
 	}
 	if (id == LadderSprite)
 	{
-		position.x = obj->getPosition( ).x + obj->getWidth( ) / 14;
+		position.x = obj->position.x + obj->width / 14;
 		onLadder = true;
 		jumped = false;
 		midair = MIDAIR_LADDER;
-		currentRow = 3;	
+		//currentRow = 3;	
 		return;
 	}
 	if (id == MapGate)
 	{
-		SoundLoader::Inst( )->playSound(WrapGateNoise);
-		World::Inst( )->changeMap(MapTest02, MAPCHANGE_RIGHT);
+		SoundLoader::Inst()->playSound(WrapGateNoise);
+		World::Inst()->changeMap(MapTest02, MAPCHANGE_RIGHT);
 		return;
 	}
 	if (id == MapGate2)
 	{
-		SoundLoader::Inst( )->playSound(WrapGateNoise);
-		World::Inst( )->changeMap(MapTest01, MAPCHANGE_LEFT);
+		SoundLoader::Inst()->playSound(WrapGateNoise);
+		World::Inst()->changeMap(MapTest01, MAPCHANGE_LEFT);
 		return;
 	}
 }
@@ -944,17 +965,17 @@ void Player::CheckPickup()
 	{
 		if (objects[i]->type() != TypeItem || objects[i]->dead)
 			continue;
-		
+
 		float pBottom = position.y + height;
-		if (pBottom <= objects[i]->getPosition().y)
+		if (pBottom <= objects[i]->position.y)
 			continue;
-		if (position.y >= objects[i]->getPosition().y + objects[i]->getHeight())
+		if (position.y >= objects[i]->position.y + objects[i]->height)
 			continue;
 
 		float pRight = position.x + width;
-		if (pRight <= objects[i]->getPosition().x)
+		if (pRight <= objects[i]->position.x)
 			continue;
-		if (position.x >= objects[i]->getPosition().x + objects[i]->getWidth())
+		if (position.x >= objects[i]->position.x + objects[i]->width)
 			continue;
 
 		if (inventory->addItem((Item*)objects[i]))
@@ -963,6 +984,40 @@ void Player::CheckPickup()
 			objects[i]->active = false;
 			objects[i]->dead = true;
 		}
-		
+
 	}
+}
+
+void Player::ChangeFacingDirection()
+{
+	if (Inputor::Inst()->getMouseDefinitePosition().x > position.x)
+	{
+		facingRight = true;
+		facingLeft = false;
+	}
+	else
+	{
+		facingRight = false;
+		facingLeft = true;
+	}
+}
+
+void Player::addBuff(int buffID, int ATT, int duration)
+{
+	int i, len = buffs.size();
+	for (i = 0; i < len; i++)
+		if (buffs[i]->getUniqueID() == buffID)
+		{
+			buffs[i]->extend();
+			return;
+		}
+	for (i = 0; i < len; i++)
+		if (!buffs[i]->active)
+		{
+			delete buffs[i];
+			buffs[i] = new Buff(buffID, ATT, duration);
+			return;
+		}
+
+	buffs.push_back(new Buff(buffID, ATT, duration));
 }

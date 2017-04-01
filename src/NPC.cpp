@@ -103,9 +103,9 @@ void NPC::update()
 				if (messageBox != NULL)
 					delete messageBox;
 				if(Dice::Inst()->rand(2))
-					messageBox = new Textbox(position, "I'm talking okay?", segoeui22, COLOR_WHITE, 60, true);
+					messageBox = new Textbox(position, "I'm talking okay?", segoeui22, COLOR_WHITE, 60);
 				else
-					messageBox = new Textbox(position, "I doubt why people always think I'm a flag", segoeui22, COLOR_WHITE, 60, true);
+					messageBox = new Textbox(position, "I doubt why people always think I'm a flag", segoeui22, COLOR_WHITE, 60);
 				clickCooldown.start();
 			}
 			currentRow = 1;
@@ -122,7 +122,7 @@ void NPC::update()
 			{
 				if (messageBox != NULL)
 					delete messageBox;
-				messageBox = new Textbox(position, "The game has been saved!", segoeui22, COLOR_WHITE, 60, true);
+				messageBox = new Textbox(position, "The game has been saved!", segoeui22, COLOR_WHITE, 60);
 				XmlParser::Inst()->mapID = World::Inst()->currentMapID;
 				XmlParser::Inst()->saveCharacter();
 				clickCooldown.start();

@@ -17,15 +17,16 @@ Skill::Skill(int _skillID, int _level)
 void Skill::Load()
 {
 	preSkillIndex = -1;
+	preSkillLevel = 1;
 	postSkillIndex = -1;
 	cooldownTick = 0;
 	passive = false;
+	sp = 1;
 	if (skillID == SkillPhysicalTraining)
 	{
 		postSkillIndex = SkillIndexDoubleThrow;
 		passive = true;
 		name = "Physical Training";
-		sp = 1;
 		maxLevel = 3;
 		percentATT = level * 10;
 		return;
@@ -35,7 +36,6 @@ void Skill::Load()
 		preSkillIndex = SkillIndexPhysicalTraining;
 		postSkillIndex = SkillIndexTripleThrow;
 		name = "Double Dart";
-		sp = 1;
 		maxLevel = 3;
 		cooldownInterval = 240;
 		minATT = level * level * 5;
@@ -46,8 +46,8 @@ void Skill::Load()
 	if (skillID == SkillTripleThrow)
 	{
 		preSkillIndex = SkillIndexDoubleThrow;
+		preSkillLevel = 2;
 		name = "Triple Star";
-		sp = 1;
 		maxLevel = 3;
 		cooldownInterval = 300;
 		minATT = level * level * 5;
@@ -71,7 +71,6 @@ void Skill::Load()
 		postSkillIndex = SkillIndexLifeRegeneration;
 		passive = true;
 		name = "Iron Body";
-		sp = 1;
 		maxLevel = 3;
 		minATT = level;
 		return;
@@ -81,16 +80,15 @@ void Skill::Load()
 		preSkillIndex = SkillIndexIronBody;
 		passive = true;
 		name = "Second Spring";
-		sp = 1;
 		maxLevel = 3;
 		minATT = level * 5;
 		return;
 	}
 	if (skillID == SkillMPBoost)
 	{
+		postSkillIndex = SkillIndexSummonAttack;
 		passive = true;
 		name = "Mana Regeneration";
-		sp = 1;
 		maxLevel = 3;
 		minATT = level * 10;
 		return;
@@ -99,9 +97,31 @@ void Skill::Load()
 	{
 		passive = true;
 		name = "Critical Shoot";
-		sp = 1;
 		maxLevel = 3;
 		minATT = level * 3;
+		return;
+	}
+	if (skillID == SkillSummonAttack)
+	{
+		preSkillIndex = SkillIndexMPBoost;
+		preSkillLevel = 1;
+		name = "Summon Attack";
+		sp = 2;
+		maxLevel = 3;
+		cooldownInterval = 600;
+		minATT = level * 20;
+		maxATT = level * 100;
+		manaConsume = 5 + level * 5;
+		return;
+	}
+	if (skillID == SkillSpeedup)
+	{
+		name = "Speed Up";
+		maxLevel = 3;
+		cooldownInterval = 1200;
+		minATT = level * 10;
+		maxATT = 600;
+		manaConsume = 5 + level * 5;
 		return;
 	}
 }
@@ -114,39 +134,45 @@ void Skill::refresh()
 void Skill::update()
 {
 	Player* player = Camera::Inst()->getTarget_nonConst();
-	///update cd
-	if (cooldownTick)
+	if (!passive)
 	{
-		cooldownTick++;
-		if (cooldownTick == cooldownInterval)
-			cooldownTick = 0;
+		///update cd
+		if (cooldownTick)
+		{
+			cooldownTick++;
+			if (cooldownTick == cooldownInterval)
+				cooldownTick = 0;
+		}
 	}
-	///update passive effects
-	if (skillID == SkillPhysicalTraining)
+	else
 	{
-		player->minATT += player->minATT * percentATT / 100.f;
-		player->maxATT += player->minATT * percentATT / 100.f;
-		return;
-	}
-	if (skillID == SkillLifeForce)
-	{
-		player->maxlife += minATT;
-		return;
-	}
-	if (skillID == SkillIronBody)
-	{
-		player->defense += minATT;
-		return;
-	}
-	if (skillID == SkillLifeRegeneration)
-	{
-		player->lifeRegenInterval -= player->lifeRegenInterval * minATT / 100.f;
-		return;
-	}
-	if (skillID == SkillCriticalThrow)
-	{
-		player->critChance += minATT;
-		return;
+		///update passive effects
+		if (skillID == SkillPhysicalTraining)
+		{
+			player->minATT += player->minATT * percentATT / 100.f;
+			player->maxATT += player->minATT * percentATT / 100.f;
+			return;
+		}
+		if (skillID == SkillLifeForce)
+		{
+			player->maxlife += minATT;
+			return;
+		}
+		if (skillID == SkillIronBody)
+		{
+			player->defense += minATT;
+			return;
+		}
+		if (skillID == SkillLifeRegeneration)
+		{
+			player->lifeRegenInterval -= player->lifeRegenInterval * minATT / 100.f;
+			return;
+		}
+		if (skillID == SkillCriticalThrow)
+		{
+			player->critChance += minATT;
+			return;
+		}
 	}
 }
 
@@ -172,6 +198,23 @@ void Skill::castSkill()
 		player->attacking();
 		player->attacking();
 		player->attacking();
+		return;
+	}
+	if (skillID == SkillSummonAttack)
+	{
+		player->attackingFrameTick = 40;
+		if (player->facingLeft)
+			World::Inst()->newSkillEffect(SummonMagicEffect, player->entityCenter.x, player->position.y + player->height, 0, minATT, maxATT, player->critChance);
+		else
+			World::Inst()->newSkillEffect(SummonMagicEffect, player->entityCenter.x, player->position.y + player->height, 1, minATT, maxATT, player->critChance);
+		SoundLoader::Inst()->playSound(SummonMagicUseSound);
+		return;
+	}
+	if (skillID == SkillSpeedup)
+	{
+		player->addBuff(SpeedupBuff, minATT, maxATT);
+		SoundLoader::Inst()->playSound(SpeedupSkillSound);
+		World::Inst()->newSkillEffect(SpeedupSkillEffect, player->entityCenter.x, player->position.y + player->height, 0);
 		return;
 	}
 }

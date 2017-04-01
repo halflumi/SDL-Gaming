@@ -12,6 +12,7 @@ private:
 public:
 	string name;
 	int preSkillIndex;
+	int preSkillLevel;
 	int postSkillIndex;
 	bool passive;
 	int sp;

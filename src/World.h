@@ -25,7 +25,17 @@ private:
 	static World* INSTANCE;
 	World() : newGame(false) {};
 	World(const World&);
-
+public:
+	static World* Inst()
+	{
+		if (INSTANCE == 0)
+		{
+			INSTANCE = new World();
+			return INSTANCE;
+		}
+		return INSTANCE;
+	}
+private:
 	MyTimer timer;
 	bool newGame;
 	int backgroundID;
@@ -39,6 +49,7 @@ private:
 	vector<Tile*> layer_tile;
 	vector<Sprite*> layer_foreground;
 	vector<Entity*> layer_entity;
+	vector<Object*> layer_effect;
 	vector<Projectile*> layer_projectile;
 	vector<Player*> layer_player;
 	vector<Textbox*> layer_text;
@@ -49,20 +60,11 @@ private:
 public:
 	int currentMapID;
 
-	static World* Inst()
-	{
-		if (INSTANCE == 0)
-		{
-			INSTANCE = new World();
-			return INSTANCE;
-		}
-		return INSTANCE;
-	}
-
 	vector<Sprite*>& getLayer_background() { return layer_background; }
 	vector<Tile*>& getLayer_tile() { return layer_tile; }
 	vector<Sprite*>& getLayer_foreground() { return layer_foreground; }
 	vector<Entity*>& getLayer_entity() { return layer_entity; }
+	vector<Object*>& getLayer_effect() { return layer_effect; }
 	vector<Projectile*>& getLayer_projectile() { return layer_projectile; }
 	vector<Player*>& getLayer_player() { return layer_player; }
 	vector<Textbox*>& getLayer_text() { return layer_text; }
@@ -77,9 +79,12 @@ public:
 	void updating();
 	void rendering();
 
-	void newProjectile(int id, Vector2D pos, float velocity_x, float velocity_y, Entity* owner, bool gravitational = true);
+	void newProjectile(int id, Vector2D pos, float velocity_x, float velocity_y, int minATT, int maxATT, int critChance, bool friendly, bool gravitational = true);
 	void createText(Vector2D pos, float velocity_x, float velocity_y, string text, int fontID, SDL_Color color, int lastingTime);
 	void newHostile(int id, int x, int y);
 	void newItem(int id, int stack, int x, int y);
 	void newItem(int id, int stack, int x, int y, float velocity_x, float velocity_y);
+	void newEffect(int id, int x, int y, int row);
+	void newSkillEffect(int id, int x, int y, int row, int minATT = 0, int maxATT = 0, int critChance = 0);
+	void newTile(int id, int x, int y);
 };

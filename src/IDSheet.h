@@ -7,11 +7,11 @@ std::string ScancodeToString(SDL_Scancode scannode);
 int ExpSheet(int level);
 ///const
 //global
-#define TOTALSKILLS 8
+#define TOTALSKILLS 10
 #define MAXLEVEL 10
 #define INVENTORYSIZE 36
-#define CLICKCOOLDOWN 80
-#define PRESSCOOLDOWN 100
+#define CLICKCOOLDOWN 10
+#define PRESSCOOLDOWN 10
 #define UIHEIGHT 66
 //colors
 #define COLOR_BLACK		{0,0,0}
@@ -37,7 +37,15 @@ enum SkillIndex
 	SkillIndexIronBody,
 	SkillIndexLifeRegeneration,
 	SkillIndexMPBoost,
-	SkillIndexCriticalThrow
+	SkillIndexCriticalThrow,
+	SkillIndexSummonAttack,
+	SkillIndexSpeedupSkill
+};
+
+enum TextboxGroupType
+{
+	TextEquipmentDescription,
+	TextSkillInfo
 };
 
 enum MapChangeType
@@ -64,6 +72,8 @@ enum MapChangeType
 #define TypeSkillPanel						10010013
 #define TypeSkillSlot						10010014
 #define TypeBuff							10010015
+#define TypeEffect							10010016
+#define TypeTextboxGroup					10010017
 //menuID 101
 #define MenuMain							10110000
 #define MenuOptions							10110001
@@ -122,6 +132,12 @@ enum MapChangeType
 #define ControlSkillHotkey2Button			10310217
 #define ControlSkillHotkey3Text				10310218
 #define ControlSkillHotkey3Button			10310219
+#define ControlSkillHotkey4Text				10310220
+#define ControlSkillHotkey4Button			10310221
+#define ControlSkillHotkey5Text				10310222
+#define ControlSkillHotkey5Button			10310223
+#define ControlSkillHotkey6Text				10310224
+#define ControlSkillHotkey6Button			10310225
 
 #define GameMenuBackground					10310100
 #define GameMenuBackgroundFile				"../assets/UI/GameMenuBackground.png"
@@ -160,6 +176,12 @@ enum MapChangeType
 #define SkillCriticalThrow					10610014
 #define SkillCriticalThrowIcon				10610015
 #define SkillCriticalThrowIconFile			"../assets/skills/SkillCriticalThrowIcon.png"
+#define SkillSummonAttack					10610016
+#define SkillSummonAttackIcon				10610017
+#define SkillSummonAttackIconFile			"../assets/skills/SkillSummonAttackIcon.png"
+#define SkillSpeedup						10610018
+#define SkillSpeedupIcon					10610019
+#define SkillSpeedupIconFile				"../assets/skills/SkillSpeedupIcon.png"
 //skilClass 107
 #define SkillClassHealingMagic				10710000
 #define SkillClassAttackingMagic			10710001
@@ -179,9 +201,9 @@ enum MapChangeType
 #define MainMenuPicFile						"../assets/UI/MainMenuBackground.png"
 //background 301
 #define MapBackground						30110000
-#define MapBackgroundFile					"../assets/Background.png"
+#define MapBackgroundFile					"../assets/UI/Background.png"
 #define MapBackground2						30110001
-#define MapBackground2File					"../assets/background2.png"
+#define MapBackground2File					"../assets/UI/Background2.png"
 //panel and UIs 302
 #define UIpic								30210000
 #define UIpicFile							"../assets/UI/UIpic.png"
@@ -213,6 +235,10 @@ enum MapChangeType
 #define SkillPanelMinusSkillButtonFile		"../assets/UI/SkillMinusButton.png"
 #define xpBar								30210014
 #define xpBarFile							"../assets/UI/expBar.png"
+#define CharacterWeaponSlot					30210015
+#define CharacterWeaponSlotFile				"../assets/UI/CharacterWeaponSlot.png"
+#define ItemInfoBackground					30210016
+#define ItemInfoBackgroundFile				"../assets/UI/ItemInfoBackground.png"
 //Hostile 303
 #define BlackBlock							30310000
 #define BlackBlockFile						"../assets/entities/BlackBlock.png"
@@ -238,6 +264,11 @@ enum MapChangeType
 #define MokbiDartItem						30410002
 #define MokbiDartName						"Mokbi Dart"
 #define MokbiDartItemFile					"../assets/items/MokbiDartItem.png"
+#define GoldCoinItem						30410003
+#define GoldCoinItemFile					"../assets/items/GoldCoinItem.png"
+#define SteelyThrowingKnivesItem			30410004
+#define SteelyThrowingKnivesItemName		"Steely Throwing Knives"
+#define SteelyThrowingKnivesItemFile		"../assets/items/SteelyThrowingKnivesItem.png"
 //NPC 305
 #define LeafNPC								30510000
 #define LeafNPCFile							"../assets/LeafNPC.png"
@@ -261,6 +292,10 @@ enum MapChangeType
 #define CrystalDartProjectileFile			"../assets/items/CrystalDartProjectile.png"
 #define MokbiDartProjectile					30710006
 #define MokbiDartProjectileFile				"../assets/items/MokbiDartProjectile.png"
+#define SteelyThrowingKnivesProjectile      30710007
+#define SteelyThrowingKnivesProjectileFile	"../assets/items/SteelyThrowingKnivesProjectile.png"
+
+#define SummonMagicProjectile				30710008
 //sprite 308
 #define WaterMushroomFrame					30810000
 #define WaterMushroomFrameFile				"../assets/WaterMushroomFrame.png"
@@ -296,7 +331,7 @@ enum MapChangeType
 //#define LadderSprite2File					"../assets/sprites/LadderSprite2.png"
 //Tile 309
 #define Brick								30910000
-#define BrickFile							"../assets/Brick.png"
+#define BrickFile							"../assets/tiles/Brick.png"
 #define Tile01								30910001
 #define Tile01File							"../assets/tiles/Tile01.png"
 #define Tile02								30910002
@@ -315,6 +350,15 @@ enum MapChangeType
 #define Tile08File							"../assets/tiles/Tile08.png"
 #define Tile09								30910009
 #define Tile09File							"../assets/tiles/Tile09.png"
+#define Tile_Sprite06						30910010
+//Effect 310
+#define SummonMagicEffect					31010000
+#define SummonMagicEffectFile				"../assets/effects/SummonMagicEffect.png"
+#define SpeedupSkillEffect					31010001
+#define SpeedupSkillEffectFile				"../assets/effects/SpeedupSkillEffect.png"
+//Buff 311
+#define SpeedupBuff							31110000
+#define SpeedupBuffFile						"../assets/buffs/SpeedupBuff.png"
 ///sounds 400xxxxx
 //musics 400
 #define Music01								40010000
@@ -359,15 +403,15 @@ enum MapChangeType
 #define LevelupSound						40210011
 #define LevelupSoundFile					"../sounds/LevelupSound.wav"
 #define JumpSound							40210012
-#define JumpSoundFile						"../sounds/Jump.mp3"
+#define JumpSoundFile						"../sounds/JumpSound.mp3"
 #define PlayerDamageSound					40210013
 #define PlayerDamageSoundFile				"../sounds/0100100.Damage.mp3"
 #define WrapGateNoise						40210014
 #define WrapGateNoiseFile					"../sounds/Portal.mp3"
 #define HealingMagicSound					40210015
 #define HealingMagicSoundFile				"../sounds/0001004.Use.mp3"
-#define SpeedBuffSound						40210016
-#define SpeedBuffSoundFile					"../sounds/0001004.Use.mp3"
+#define SpeedupSkillSound					40210016
+#define SpeedupSkillSoundFile				"../sounds/SpeedupSkillUse.mp3"
 
 #define DemonDamageSound					40210017
 #define DemonDamageSoundFile				"../sounds/mob/DemonDamage.wav"
@@ -393,3 +437,8 @@ enum MapChangeType
 #define PigDamageSoundFile					"../sounds/mob/PigDamage.mp3"
 #define PigDieSound							40210028	   
 #define PigDieSoundFile						"../sounds/mob/PigDie.mp3"
+
+#define SummonMagicUseSound					40210029
+#define SummonMagicUseSoundFile				"../sounds/SummonMagicUse.mp3"
+#define SummonMagicHitSound					40210030
+#define SummonMagicHitSoundFile				"..//sounds/SummonMagicHit.mp3"

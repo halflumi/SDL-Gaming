@@ -4,12 +4,9 @@
 class Camera
 {
 private:
-	Camera() : target(NULL), position(0, 0) { };
+	Camera() : target(NULL), position(0, 0), velocity(0,0) { };
 	~Camera() { };
 	static Camera* INSTANCE;
-
-	Player* target;
-	Vector2D position;
 public:
 	static Camera* Inst()
 	{
@@ -17,11 +14,15 @@ public:
 			INSTANCE = new Camera();
 		return INSTANCE;
 	}
-
-	void setPosition(float x, float y) { position.x = x; position.y = y; }
+private:
+	Player* target;
+	Vector2D position;
+	Vector2D velocity;
+public:
 	const Player* getTarget() const { return target; }
 	Player* getTarget_nonConst() const { return target; }
 	const Vector2D getPosition() const { return position; }
 
-	void Focus(Player* _target);
+	void focus(Player* _target) { target = _target; position = _target->position; }
+	void upadte();
 };

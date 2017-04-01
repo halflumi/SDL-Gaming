@@ -9,16 +9,20 @@
 #include "Dialog.h"
 #include "MyTimer.h"
 #include "Projectile.h"
+#include "Buff.h"
 
 #define TOTALATTRIBUTES 5
 
 class Player : public Entity
 {
 private:
-	MyTimer timer;
+	MyTimer frameTimer;
+	vector<Buff*> buffs;
+	int footstepTick;
 	bool onLadder;
 	bool movingUp;
 	bool movingDown;
+	float baseMaxSpeed;
 	int attackInterval;
 	int attackTick;
 	int lifeRegenTick;
@@ -34,9 +38,6 @@ private:
 	int baseInvulnerableInterval;	
 	static enum AttributesList { ATK, DEF, HP, MP, SP };
 	static const int LvUpBonus[TOTALATTRIBUTES][MAXLEVEL];
-
-	bool focused;
-	Vector2D display_pos;
 
 	void Load();
 	
@@ -57,6 +58,7 @@ private:
 	void DoInteractive(Object*);
 	void CheckPickup();
 	void HitGround();
+	void ChangeFacingDirection();
 public:
 	MyTimer keyCooldown;
 	MyTimer mouseCooldown;
@@ -70,6 +72,7 @@ public:
 	InventoryItem* leftHand_equ;
 	InventoryItem* helmet_equ;
 
+	int attackingFrameTick;
 	int expToNextLevel;
 	int lifeRegenInterval;
 	int lifeRegenAmount;
@@ -79,13 +82,10 @@ public:
 	Player(int id, int x, int y);
 	~Player();
 
-	void setFocused() { focused = true; }
-	void removeFocused() { focused = false; }
-	Vector2D& getDisplayPos() { return display_pos; }
-
 	int type() { return TypePlayer; }
 	void update();
 	void draw();
 
 	void attacking();
+	void addBuff(int buffID, int ATT, int duration);
 };

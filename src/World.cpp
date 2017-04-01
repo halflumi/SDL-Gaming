@@ -8,6 +8,7 @@
 #include "Hostile.h"
 #include "Item.h"
 #include "XmlParser.h"
+#include "Effect.h"
 
 #define LAYERCOUNT 7
 #define HealthTextPos		191, Main::Inst()->getRenderHeight() + 1
@@ -46,6 +47,8 @@ void World::initialize()
 	TextureLoader::Inst()->load(InventoryArrangeButtonFile, InventoryArrangeButton);
 	TextureLoader::Inst()->load(SkillPanelAddSkillButtonFile, SkillPanelAddSkillButton);
 	TextureLoader::Inst()->load(SkillPanelMinusSkillButtonFile, SkillPanelMinusSkillButton);
+	TextureLoader::Inst()->load(CharacterWeaponSlotFile, CharacterWeaponSlot);
+	TextureLoader::Inst()->load(ItemInfoBackgroundFile, ItemInfoBackground);
 	///Load skill icons
 	TextureLoader::Inst()->load(SkillPhysicalTrainingIconFile, SkillPhysicalTrainingIcon);
 	TextureLoader::Inst()->load(SkillDoubleThrowIconFile, SkillDoubleThrowIcon);
@@ -55,6 +58,8 @@ void World::initialize()
 	TextureLoader::Inst()->load(SkillLifeRegenerationIconFile, SkillLifeRegenerationIcon);
 	TextureLoader::Inst()->load(SkillMPBoostIconFile, SkillMPBoostIcon);
 	TextureLoader::Inst()->load(SkillCriticalThrowIconFile, SkillCriticalThrowIcon);
+	TextureLoader::Inst()->load(SkillSummonAttackIconFile, SkillSummonAttackIcon);
+	TextureLoader::Inst()->load(SkillSpeedupIconFile, SkillSpeedupIcon);
 	///Load tiles
 	TextureLoader::Inst()->load(BrickFile, Brick);
 	TextureLoader::Inst()->load(Tile01File, Tile01);
@@ -97,15 +102,23 @@ void World::initialize()
 	TextureLoader::Inst()->load(HostileWoodMobFile, HostileWoodMob);
 	TextureLoader::Inst()->load(HostileGiantCatFile, HostileGiantCat);
 	TextureLoader::Inst()->load(HostilePigNPCFile, HostilePigNPC);
-	///Load Projectiles
+	///Load projectiles
 	TextureLoader::Inst()->load(SubiDartProjectileFile, SubiDartProjectile);
 	TextureLoader::Inst()->load(IronDartProjectileFile, IronDartProjectile);
 	TextureLoader::Inst()->load(CrystalDartProjectileFile, CrystalDartProjectile);
 	TextureLoader::Inst()->load(MokbiDartProjectileFile, MokbiDartProjectile);
-	///Load Items
+	TextureLoader::Inst()->load(SteelyThrowingKnivesProjectileFile, SteelyThrowingKnivesProjectile);
+	///Load items
 	TextureLoader::Inst()->load(IronDartItemFile, IronDartItem);
 	TextureLoader::Inst()->load(CrystalDartItemFile, CrystalDartItem);
 	TextureLoader::Inst()->load(MokbiDartItemFile, MokbiDartItem);
+	TextureLoader::Inst()->load(GoldCoinItemFile, GoldCoinItem);
+	TextureLoader::Inst()->load(SteelyThrowingKnivesItemFile, SteelyThrowingKnivesItem);
+	///Load effects
+	TextureLoader::Inst()->load(SummonMagicEffectFile, SummonMagicEffect);
+	TextureLoader::Inst()->load(SpeedupSkillEffectFile, SpeedupSkillEffect);
+	///Load buffs
+	TextureLoader::Inst()->load(SpeedupBuffFile, SpeedupBuff);
 	///Load sounds
 	SoundLoader::Inst()->load(WalkOnSnow1File, WalkOnSnow1, SOUND_SFX);
 	SoundLoader::Inst()->load(WalkOnSnow2File, WalkOnSnow2, SOUND_SFX);
@@ -120,6 +133,9 @@ void World::initialize()
 	SoundLoader::Inst()->load(PlayerDamageSoundFile, PlayerDamageSound, SOUND_SFX);
 	SoundLoader::Inst()->load(WrapGateNoiseFile, WrapGateNoise, SOUND_SFX);
 	SoundLoader::Inst()->load(HealingMagicSoundFile, HealingMagicSound, SOUND_SFX);
+	SoundLoader::Inst()->load(SummonMagicUseSoundFile, SummonMagicUseSound, SOUND_SFX);
+	SoundLoader::Inst()->load(SummonMagicHitSoundFile, SummonMagicHitSound, SOUND_SFX);
+	SoundLoader::Inst()->load(SpeedupSkillSoundFile, SpeedupSkillSound, SOUND_SFX);
 
 	SoundLoader::Inst()->load(DamageSoundFile, DamageSound, SOUND_SFX);
 	SoundLoader::Inst()->load(DeathSoundFile, DeathSound, SOUND_SFX);
@@ -179,7 +195,7 @@ void World::changeMap(int mapID, MapChangeType form)
 	{
 		Player* player = new Player(PlayerFrame, 0, 0);
 		getLayer_player().push_back(player);
-		Camera::Inst()->Focus(player);
+		Camera::Inst()->focus(player);
 	}
 
 	clearWorld();
@@ -302,6 +318,7 @@ void World::changeMap(int mapID, MapChangeType form)
 		///entities
 		getLayer_entity().push_back(new Hostile(HostilePigNPC, 0, 200, height - 200));
 		///items
+		getLayer_entity().push_back(new Item(SteelyThrowingKnivesItem, 1, 500, 0));
 		return;
 	}
 }
@@ -309,40 +326,31 @@ void World::changeMap(int mapID, MapChangeType form)
 void World::AttackWave()
 {
 	int time = timer.getTicks();
-	if (time > 500 && time < 530)
+	switch (time)
 	{
+	case 30:
+	case 330:
+	case 630:
+	case 930:
+	case 1230:
+	case 1530:
+	case 1830:
+	case 2130:
 		newHostile(HostileWoodMob, width - 10, 0);
-	}
-	else if (time > 10500 && time < 10530)
-	{
-		newHostile(HostileWoodMob, width - 10, 0);
-	}
-	else if (time > 20500 && time < 20530)
-	{
-		newHostile(HostileWoodMob, width - 10, 0);
-	}
-	else if (time > 30500 && time < 30530)
-	{
-		newHostile(HostileWoodMob, width - 10, 0);
-	}
-	else if (time > 40500 && time < 40530)
-	{
+		break;
+	case 2730:
+	case 3030:
 		newHostile(HostileSkeleton, width - 10, 0);
-	}
-	else if (time > 60500 && time < 60530)
-	{
-		newHostile(HostileSkeleton, width - 10, 0);
-	}
-	else if (time > 80500 && time < 80530)
-	{
+		break;
+	case 3630:
+	case 3700:
 		newHostile(HostileGiantCat, width - 10, 0);
-	}
-	else if (time > 120500 && time < 120530)
-	{
+		break;
+	case 4000:
+	case 4300:
 		newHostile(HostileGhostMob, width - 10, 0);
-	}
-	else if (time > 245500 && time < 245530)
-	{
+		break;
+	case 4900:
 		newHostile(DemonHostile, width - 10, 0);
 	}
 }
@@ -352,7 +360,11 @@ void World::updating()
 	int k, i;
 	int len;
 
+	//update camera to focused player
+	Camera::Inst()->upadte();
+	//demo attack wave
 	AttackWave();
+
 	//update background
 	len = layer_background.size();
 	for (i = 0; i < len; i++)
@@ -379,6 +391,11 @@ void World::updating()
 	len = layer_player.size();
 	for (i = 0; i < len; i++)
 		layer_player[i]->update();
+	//update effects
+	len = layer_effect.size();
+	for (i = 0; i < len; i++)
+		if (layer_effect[i]->active)
+			layer_effect[i]->update();
 	//update texts
 	len = layer_text.size();
 	for (i = 0; i < len; i++)
@@ -420,6 +437,11 @@ void World::rendering()
 	len = layer_player.size();
 	for (i = 0; i < len; i++)
 		layer_player[i]->draw();
+	//render effects
+	len = layer_effect.size();
+	for (i = 0; i < len; i++)
+		if (layer_effect[i]->active)
+			layer_effect[i]->draw();
 	//render texts
 	len = layer_text.size();
 	for (i = 0; i < len; i++)
@@ -468,7 +490,7 @@ void World::RenderUI()
 	xpNumText.draw();
 }
 
-void World::newProjectile(int id, Vector2D pos, float velocity_x, float velocity_y, Entity* owner, bool gravitational)
+void World::newProjectile(int id, Vector2D pos, float velocity_x, float velocity_y, int minATT, int maxATT, int critChance, bool friendly, bool gravitational)
 {
 	vector<Projectile*>& projectiles = getLayer_projectile();
 	int len = projectiles.size();
@@ -478,12 +500,12 @@ void World::newProjectile(int id, Vector2D pos, float velocity_x, float velocity
 		if (!projectiles[i]->active)
 		{
 			delete projectiles[i];
-			projectiles[i] = new Projectile(id, i, pos, velocity_x, velocity_y, owner, gravitational);
+			projectiles[i] = new Projectile(id, i, pos, velocity_x, velocity_y, minATT, maxATT, critChance, friendly, gravitational);
 			return;
 		}
 	}
 
-	projectiles.push_back(new Projectile(id, len, pos, velocity_x, velocity_y, owner, gravitational));
+	projectiles.push_back(new Projectile(id, len, pos, velocity_x, velocity_y, minATT, maxATT, critChance, friendly, gravitational));
 }
 
 void World::createText(Vector2D pos, float velocity_x, float velocity_y, string text, int fontID, SDL_Color color, int lastingTime)
@@ -556,4 +578,45 @@ void World::newItem(int id, int stack, int x, int y, float velocity_x, float vel
 	}
 
 	entites.push_back(new Item(id, stack, x, y, velocity_x, velocity_y));
+}
+
+void World::newEffect(int id, int x, int y, int row)
+{
+	vector<Object*>& effects = getLayer_effect();
+	int len = effects.size();
+	int i;
+	for (i = 0; i < len; i++)
+	{
+		if (effects[i]->active)
+		{
+			delete effects[i];
+			effects[i] = new Effect(id, x, y, row);
+			return;
+		}
+	}
+
+	effects.push_back(new Effect(id, x, y, row));
+}
+
+void World::newSkillEffect(int id, int x, int y, int row, int minATT, int maxATT, int critChance)
+{
+	vector<Object*>& effects = getLayer_effect();
+	int len = effects.size();
+	int i;
+	for (i = 0; i < len; i++)
+	{
+		if (effects[i]->active)
+		{
+			delete effects[i];
+			effects[i] = new Effect(id, x, y, row, minATT, maxATT, critChance);
+			return;
+		}
+	}
+
+	effects.push_back(new Effect(id, x, y, row, minATT, maxATT, critChance));
+}
+
+void World::newTile(int id, int x, int y)
+{
+	layer_tile.push_back(new Tile(id, x, y));
 }

@@ -13,21 +13,33 @@ using namespace std;
 class Main
 {
 private:
-	Main() : keyCooldown(true) {}
+	Main() {}
 	~Main() {}
 	Main(const Main&);
 	static Main* INSTANCE;
+public:
+	static Main* Inst()
+	{
+		if (INSTANCE == 0)
+		{
+			INSTANCE = new Main();
+			return INSTANCE;
+		}
 
-	MyTimer keyCooldown;
+		return INSTANCE;
+	}
+private:
+	MyTimer* keyCooldown;
 	SDL_Window* window;
 	SDL_Renderer* renderer;
 	unordered_map<int, TTF_Font*> theFont;
 
 	bool _running;
+	
 	int windowWidth;
 	int windowHeight;
 	int currentMenu;
-
+	int frameTick;
 	bool HandleMenuEvents();
 	void UpdateMenu();
 	void RenderMenu();
@@ -40,17 +52,6 @@ public:
 	bool inGameMenu;
 	vector<Button*> menuButtons;
 
-	static Main* Inst()
-	{
-		if (INSTANCE == 0)
-		{
-			INSTANCE = new Main();
-			return INSTANCE;
-		}
-
-		return INSTANCE;
-	}
-
 	SDL_Window* getWindow() const { return window; }
 	SDL_Renderer* getRenderer() const { return renderer; }
 	TTF_Font* getFont(int fontID) { return theFont[fontID]; }
@@ -58,6 +59,7 @@ public:
 	int getWindowHeight() const { return windowHeight; }
 	int getRenderWidth() const { return renderWidth; }
 	int getRenderHeight() const { return renderHeight; }
+	int getFrameTick() const { return frameTick; }
 	bool isRunning() { return _running; }
 	void quit() { _running = false; }
 

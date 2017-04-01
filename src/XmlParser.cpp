@@ -174,6 +174,30 @@ void XmlParser::load()
 		error = element->QueryIntText((SDL_Keycode*)&key_skillHotkey3);
 	if (error != XML_SUCCESS)
 		cout << "XML_ERROR passing key_skillHotkey3 value to the variable." << endl;
+	///key_skillHotkey4
+	element = node->FirstChildElement("key_skillHotkey4");
+	if (element == nullptr)
+		cout << "XML_ERROR getting key_skillHotkey4 element from the node." << endl;
+	else
+		error = element->QueryIntText((SDL_Keycode*)&key_skillHotkey4);
+	if (error != XML_SUCCESS)
+		cout << "XML_ERROR passing key_skillHotkey4 value to the variable." << endl;
+	///key_skillHotkey5
+	element = node->FirstChildElement("key_skillHotkey5");
+	if (element == nullptr)
+		cout << "XML_ERROR getting key_skillHotkey5 element from the node." << endl;
+	else
+		error = element->QueryIntText((SDL_Keycode*)&key_skillHotkey5);
+	if (error != XML_SUCCESS)
+		cout << "XML_ERROR passing key_skillHotkey5 value to the variable." << endl;
+	///key_skillHotkey6
+	element = node->FirstChildElement("key_skillHotkey6");
+	if (element == nullptr)
+		cout << "XML_ERROR getting key_skillHotkey6 element from the node." << endl;
+	else
+		error = element->QueryIntText((SDL_Keycode*)&key_skillHotkey6);
+	if (error != XML_SUCCESS)
+		cout << "XML_ERROR passing key_skillHotkey6 value to the variable." << endl;
 }
 
 void XmlParser::save()
@@ -256,6 +280,18 @@ void XmlParser::save()
 	///key_skillHotkey3
 	element = xmlFile.NewElement("key_skillHotkey3");
 	element->SetText(key_skillHotkey3);
+	node->InsertEndChild(element);
+	///key_skillHotkey4
+	element = xmlFile.NewElement("key_skillHotkey4");
+	element->SetText(key_skillHotkey4);
+	node->InsertEndChild(element);
+	///key_skillHotkey5
+	element = xmlFile.NewElement("key_skillHotkey5");
+	element->SetText(key_skillHotkey5);
+	node->InsertEndChild(element);
+	///key_skillHotkey6
+	element = xmlFile.NewElement("key_skillHotkey6");
+	element->SetText(key_skillHotkey6);
 	node->InsertEndChild(element);
 
 	error = xmlFile.SaveFile(SettingsFile);
@@ -340,6 +376,14 @@ void XmlParser::loadCharacter()
 		inventory[i] = temp;
 		listElement = listElement->NextSiblingElement("item");
 	}
+	///gold
+	element = node->FirstChildElement("gold");
+	if (element == nullptr)
+		cout << "XML_ERROR getting gold element from the node." << endl;
+	else
+		error = element->QueryIntText(&gold);
+	if (error != XML_SUCCESS)
+		cout << "XML_ERROR passing gold value to the variable." << endl;
 }
 
 void XmlParser::saveCharacter()
@@ -383,6 +427,10 @@ void XmlParser::saveCharacter()
 		listElement->SetText(item->stack);
 		element->InsertEndChild(listElement);
 	}
+	node->InsertEndChild(element);
+	///gold
+	element = xmlFile.NewElement("gold");
+	element->SetText(player->gold);
 	node->InsertEndChild(element);
 
 	error = xmlFile.SaveFile(SavedataFile);

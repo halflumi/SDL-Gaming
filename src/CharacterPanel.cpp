@@ -4,6 +4,7 @@
 #include "Inputor.h"
 #include "Camera.h"
 
+#define GRIDSIZE 46
 #define TITLEHEIGHT 53
 #define LEVEL_X 97
 #define LEVEL_Y 232
@@ -89,6 +90,8 @@ void CharacterPanel::draw()
 	rightHandSlot->draw();
 	leftHandSlot->draw();
 	helmetSlot->draw();
+	if (!rightHandSlot->active)
+		TextureLoader::Inst()->draw(CharacterWeaponSlot, rightHandSlot->position.x, rightHandSlot->position.y, GRIDSIZE, GRIDSIZE);
 }
 
 bool CharacterPanel::outsideCheckMouseTitle()

@@ -12,30 +12,30 @@ bool operator==(SDL_Color& color, SDL_Color& _color)
 
 Textbox::Textbox() : textTexture(NULL)
 {
-	maxlife = -2;
+	duration = -2;
 }
 
-Textbox::Textbox(Vector2D pos, string _text, int _fontID, SDL_Color _color, int lastingTime, bool _messageBox) : textTexture(NULL)
+Textbox::Textbox(Vector2D pos, string _text, int _fontID, SDL_Color _color, int lastingTime) : timer(true)
 {
-	messageBox = _messageBox;
+	textTexture = NULL;
 	position = pos;
 	text = _text;
 	fontID = _fontID;
 	color = _color;
-	maxlife = lastingTime;
+	duration = lastingTime;
 	Load();
 }
 
-Textbox::Textbox(Vector2D pos, float velocity_x, float velocity_y, string _text, int _fontID, SDL_Color _color, int lastingTime) : textTexture(NULL)
+Textbox::Textbox(Vector2D pos, float velocity_x, float velocity_y, string _text, int _fontID, SDL_Color _color, int lastingTime) : timer(true)
 {
-	messageBox = false;
+	textTexture = NULL;
 	position = pos;
 	velocity.x = velocity_x;
 	velocity.y = velocity_y;
 	text = _text;
 	fontID = _fontID;
 	color = _color;
-	maxlife = lastingTime;
+	duration = lastingTime;
 	Load();
 }
 
@@ -98,31 +98,27 @@ void Textbox::Load()
 
 void Textbox::update()
 {
-	if (maxlife < 0)
+	if (duration < 0) // UI text
 		return;
 
 	VisiableCheck();
 
-	if (maxlife > 0 && life > maxlife)
+	if (timer.getTicks() > duration)
 	{
 		active = false;
 		return;
 	}
-	life++;
-
-	Entity::update();
-	if(life < 60)
+	/// upfloat for 0.8 sec
+	if (timer.getTicks() < 48)
 		position += velocity;
+	else
+		alpha -= 10;
 }
 
 void Textbox::draw()
 {
 	if (active)
 	{
-		if (messageBox)
-		{
-			TextureLoader::Inst()->drawFrameEx(MessageboxMask, position.x - Camera::Inst()->getPosition().x + Main::Inst()->getRenderWidth() / 2, position.y - Camera::Inst()->getPosition().y + Main::Inst()->getRenderHeight() / 2, 10, 10, width, height, 0, 0, 0, 255);
-		}
 		drawText();
 	}
 }
@@ -131,7 +127,7 @@ void Textbox::drawText(SDL_RendererFlip flip)
 {
 	SDL_Rect destRect;
 
-	if (maxlife != -1)
+	if (duration != -1)
 	{
 		destRect.x = position.x - Camera::Inst()->getPosition().x + Main::Inst()->getRenderWidth() / 2;
 		destRect.y = position.y - Camera::Inst()->getPosition().y + Main::Inst()->getRenderHeight() / 2;

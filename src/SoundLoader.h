@@ -20,9 +20,6 @@ private:
 	SoundLoader() {};
 	~SoundLoader();
 	SoundLoader(const SoundLoader&);
-
-	unordered_map<int, Mix_Chunk*> sfxs;
-	unordered_map<int, Mix_Music*> musics;
 public:
 	static SoundLoader* Inst()
 	{
@@ -33,7 +30,10 @@ public:
 		}
 		return INSTANCE;
 	}
-
+private:
+	unordered_map<int, Mix_Chunk*> sfxs;
+	unordered_map<int, Mix_Music*> musics;
+public:
 	bool load(string fileName, int id, sound_type type);
 
 	void applyVolumn();

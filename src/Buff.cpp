@@ -1,22 +1,44 @@
 #include "Buff.h"
+#include "TextureLoader.h"
+#include "Camera.h"
+#include "Main.h"
 
-Buff::Buff(int buffID, int lastingTime)
+#define BUFFSIZE 32
+
+Buff::Buff(int buffID, int _ATT, int lastingTime) : timer(true)
 {
 	uniqueID = buffID;
-	lastingTicks = lastingTime;
+	ATT = _ATT;
+	duration = lastingTime;
+	Load();
 }
 
 void Buff::Load()
 {
-
+	width = height = BUFFSIZE;
 }
 
 void Buff::update()
 {
+	Player* player = Camera::Inst()->getTarget_nonConst();
 
+	if (timer.getTicks() > duration)
+		active = false;
+
+	if (uniqueID == SpeedupBuff)
+	{
+		player->maxSpeed += player->maxSpeed * ATT / 100.f;
+		return;
+	}
 }
 
 void Buff::draw()
 {
+	TextureLoader::Inst()->draw(uniqueID, position.x, Main::Inst()->getRenderHeight() - height, width, height);
+}
 
+void Buff::extend()
+{
+	active = true;
+	timer.start();
 }

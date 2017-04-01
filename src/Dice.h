@@ -9,8 +9,6 @@ private:
 	static Dice* INSTANCE;
 	Dice() {};
 	Dice(const Dice&);
-
-	random_device random_generator;
 public:
 	static Dice* Inst()
 	{
@@ -21,7 +19,9 @@ public:
 		}
 		return INSTANCE;
 	}
-
+private:
+	random_device random_generator;
+public:
 	int rand(int max);
 	int rand(int min, int max);
 	int randInverse(int max);

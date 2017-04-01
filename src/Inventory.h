@@ -4,7 +4,7 @@
 #include "IDSheet.h"
 #include "Button.h"
 #include "MyTimer.h"
-#include "Textbox.h"
+#include "TextboxGroup.h"
 #include "Item.h"
 
 using namespace std;
@@ -17,12 +17,10 @@ private:
 	
 	void Load();
 	void InitItemInfo();
-	void UpdateItemInfo();
-	void RenderItemInfo();
 	bool CheckMouseOver_slot();
 public:
 	Textbox* stackNumText;
-	vector<Textbox*> itemInfoTexts;
+	TextboxGroup itemInfoTexts;
 	bool stackable;
 	int stack;
 	int maxStack;
@@ -51,12 +49,14 @@ class Inventory : public Object
 private:
 	int inventorySize;
 
+	Textbox* goldNumText;
 	Button closeButton;
 	Button rearrangeButton;
 
 	void Load();
 public:
 	vector<InventoryItem*> items;
+	int gold;
 
 	Inventory();
 	~Inventory() { items.clear(); }

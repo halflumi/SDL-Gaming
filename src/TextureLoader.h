@@ -13,8 +13,6 @@ private:
 	~TextureLoader() {}
 	TextureLoader(const TextureLoader&);
 	static TextureLoader* INSTANCE;
-
-	unordered_map<int, SDL_Texture*> textureMap;
 public:
 	static TextureLoader* Inst()
 	{
@@ -26,7 +24,9 @@ public:
 
 		return INSTANCE;
 	}
-
+private:
+	unordered_map<int, SDL_Texture*> textureMap;
+public:
 	unordered_map<int, SDL_Texture*>& getTextureMap() { return textureMap; }
 
 	bool load(string fileName, int id);

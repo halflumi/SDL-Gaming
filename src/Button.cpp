@@ -54,6 +54,12 @@
 #define ControlSkillHotkey2ButtonPos	MAINMENU_X + 650,MAINMENU_Y - 100
 #define ControlSkillHotkey3TestPos		MAINMENU_X + 400,MAINMENU_Y - 50
 #define ControlSkillHotkey3ButtonPos	MAINMENU_X + 650,MAINMENU_Y - 50
+#define ControlSkillHotkey4TestPos		MAINMENU_X + 400,MAINMENU_Y
+#define ControlSkillHotkey4ButtonPos	MAINMENU_X + 650,MAINMENU_Y
+#define ControlSkillHotkey5TestPos		MAINMENU_X + 400,MAINMENU_Y + 50
+#define ControlSkillHotkey5ButtonPos	MAINMENU_X + 650,MAINMENU_Y + 50
+#define ControlSkillHotkey6TestPos		MAINMENU_X + 400,MAINMENU_Y + 100
+#define ControlSkillHotkey6ButtonPos	MAINMENU_X + 650,MAINMENU_Y + 100
 
 #define GAMEMENU_X 50
 #define GAMEMENU_Y Main::Inst()->getWindowHeight()
@@ -416,6 +422,51 @@ void Button::Load()
 		TTF_SizeText(Main::Inst()->getFont(arial28_bold), ScancodeToString(XmlParser::Inst()->key_skillHotkey3).c_str(), &width, &height);
 		return;
 	}
+	if (uniqueID == ControlSkillHotkey4Text)
+	{
+		buttonClass = ButtonTypeTextbox;
+		position.set(ControlSkillHotkey4TestPos);
+		buttonText = new Textbox(position, "Skill Hotkey4", arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), "Skill Hotkey4", &width, &height);
+		return;
+	}
+	if (uniqueID == ControlSkillHotkey4Button)
+	{
+		position.set(ControlSkillHotkey4ButtonPos);
+		buttonText = new Textbox(position, ScancodeToString(XmlParser::Inst()->key_skillHotkey4), arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), ScancodeToString(XmlParser::Inst()->key_skillHotkey4).c_str(), &width, &height);
+		return;
+	}
+	if (uniqueID == ControlSkillHotkey5Text)
+	{
+		buttonClass = ButtonTypeTextbox;
+		position.set(ControlSkillHotkey5TestPos);
+		buttonText = new Textbox(position, "Skill Hotkey5", arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), "Skill Hotkey5", &width, &height);
+		return;
+	}
+	if (uniqueID == ControlSkillHotkey5Button)
+	{
+		position.set(ControlSkillHotkey5ButtonPos);
+		buttonText = new Textbox(position, ScancodeToString(XmlParser::Inst()->key_skillHotkey5), arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), ScancodeToString(XmlParser::Inst()->key_skillHotkey5).c_str(), &width, &height);
+		return;
+	}
+	if (uniqueID == ControlSkillHotkey6Text)
+	{
+		buttonClass = ButtonTypeTextbox;
+		position.set(ControlSkillHotkey6TestPos);
+		buttonText = new Textbox(position, "Skill Hotkey6", arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), "Skill Hotkey6", &width, &height);
+		return;
+	}
+	if (uniqueID == ControlSkillHotkey6Button)
+	{
+		position.set(ControlSkillHotkey6ButtonPos);
+		buttonText = new Textbox(position, ScancodeToString(XmlParser::Inst()->key_skillHotkey6), arial28_bold, COLOR_WHITE, -1);
+		TTF_SizeText(Main::Inst()->getFont(arial28_bold), ScancodeToString(XmlParser::Inst()->key_skillHotkey6).c_str(), &width, &height);
+		return;
+	}
 	//game menu
 	if (uniqueID == GameMenuBackground)
 	{
@@ -600,7 +651,7 @@ void Button::update()
 		buttonText->changeText(to_string(XmlParser::Inst()->volumn_sfx));
 	}
 	//control menu
-	if (uniqueID == ControlMovingUpButton || uniqueID == ControlMovingDownButton || uniqueID == ControlMovingLeftButton || uniqueID == ControlMovingRightButton || uniqueID == ControlCharacterPanelButton || uniqueID == ControlSkillPanelButton || uniqueID == ControlInventoryButton)
+	if (uniqueID == ControlMovingUpButton || uniqueID == ControlMovingDownButton || uniqueID == ControlMovingLeftButton || uniqueID == ControlMovingRightButton || uniqueID == ControlCharacterPanelButton || uniqueID == ControlSkillPanelButton || uniqueID == ControlInventoryButton || uniqueID == ControlSkillHotkey1Button || uniqueID == ControlSkillHotkey2Button || uniqueID == ControlSkillHotkey3Button || uniqueID == ControlSkillHotkey4Button || uniqueID == ControlSkillHotkey5Button || uniqueID == ControlSkillHotkey6Button)
 	{
 		if (checkMouseOver())
 			buttonText->changeColor(COLOR_PURPLE);

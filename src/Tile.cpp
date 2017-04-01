@@ -50,6 +50,12 @@ void Tile::Load()
 		height = 60;
 		return;
 	}
+	if (uniqueID == Tile_Sprite06)
+	{
+		width = 84;
+		height = 11;
+		return;
+	}
 }
 
 void Tile::update()

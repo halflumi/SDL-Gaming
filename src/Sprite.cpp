@@ -2,6 +2,7 @@
 #include "Main.h"
 #include "TextureLoader.h"
 #include "Camera.h"
+#include "World.h"
 
 Sprite::Sprite(int id, int x, int y)
 {
@@ -31,7 +32,7 @@ void Sprite::Load()
 	if (uniqueID == LadderSprite)
 	{
 		width = 54;
-		height = 167;
+		height = 198;
 		return;
 	}
 	if (uniqueID == MapGate)
@@ -79,7 +80,8 @@ void Sprite::Load()
 	if (uniqueID == Sprite06)
 	{
 		width = 394;
-		height = 636;		
+		height = 636;
+		World::Inst()->newTile(Tile_Sprite06, position.x + 84, position.y + 420);
 		return;
 	}
 	if (uniqueID == Sprite07)

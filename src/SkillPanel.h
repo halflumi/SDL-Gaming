@@ -2,7 +2,7 @@
 #include <vector>
 #include "Object.h"
 #include "Button.h"
-#include "Textbox.h"
+#include "TextboxGroup.h"
 #include "Skill.h"
 
 using namespace std;
@@ -10,7 +10,7 @@ using namespace std;
 class SkillSlot : public Object
 {
 private:
-	vector<Textbox*> skillInfoTexts;
+	TextboxGroup skillInfoTexts;
 	Textbox* levelNumText;
 	bool mouseAbove;
 

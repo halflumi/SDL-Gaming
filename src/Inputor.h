@@ -19,17 +19,6 @@ private:
 	~Inputor() { }
 	Inputor(const Inputor&);
 	static Inputor* INSTANCE;
-
-	const Uint8* keystates;
-    vector<bool> mousestates;
-	Vector2D mousePosition_old;
-	Vector2D mousePosition;
-
-	void OnKeyDown();
-	void OnKeyUp();
-	void OnMouseMove(SDL_Event & event);
-	void OnMouseButtonDown(SDL_Event & event);
-	void OnMouseButtonUp(SDL_Event & event);
 public:
 	static Inputor* Inst()
 	{
@@ -41,7 +30,18 @@ public:
 
 		return INSTANCE;
 	}
+private:
+	const Uint8* keystates;
+    vector<bool> mousestates;
+	Vector2D mousePosition_old;
+	Vector2D mousePosition;
 
+	void OnKeyDown();
+	void OnKeyUp();
+	void OnMouseMove(SDL_Event & event);
+	void OnMouseButtonDown(SDL_Event & event);
+	void OnMouseButtonUp(SDL_Event & event);
+public:
 	void updating();
 
 	bool isKeyDown(SDL_Scancode key) const;

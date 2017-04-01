@@ -6,17 +6,20 @@
 #include "SoundLoader.h"
 #include "Camera.h"
 #include "Dice.h"
+#include "Hostile.h"
 
 #define PI 3.1415926F
 
-Projectile::Projectile(int id, int _worldID, Vector2D pos, float velocity_x, float velocity_y, Entity* _owner, bool gravitational)
+Projectile::Projectile(int id, int _worldID, Vector2D pos, float velocity_x, float velocity_y, int _minATT, int _maxATT, int _critChance, bool _friendly, bool gravitational)
 {
+	friendly = _friendly;
 	position = pos;
 	uniqueID = id;
 	worldID = _worldID;
-	velocity.x = velocity_x;
-	velocity.y = velocity_y;
-	owner = _owner;
+	velocity.set(velocity_x,velocity_y);
+	minATT = _minATT;
+	maxATT = _maxATT;
+	critChance = _critChance;
 	Load();
 }
 
@@ -24,29 +27,50 @@ void Projectile::Load()
 {
 	penetrate = 1;
 
+	///darts
 	if (uniqueID == SubiDartProjectile)
 	{
-		width = 27;
-		height = 27;
+		width = 19;
+		height = 19;
+		numFrames = 2;
 		return;
 	}
 	if (uniqueID == IronDartProjectile)
 	{
-		width = 27;
-		height = 27;
+		width = 19;
+		height = 20;
+		numFrames = 2;
 		return;
 	}
 	if (uniqueID == CrystalDartProjectile)
 	{
 		width = 27;
 		height = 27;
+		numFrames = 2;
 		return;
 	}
 	if (uniqueID == MokbiDartProjectile)
 	{
-		width = 28;
-		height = 28;
+		width = 23;
+		height = 22;
+		numFrames = 2;
 		penetrate = 2;
+		return;
+	}
+	if (uniqueID == SteelyThrowingKnivesProjectile)
+	{
+		width = 48;
+		height = 9;
+		numFrames = 2;
+		penetrate = 2;
+		return;
+	}
+	///skill effects
+	if (uniqueID == SummonMagicProjectile)
+	{
+		width = 120;
+		height = 20;
+		penetrate = -1;
 		return;
 	}
 }
@@ -72,7 +96,9 @@ void Projectile::update()
 	}
 
 	VisiableCheck();
+	currentFrame = int(((frameTimer.getTicks() / animatedSpeed) % numFrames));
 
+	///darts
 	if (uniqueID == SubiDartProjectile)
 	{
 		angle += 10.F;
@@ -109,6 +135,24 @@ void Projectile::update()
 		if (life > 60)
 			acceleration.y = GRAVITY;
 		if (life > 300)
+			Kill();
+		life++;
+		return;
+	}
+	if (uniqueID == SteelyThrowingKnivesProjectile)
+	{
+		angle = atan2(velocity.y, velocity.x) * 180.F / PI + 180.F;
+		if (life > 120)
+			acceleration.y = GRAVITY;
+		if (life > 300)
+			Kill();
+		life++;
+		return;
+	}
+	///skill effects
+	if (uniqueID == SummonMagicProjectile)
+	{
+		if (life > 15)
 			Kill();
 		life++;
 		return;
@@ -147,13 +191,13 @@ bool Projectile::CollisionCheck_tile(Vector2D newpos)
 	int len = objects.size();
 	for (i = 0; i < len; i++)
 	{
-		if (pBottom <= objects[i]->getPosition().y)
+		if (pBottom <= objects[i]->position.y)
 			continue;
-		if (newpos.y >= objects[i]->getPosition().y + objects[i]->getHeight())
+		if (newpos.y >= objects[i]->position.y + objects[i]->height)
 			continue;
-		if (pRight <= objects[i]->getPosition().x)
+		if (pRight <= objects[i]->position.x)
 			continue;
-		if (newpos.x >= objects[i]->getPosition().x + objects[i]->getWidth())
+		if (newpos.x >= objects[i]->position.x + objects[i]->width)
 			continue;
 
 		return true;
@@ -168,6 +212,7 @@ bool Projectile::CollisionCheck_entity(Vector2D newpos)
 	int pBottom = newpos.y + height;
 
 	vector<Entity*>& entities = World::Inst()->getLayer_entity();
+	Hostile* mob;
 	int i;
 	int len = entities.size();
 	bool attacked;
@@ -175,11 +220,12 @@ bool Projectile::CollisionCheck_entity(Vector2D newpos)
 	{
 		if (entities[i]->type() != TypeHostile)
 			continue;
-		if (!entities[i]->active || entities[i]->friendly)
+		if (!entities[i]->active || entities[i]->friendly == friendly)
 			continue;
+		mob = (Hostile*)entities[i];
 		attacked = false;
 		for (auto it = attackedTargets.begin(); it != attackedTargets.end(); it++)
-			if (*it == entities[i]->worldID)
+			if (*it == mob->worldID)
 			{
 				attacked = true;
 				break;
@@ -187,17 +233,18 @@ bool Projectile::CollisionCheck_entity(Vector2D newpos)
 		if (attacked)
 			continue;
 
-		if (pBottom <= entities[i]->getPosition().y)
+		if (pBottom <= mob->position.y)
 			continue;
-		if (newpos.y >= entities[i]->getPosition().y + entities[i]->getHeight())
+		if (newpos.y >= mob->position.y + mob->height)
 			continue;
-		if (pRight <= entities[i]->getPosition().x)
+		if (pRight <= mob->position.x)
 			continue;
-		if (newpos.x >= entities[i]->getPosition().x + entities[i]->getWidth())
+		if (newpos.x >= mob->position.x + mob->width)
 			continue;
+		//cout << uniqueID << ' ' << friendly << endl;
 
-		attackedTargets.push_back(entities[i]->worldID);
-		entities[i]->onHit(Dice::Inst()->rand(owner->minATT, owner->maxATT), owner->critChance);
+		attackedTargets.push_back(mob->worldID);
+		mob->onHit(Dice::Inst()->rand(minATT, maxATT), Dice::Inst()->rand(100) < critChance);
 		penetrate--;
 		if(penetrate == 0)
 			return true;
