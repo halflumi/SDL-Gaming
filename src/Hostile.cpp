@@ -498,6 +498,10 @@ void Hostile::kill()
 
 	///drop
 	World::Inst()->newItem(GoldCoinItem, Dice::Inst()->rand(100), entityCenter.x + Dice::Inst()->randInverse(20), entityCenter.y);
+
+	if (Dice::Inst()->rand(3) == 0)
+		World::Inst()->newItem(HealthPotionItem, Dice::Inst()->rand(1, 10), entityCenter.x + Dice::Inst()->randInverse(20), entityCenter.y);
+
 	if (Dice::Inst()->rand(10) == 0)
 		World::Inst()->newItem(IronDartItem, 1, entityCenter.x + Dice::Inst()->randInverse(20), entityCenter.y);
 	else if (Dice::Inst()->rand(15) == 0)

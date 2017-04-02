@@ -35,9 +35,9 @@ void CharacterPanel::Load()
 	height = 354;
 	position.x = 100;
 	position.y = 100;
-	rightHandSlot = new InventoryItem(NULL, NULL);
-	leftHandSlot = new InventoryItem(NULL, NULL);
-	helmetSlot = new InventoryItem(NULL, NULL);
+	rightHandSlot = new InventoryItem(NULL, NULL, ItemslotTypeRighthand);
+	leftHandSlot = new InventoryItem(NULL, NULL, ItemslotTypeLefthand);
+	helmetSlot = new InventoryItem(NULL, NULL, ItemslotTypeHelmet);
 }
 
 void CharacterPanel::update()

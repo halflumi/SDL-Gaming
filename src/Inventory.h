@@ -25,7 +25,8 @@ public:
 	int stack;
 	int maxStack;
 
-	int itemClass;
+	ItemType itemType;
+	ItemslotType slotType;
 	bool beingPicked;
 	Vector2D slotpos;
 
@@ -33,7 +34,7 @@ public:
 	int maxATT;
 	int defense;
 
-	InventoryItem(int id, int stack);
+	InventoryItem(int id, int stack, ItemslotType slotType);
 	~InventoryItem() { delete selectCooldown; delete stackNumText; }
 	void init(int id, int stack);
 

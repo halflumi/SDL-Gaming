@@ -33,7 +33,7 @@ void Item::Load()
 		height = 27;
 		return;
 	}
-	if(uniqueID == CrystalDartItem)
+	if (uniqueID == CrystalDartItem)
 	{
 		width = 27;
 		height = 27;
@@ -55,6 +55,11 @@ void Item::Load()
 	if (uniqueID == SteelyThrowingKnivesItem)
 	{
 		width = height = 29;
+		return;
+	}
+	if (uniqueID == HealthPotionItem)
+	{
+		width = height = 27;
 		return;
 	}
 }

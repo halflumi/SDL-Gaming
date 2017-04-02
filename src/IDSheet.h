@@ -42,6 +42,22 @@ enum SkillIndex
 	SkillIndexSpeedupSkill
 };
 
+enum ItemType
+{
+	ItemTypeWeapon,
+	ItemTypeHelmet,
+	ItemTypeMiscellaneous
+};
+
+enum ItemslotType
+{
+	ItemslotTypeInventory,
+	ItemslotTypeSplited,
+	ItemslotTypeRighthand,
+	ItemslotTypeLefthand,
+	ItemslotTypeHelmet
+};
+
 enum TextboxGroupType
 {
 	TextEquipmentDescription,
@@ -269,6 +285,9 @@ enum MapChangeType
 #define SteelyThrowingKnivesItem			30410004
 #define SteelyThrowingKnivesItemName		"Steely Throwing Knives"
 #define SteelyThrowingKnivesItemFile		"../assets/items/SteelyThrowingKnivesItem.png"
+#define HealthPotionItem					30410005
+#define HealthPotionItemName				"Health Potion"
+#define HealthPotionItemFile				"../assets/items/HealthPotionItem.png"
 //NPC 305
 #define LeafNPC								30510000
 #define LeafNPCFile							"../assets/LeafNPC.png"

@@ -17,7 +17,7 @@
 #define CloseButtonPos		position.x + 260, position.y + 2
 #define RearrangeButtonPos	position.x + 261, position.y + 355
 
-InventoryItem::InventoryItem(int id, int _stack) : itemInfoTexts(-1, TextEquipmentDescription)
+InventoryItem::InventoryItem(int id, int _stack, ItemslotType _slotType) : itemInfoTexts(-1, TextEquipmentDescription)
 {
 	if (id == NULL)
 		active = false;
@@ -25,6 +25,7 @@ InventoryItem::InventoryItem(int id, int _stack) : itemInfoTexts(-1, TextEquipme
 	selectCooldown = NULL;
 	uniqueID = id;
 	stack = _stack;
+	slotType = _slotType;
 	Load();
 }
 
@@ -53,7 +54,7 @@ void InventoryItem::Load()
 	if (uniqueID == IronDartItem)
 	{
 		name = IronDartItemName;
-		itemClass = ItemClassWeapon;
+		itemType = ItemTypeWeapon;
 
 		width = 27;
 		height = 27;
@@ -63,7 +64,7 @@ void InventoryItem::Load()
 	else if (uniqueID == CrystalDartItem)
 	{
 		name = CrystalDartName;
-		itemClass = ItemClassWeapon;
+		itemType = ItemTypeWeapon;
 
 		width = 27;
 		height = 27;
@@ -73,7 +74,7 @@ void InventoryItem::Load()
 	else if (uniqueID == MokbiDartItem)
 	{
 		name = MokbiDartName;
-		itemClass = ItemClassWeapon;
+		itemType = ItemTypeWeapon;
 
 		width = 28;
 		height = 28;
@@ -83,12 +84,22 @@ void InventoryItem::Load()
 	else if (uniqueID == SteelyThrowingKnivesItem)
 	{
 		name = SteelyThrowingKnivesItemName;
-		itemClass = ItemClassWeapon;
+		itemType = ItemTypeWeapon;
 
 		width = 29;
 		height = 29;
 		minATT = 5;
 		maxATT = 10;
+		
+	}
+	else if (uniqueID == HealthPotionItem)
+	{
+		width = height = 27;
+
+		name = HealthPotionItemName;
+		itemType = ItemTypeMiscellaneous;
+		stackable = true;
+		maxStack = 99;
 	}
 	InitItemInfo();
 }
@@ -97,12 +108,17 @@ void InventoryItem::InitItemInfo()
 {
 	itemInfoTexts.newLine(name, segoeui22, COLOR_WHITE);
 
-	itemInfoTexts.newLine("attack: " + to_string(minATT) + "~" + to_string(maxATT), segoeui18, COLOR_WHITE);
-	itemInfoTexts.newLine("attack Interval: 40", segoeui18, COLOR_WHITE);
-	if (uniqueID == MokbiDartItem || uniqueID == SteelyThrowingKnivesItem)
+	switch(itemType)
 	{
-		itemInfoTexts.newLine("can penetrate 2 enemies", segoeui18, COLOR_WHITE);
-		return;
+	case ItemTypeWeapon:
+		itemInfoTexts.newLine("attack: " + to_string(minATT) + "~" + to_string(maxATT), segoeui18, COLOR_WHITE);
+		itemInfoTexts.newLine("attack Interval: 40", segoeui18, COLOR_WHITE);
+		if (uniqueID == MokbiDartItem || uniqueID == SteelyThrowingKnivesItem)
+		{
+			itemInfoTexts.newLine("can penetrate 2 enemies", segoeui18, COLOR_WHITE);
+			return;
+		}
+		break;
 	}
 }
 
@@ -158,16 +174,26 @@ void InventoryItem::update()
 				}
 				else if (active)	//exchange one item
 				{
-					int tempID = player->selectingItem->uniqueID;
-					int tempStack = player->selectingItem->stack;
-					player->selectingItem->init(uniqueID, stack);
-					init(tempID, tempStack);
-					player->selectingItem = NULL;
-					beingPicked = false;
+					if (player->selectingItem->slotType == ItemslotTypeSplited) // means it is splited, pick up the item
+					{
+						int tempID = player->selectingItem->uniqueID;
+						int tempStack = player->selectingItem->stack;
+						player->selectingItem->init(uniqueID, stack);
+						init(tempID, tempStack);
+					}
+					else
+					{
+						int tempID = player->selectingItem->uniqueID;
+						int tempStack = player->selectingItem->stack;
+						player->selectingItem->init(uniqueID, stack);
+						init(tempID, tempStack);
+						player->selectingItem = NULL;
+						beingPicked = false;
+					}
 				}
 				else //put down one item
 				{
-					if (player->selectingItem->itemClass == -1) // means it is splited, delete the splited
+					if (player->selectingItem->slotType == ItemslotTypeSplited) // means it is splited, delete the splited
 					{
 						init(player->selectingItem->getUniqueID(), player->selectingItem->stack);
 						delete player->selectingItem;
@@ -225,8 +251,7 @@ bool InventoryItem::CheckMouseOver_slot()
 
 InventoryItem* InventoryItem::getSplit(int stack)
 {
-	InventoryItem* splitItem = new InventoryItem(uniqueID, stack);
-	splitItem->itemClass = -1;
+	InventoryItem* splitItem = new InventoryItem(uniqueID, stack, ItemslotTypeSplited);
 	splitItem->slotpos = slotpos;
 	splitItem->beingPicked = true;
 	return splitItem;
@@ -249,7 +274,7 @@ void Inventory::Load()
 	gold = XmlParser::Inst()->gold;
 	goldNumText = new Textbox(position, to_string(gold), arial28_bold, COLOR_BLACK, -1);
 	for (int i = 0; i < INVENTORYSIZE * 2; i += 2)
-		items.push_back(new InventoryItem(XmlParser::Inst()->inventory[i], XmlParser::Inst()->inventory[i + 1]));
+		items.push_back(new InventoryItem(XmlParser::Inst()->inventory[i], XmlParser::Inst()->inventory[i + 1], ItemslotTypeInventory));
 }
 
 void Inventory::update()
@@ -325,7 +350,7 @@ bool Inventory::addItem(int itemID, int stack)
 			int addup = items[i]->stack + stack;
 			if (addup > items[i]->maxStack)
 			{
-				stack -= items[i]->maxStack - items[i]->stack;
+				stack = addup - items[i]->maxStack;
 				items[i]->stack = items[i]->maxStack;
 			}
 			else
@@ -361,7 +386,7 @@ bool Inventory::addItem(Item* item)
 			int addup = items[i]->stack + item->stack;
 			if (addup > items[i]->maxStack)
 			{
-				item->stack -= items[i]->maxStack - items[i]->stack;
+				item->stack = addup - items[i]->maxStack;
 				items[i]->stack = items[i]->maxStack;
 			}
 			else
@@ -388,23 +413,50 @@ void Inventory::rearrangeItems()
 	int i, k;
 	int maxIndex;
 	int max;
-	for (k = 0; k < INVENTORYSIZE; k++)
+	bool combined;
+	for (k = 0; k < INVENTORYSIZE;)
 	{
 		max = 0;
+		combined = false;
 		for (i = 0; i < INVENTORYSIZE; i++)
 		{
-			if (!items[i]->active)
+			if (!items[i]->active) // filter empty slots
 				continue;
-			if (items[i]->getUniqueID() > max)
+			if (items[i]->getUniqueID() > max) // find biggest id
 			{
 				maxIndex = i;
 				max = items[i]->getUniqueID();
 			}
 		}
-		if (max == 0)
+		if (max == 0) // all the items has been checked
 			break;
-		idArray[k] = max;
-		stackArray[k] = items[maxIndex]->stack;
+
+		if(items[maxIndex]->stackable) // check whether the stackable item can be stacked with the sorted item
+			for (i = 0; i < k; i++) 
+			{
+				if (idArray[i] == items[maxIndex]->getUniqueID())
+				{
+					int addup = stackArray[i] + items[maxIndex]->stack;
+					//cout << addup << endl;
+					if (addup > items[maxIndex]->maxStack)
+					{
+						items[maxIndex]->stack = addup - items[maxIndex]->maxStack;
+						stackArray[i] = items[maxIndex]->maxStack;
+					}
+					else
+					{
+						stackArray[i] = addup;
+						combined = true;
+						break;
+					}
+				}
+			}
+		if (!combined)
+		{
+			idArray[k] = max;
+			stackArray[k] = items[maxIndex]->stack;
+			k++;
+		}
 		items[maxIndex]->active = false;
 	}
 

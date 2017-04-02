@@ -121,7 +121,7 @@ void Player::update()
 		if (!inventory->active)
 		{
 			selectingItem->beingPicked = false;
-			if (selectingItem->itemClass == -1)
+			if (selectingItem->slotType == ItemslotTypeSplited)
 				inventory->addItem(selectingItem->getUniqueID(), selectingItem->stack);
 			selectingItem = NULL;
 		}
@@ -416,7 +416,7 @@ void Player::HandleInput()
 		World::Inst()->newItem(selectingItem->getUniqueID(), selectingItem->stack, entityCenter.x, entityCenter.y, direction.x, direction.y);
 		selectingItem->active = false;
 		selectingItem->beingPicked = false;
-		if (selectingItem->itemClass == -1)
+		if (selectingItem->slotType == ItemslotTypeSplited)
 			delete selectingItem;
 
 		selectingItem = NULL;

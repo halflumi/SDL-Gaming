@@ -114,6 +114,7 @@ void World::initialize()
 	TextureLoader::Inst()->load(MokbiDartItemFile, MokbiDartItem);
 	TextureLoader::Inst()->load(GoldCoinItemFile, GoldCoinItem);
 	TextureLoader::Inst()->load(SteelyThrowingKnivesItemFile, SteelyThrowingKnivesItem);
+	TextureLoader::Inst()->load(HealthPotionItemFile, HealthPotionItem);
 	///Load effects
 	TextureLoader::Inst()->load(SummonMagicEffectFile, SummonMagicEffect);
 	TextureLoader::Inst()->load(SpeedupSkillEffectFile, SpeedupSkillEffect);
