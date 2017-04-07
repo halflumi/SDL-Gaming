@@ -33,8 +33,8 @@ int main(int argc, char **argv)
 
 			if (frameTime < DELAY_TIME)
 				SDL_Delay((int)(DELAY_TIME - frameTime));
-			if (!Dice::Inst()->rand(100))
-				cout << "FPS: " << 1000 / (SDL_GetTicks() - frameStart) << endl;
+			//if (!Dice::Inst()->rand(100))
+			//	cout << "FPS: " << 1000 / (SDL_GetTicks() - frameStart) << endl;
 		}
 	}
 	cout << "Exit game now..." << endl;

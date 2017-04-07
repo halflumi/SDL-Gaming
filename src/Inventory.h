@@ -12,15 +12,16 @@ using namespace std;
 class InventoryItem : public Object
 {
 private:
-	bool mouseAbove;
 	MyTimer* selectCooldown;
 	
 	void Load();
 	void InitItemInfo();
 	bool CheckMouseOver_slot();
+	void InventoryMovement();
 public:
 	Textbox* stackNumText;
 	TextboxGroup itemInfoTexts;
+	bool mouseAbove;
 	bool stackable;
 	int stack;
 	int maxStack;

@@ -23,7 +23,7 @@ class World
 	};
 private:
 	static World* INSTANCE;
-	World() : newGame(false) {};
+	World();
 	World(const World&);
 public:
 	static World* Inst()
@@ -44,6 +44,9 @@ private:
 	Textbox healthNumText;
 	Textbox manaNumText;
 	Textbox xpNumText;
+	ProgressBar healthBar;
+	ProgressBar manaBar;
+	ProgressBar xpBar;
 
 	vector<Sprite*> layer_background;
 	vector<Tile*> layer_tile;
@@ -55,6 +58,7 @@ private:
 	vector<Textbox*> layer_text;
 
 	void RenderBackground();
+	void UpdateUI();
 	void RenderUI();
 	void AttackWave();
 public:

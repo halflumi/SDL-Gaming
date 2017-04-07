@@ -12,7 +12,6 @@ protected:
 	: position(0, 0), uniqueID(-1), name(""), width(0), height(0), currentRow(0), currentFrame(0), numFrames(1), animatedSpeed(12), angle(0), alpha(255), visiable(false), active(true) 
 	{}
 	int uniqueID;
-	string name;
 
 	int currentFrame;
 	int currentRow;
@@ -24,6 +23,7 @@ protected:
 	virtual void Load() = 0;
 	void VisiableCheck();
 public:
+	string name;
 	Vector2D position;
 	int width;
 	int height;

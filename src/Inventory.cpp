@@ -26,6 +26,7 @@ InventoryItem::InventoryItem(int id, int _stack, ItemslotType _slotType) : itemI
 	uniqueID = id;
 	stack = _stack;
 	slotType = _slotType;
+	beingPicked = false;
 	Load();
 }
 
@@ -44,7 +45,6 @@ void InventoryItem::Load()
 	if(selectCooldown == NULL)
 		selectCooldown = new MyTimer(true);
 	mouseAbove = false;
-	beingPicked = false;
 
 	stackable = false;
 	maxStack = 1;
@@ -135,92 +135,8 @@ void InventoryItem::update()
 		mouseAbove = true;
 		itemInfoTexts.setPosition(position.x, position.y + GRIDSIZE);
 		itemInfoTexts.update();
-		if (Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && selectCooldown->getTicks() > CLICKCOOLDOWN)
-		{
-			selectCooldown->start();
-			Player* player = Camera::Inst()->getTarget_nonConst();
-			
-			if (player->selectingItem == NULL)	//pick one item up
-			{
-				if (active)
-				{
-					player->selectingItem = this;
-					beingPicked = true;
-				}
-			}
-			else
-			{
-				if (player->selectingItem == this)	//exchange itself
-				{
-					beingPicked = false;
-					player->selectingItem = NULL;
-				}
-				else if (active && stackable && player->selectingItem->getUniqueID() == uniqueID) //add up to the same item
-				{
-					int addup = player->selectingItem->stack + stack;
-					if (addup > maxStack)
-					{
-						player->selectingItem->stack -= maxStack - stack;
-						stack = maxStack;
-					}
-					else // two items add up into one item, use empty item to fill the gap
-					{
-						stack = addup;
-						
-						player->selectingItem->active = false;
-						player->selectingItem->beingPicked = false;
-						player->selectingItem = NULL;
-					}
-				}
-				else if (active)	//exchange one item
-				{
-					if (player->selectingItem->slotType == ItemslotTypeSplited) // means it is splited, pick up the item
-					{
-						int tempID = player->selectingItem->uniqueID;
-						int tempStack = player->selectingItem->stack;
-						player->selectingItem->init(uniqueID, stack);
-						init(tempID, tempStack);
-					}
-					else
-					{
-						int tempID = player->selectingItem->uniqueID;
-						int tempStack = player->selectingItem->stack;
-						player->selectingItem->init(uniqueID, stack);
-						init(tempID, tempStack);
-						player->selectingItem = NULL;
-						beingPicked = false;
-					}
-				}
-				else //put down one item
-				{
-					if (player->selectingItem->slotType == ItemslotTypeSplited) // means it is splited, delete the splited
-					{
-						init(player->selectingItem->getUniqueID(), player->selectingItem->stack);
-						delete player->selectingItem;
-						player->selectingItem = NULL;
-					}
-					else
-					{
-						init(player->selectingItem->getUniqueID(), player->selectingItem->stack);
-						player->selectingItem->active = false;
-						player->selectingItem->beingPicked = false;
-						player->selectingItem = NULL;
-					}
-				}
-			}
-		}
-		if (stack > 1 && Inputor::Inst()->getMouseButtonState(MOUSE_RIGHT) && selectCooldown->getTicks() > CLICKCOOLDOWN)
-		{
-			selectCooldown->start();
-			Player* player = Camera::Inst()->getTarget_nonConst();
-
-			if (player->selectingItem == NULL)
-			{
-				int split = stack / 2;
-				stack -= split;
-				player->selectingItem = getSplit(split);
-			}
-		}
+		/// pickup, exchange or throw
+		InventoryMovement();
 	}
 	else
 		mouseAbove = false;
@@ -233,8 +149,6 @@ void InventoryItem::draw()
 		TextureLoader::Inst()->drawFrameEx(uniqueID, position.x + SIZEDIFF, position.y + SIZEDIFF, width, height, ITEMSIZE, ITEMSIZE, currentRow, currentFrame, angle, alpha);
 		if (maxStack > 1)
 			stackNumText->draw();
-		if (!beingPicked && mouseAbove)
-			itemInfoTexts.draw();
 	}
 	if (mouseAbove)
 		TextureLoader::Inst()->drawFrameEx(InventoryGridMask, slotpos.x, slotpos.y, 10, 10, GRIDSIZE, GRIDSIZE, 0, 0, 0, 255);
@@ -255,6 +169,97 @@ InventoryItem* InventoryItem::getSplit(int stack)
 	splitItem->slotpos = slotpos;
 	splitItem->beingPicked = true;
 	return splitItem;
+}
+
+void InventoryItem::InventoryMovement()
+{
+	if (Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && selectCooldown->getTicks() > CLICKCOOLDOWN)
+	{
+		selectCooldown->start();
+		Player* player = Camera::Inst()->getTarget_nonConst();
+
+		if (player->selectingItem == NULL)	//pick one item up
+		{
+			if (active)
+			{
+				player->selectingItem = this;
+				beingPicked = true;
+			}
+		}
+		else if (player->selectingItem == this)	//exchange itself
+		{
+			beingPicked = false;
+			player->selectingItem = NULL;
+		}
+		else if (active && stackable && player->selectingItem->getUniqueID() == uniqueID) //add up to the same item
+		{
+			int addup = player->selectingItem->stack + stack;
+			if (addup > maxStack)
+			{
+				player->selectingItem->stack -= maxStack - stack;
+				stack = maxStack;
+			}
+			else // two items add up into one item, use empty item to fill the gap
+			{
+				stack = addup;
+
+				player->selectingItem->active = false;
+				player->selectingItem->beingPicked = false;
+				player->selectingItem = NULL;
+			}
+		}
+		else if (active)	//exchange one item
+		{
+			if(slotType == ItemslotTypeInventory || slotType == player->selectingItem->itemType || slotType == player->selectingItem->itemType + 1) // a potion cannot be put in weapon slot
+				if (player->selectingItem->slotType == ItemslotTypeSplited) // means it is splited, pick up the item
+				{
+					int tempID = player->selectingItem->uniqueID;
+					int tempStack = player->selectingItem->stack;
+					player->selectingItem->init(uniqueID, stack);
+					init(tempID, tempStack);
+				}
+				else
+				{
+					int tempID = player->selectingItem->uniqueID;
+					int tempStack = player->selectingItem->stack;
+					player->selectingItem->init(uniqueID, stack);
+					init(tempID, tempStack);
+					player->selectingItem->beingPicked = false;
+					player->selectingItem = NULL;
+					beingPicked = false;
+				}
+		}
+		else //put down one item
+		{
+			if (slotType == ItemslotTypeInventory || slotType == player->selectingItem->itemType || slotType == player->selectingItem->itemType + 1) // a potion cannot be put in weapon slot
+				if (player->selectingItem->slotType == ItemslotTypeSplited) // means it is splited, delete the splited
+				{
+					init(player->selectingItem->getUniqueID(), player->selectingItem->stack);
+					delete player->selectingItem;
+					player->selectingItem = NULL;
+				}
+				else
+				{
+					init(player->selectingItem->getUniqueID(), player->selectingItem->stack);
+					player->selectingItem->active = false;
+					player->selectingItem->beingPicked = false;
+					player->selectingItem = NULL;
+				}
+		}
+	}
+
+	if (stack > 1 && Inputor::Inst()->getMouseButtonState(MOUSE_RIGHT) && selectCooldown->getTicks() > CLICKCOOLDOWN)
+	{
+		selectCooldown->start();
+		Player* player = Camera::Inst()->getTarget_nonConst();
+
+		if (player->selectingItem == NULL)
+		{
+			int split = stack / 2;
+			stack -= split;
+			player->selectingItem = getSplit(split);
+		}
+	}
 }
 
 //--------------------------------------------------------
@@ -297,13 +302,11 @@ void Inventory::update()
 	goldNumText->changeText(to_string(gold));
 	///update inventory items
 	for (int i = 0; i < INVENTORYSIZE; i++)
-	{
 		if (!items[i]->beingPicked)
 		{
 			items[i]->setPosition(position.x + i % GRIDNUM * (GRIDSIZE + GRIDGAP) + 3, position.y + i / GRIDNUM * (GRIDSIZE + GRIDGAP) + TITLEHEIGHT);
 			items[i]->update();
 		}
-	}
 }
 
 void Inventory::draw()
@@ -314,8 +317,15 @@ void Inventory::draw()
 	goldNumText->draw();
 
 	int i, len = items.size();
+	int infoIndex = -1;
 	for (i = 0; i < len; i++)
-			items[i]->draw();
+	{
+		items[i]->draw();
+		if (items[i]->mouseAbove && items[i]->active && !items[i]->beingPicked)
+			infoIndex = i;
+	}
+	if(infoIndex != -1)
+		items[infoIndex]->itemInfoTexts.draw();
 }
 
 bool Inventory::outsideCheckMouseTitle()
@@ -345,7 +355,7 @@ bool Inventory::addItem(int itemID, int stack)
 	int i;
 	for (i = 0; i < INVENTORYSIZE; i++)
 	{
-		if (active && items[i]->stackable && items[i]->getUniqueID() == itemID)
+		if (items[i]->active && items[i]->stackable && items[i]->getUniqueID() == itemID)
 		{
 			int addup = items[i]->stack + stack;
 			if (addup > items[i]->maxStack)
@@ -381,7 +391,7 @@ bool Inventory::addItem(Item* item)
 	int i;
 	for (i = 0; i < INVENTORYSIZE; i++)
 	{
-		if (active && items[i]->stackable && items[i]->getUniqueID() == item->getUniqueID())
+		if (items[i]->active && items[i]->stackable && items[i]->getUniqueID() == item->getUniqueID())
 		{
 			int addup = items[i]->stack + item->stack;
 			if (addup > items[i]->maxStack)

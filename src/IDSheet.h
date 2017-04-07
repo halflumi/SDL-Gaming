@@ -44,8 +44,8 @@ enum SkillIndex
 
 enum ItemType
 {
-	ItemTypeWeapon,
-	ItemTypeHelmet,
+	ItemTypeWeapon = 1000,
+	ItemTypeHelmet = 1100,
 	ItemTypeMiscellaneous
 };
 
@@ -53,9 +53,9 @@ enum ItemslotType
 {
 	ItemslotTypeInventory,
 	ItemslotTypeSplited,
-	ItemslotTypeRighthand,
-	ItemslotTypeLefthand,
-	ItemslotTypeHelmet
+	ItemslotTypeRighthand = 1000,
+	ItemslotTypeLefthand = 1001,
+	ItemslotTypeHelmet= 1100
 };
 
 enum TextboxGroupType
@@ -90,6 +90,7 @@ enum MapChangeType
 #define TypeBuff							10010015
 #define TypeEffect							10010016
 #define TypeTextboxGroup					10010017
+#define TypeProgressBar						10010018
 //menuID 101
 #define MenuMain							10110000
 #define MenuOptions							10110001
@@ -223,10 +224,6 @@ enum MapChangeType
 //panel and UIs 302
 #define UIpic								30210000
 #define UIpicFile							"../assets/UI/UIpic.png"
-#define HealthBar							30210001
-#define HealthBarFile						"../assets/UI/HealthBar.png"
-#define ManaBar								30210002
-#define ManaBarFile							"../assets/UI/ManaBar.png"
 #define InventoryGrid						30210003
 #define InventoryGridFile					"../assets/UI/InventoryGrid.png"
 #define InventoryGridMask					30210004
@@ -235,8 +232,6 @@ enum MapChangeType
 #define InventoryCloseButtonFile			"../assets/UI/InventoryCloseButton.png"
 #define CharacterPanelPic					30210006
 #define CharacterPanelPicFile				"../assets/UI/CharacterPanel.png"
-#define ExpBar								30210007
-#define ExpBarFile							"../assets/UI/ExpBar.png"
 #define DialogBackground					30210008
 #define DialogBackgroundFile				"../assets/UI/DialogBackground.png"
 #define MessageboxMask						30210009
@@ -249,12 +244,19 @@ enum MapChangeType
 #define SkillPanelAddSkillButtonFile		"../assets/UI/SkillPlusButton.png"
 #define SkillPanelMinusSkillButton			30210013
 #define SkillPanelMinusSkillButtonFile		"../assets/UI/SkillMinusButton.png"
-#define xpBar								30210014
-#define xpBarFile							"../assets/UI/expBar.png"
 #define CharacterWeaponSlot					30210015
 #define CharacterWeaponSlotFile				"../assets/UI/CharacterWeaponSlot.png"
 #define ItemInfoBackground					30210016
 #define ItemInfoBackgroundFile				"../assets/UI/ItemInfoBackground.png"
+
+#define XPProgressBar						30220000
+#define XPProgressBarFile					"../assets/UI/XPBar.png"
+#define HealthProgressBar					30220001
+#define HealthProgressBarFile				"../assets/UI/HealthBar.png"
+#define ManaProgressBar						30220002
+#define ManaProgressBarFile					"../assets/UI/ManaBar.png"
+#define CharacterXPBar						30220003
+#define CharacterXPBarFile					"../assets/UI/CharacterXPBar.png"
 //Hostile 303
 #define BlackBlock							30310000
 #define BlackBlockFile						"../assets/entities/BlackBlock.png"

@@ -189,10 +189,7 @@ void SkillSlot::update()
 		if (to_string(skill->level) != levelNumText->text)
 			levelNumText->changeText(to_string(skill->level));
 
-	if (checkMouseOver())
-		mouseAbove = true;
-	else
-		mouseAbove = false;
+	mouseAbove = false;
 }
 
 void SkillSlot::draw()
@@ -208,9 +205,12 @@ void SkillSlot::draw()
 bool SkillSlot::checkMouseOver()
 {
 	Vector2D mousepos = Inputor::Inst()->getMouseRelativePosition();
-
+	
 	if (mousepos.x <= position.x + GRIDSIZE && mousepos.x >= position.x && mousepos.y >= position.y && mousepos.y <= position.y + GRIDSIZE)
+	{
+		mouseAbove = true;
 		return true;
+	}
 	return false;
 }
 
@@ -322,10 +322,13 @@ void SkillPanel::UpdateSkillSlots()
 	skillslots[SkillIndexCriticalThrow]->setPosition(SkillCriticalThrowPos);
 	skillslots[SkillIndexSummonAttack]->setPosition(SkillSummonAttackPos);
 	skillslots[SkillIndexSpeedupSkill]->setPosition(SkillSpeedupPos);
-	///select and hotkey assignment
+	///fresh skillslots
+	for (int i = 0; i < TOTALSKILLS; i++)
+		skillslots[i]->update();
+	///select skillslots and hotkey assignment
 	for (int i = 0; i < TOTALSKILLS; i++)
 	{
-		if (skillslots[i]->checkMouseOver())
+		if (skillslots[i]->checkMouseOver()) // give gray shadow feedback
 		{
 			if (Inputor::Inst()->getMouseButtonState(MOUSE_LEFT) && selectCooldown.getTicks() > CLICKCOOLDOWN)
 			{
@@ -343,9 +346,6 @@ void SkillPanel::UpdateSkillSlots()
 			}
 		}
 	}
-	///fresh skillslots
-	for (int i = 0; i < TOTALSKILLS; i++)
-		skillslots[i]->update();
 	///update chosen skillslot
 	if (selectedSkillIndex != -1)
 		skillslots[selectedSkillIndex]->updateSkillInfo(position);

@@ -420,12 +420,25 @@ void XmlParser::saveCharacter()
 	element = xmlFile.NewElement("inventory");
 	for (const auto & item : Camera::Inst()->getTarget_nonConst()->inventory->items)
 	{
-		XMLElement* listElement = xmlFile.NewElement("item");
-		listElement->SetText(item->getUniqueID());
+		XMLElement* listElement;
+		if (item->active)
+		{
+			listElement = xmlFile.NewElement("item");
+			listElement->SetText(item->getUniqueID());
+			element->InsertEndChild(listElement);
+			listElement = xmlFile.NewElement("item");
+			listElement->SetText(item->stack);
+			element->InsertEndChild(listElement);
+		}
+		else
+		{
+		listElement = xmlFile.NewElement("item");
+		listElement->SetText(NULL);
 		element->InsertEndChild(listElement);
 		listElement = xmlFile.NewElement("item");
-		listElement->SetText(item->stack);
+		listElement->SetText(0);
 		element->InsertEndChild(listElement);
+		}
 	}
 	node->InsertEndChild(element);
 	///gold

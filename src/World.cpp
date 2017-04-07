@@ -16,12 +16,17 @@
 #define xpTextPos			941, Main::Inst()->getRenderHeight() + 42 
 #define HealthBarPos		39, Main::Inst()->getRenderHeight() + 9
 #define ManaBarPos			39, Main::Inst()->getRenderHeight() + 30
-#define HealthBarLength		148.f
+#define XPBarPos			39, Main::Inst()->getRenderHeight() + 50
+#define HealthBarLength		148
 #define HealthBarHeight		9
-#define xpBarPos			39, Main::Inst()->getRenderHeight() + 50
-#define xpBarLength			898.f
+#define xpBarLength			898
 
 World* World::INSTANCE = 0;
+
+World::World() : healthBar(HealthProgressBar, HealthBarLength, HealthBarHeight), manaBar(ManaProgressBar, HealthBarLength, HealthBarHeight), xpBar(XPProgressBar, HealthBarLength, HealthBarHeight)
+{
+	newGame = false;
+}
 
 void World::initialize()
 {
@@ -33,15 +38,11 @@ void World::initialize()
 	TextureLoader::Inst()->load(MapBackground2File, MapBackground2);
 	///Load panels and uis
 	TextureLoader::Inst()->load(UIpicFile, UIpic);
-	TextureLoader::Inst()->load(HealthBarFile, HealthBar);
-	TextureLoader::Inst()->load(ManaBarFile, ManaBar);
-	TextureLoader::Inst()->load(xpBarFile, xpBar);
 	TextureLoader::Inst()->load(InventoryGridFile, InventoryGrid);
 	TextureLoader::Inst()->load(InventoryGridMaskFile, InventoryGridMask);
 	TextureLoader::Inst()->load(InventoryCloseButtonFile, InventoryCloseButton);
 	TextureLoader::Inst()->load(CharacterPanelPicFile, CharacterPanelPic);
 	TextureLoader::Inst()->load(SkillPanelPicFile, SkillPanelPic);
-	TextureLoader::Inst()->load(ExpBarFile, ExpBar);
 	TextureLoader::Inst()->load(DialogBackgroundFile, DialogBackground);
 	TextureLoader::Inst()->load(MessageboxMaskFile, MessageboxMask);
 	TextureLoader::Inst()->load(InventoryArrangeButtonFile, InventoryArrangeButton);
@@ -49,6 +50,11 @@ void World::initialize()
 	TextureLoader::Inst()->load(SkillPanelMinusSkillButtonFile, SkillPanelMinusSkillButton);
 	TextureLoader::Inst()->load(CharacterWeaponSlotFile, CharacterWeaponSlot);
 	TextureLoader::Inst()->load(ItemInfoBackgroundFile, ItemInfoBackground);
+
+	TextureLoader::Inst()->load(XPProgressBarFile, XPProgressBar);
+	TextureLoader::Inst()->load(HealthProgressBarFile, HealthProgressBar);
+	TextureLoader::Inst()->load(ManaProgressBarFile, ManaProgressBar);
+	TextureLoader::Inst()->load(CharacterXPBarFile, CharacterXPBar);
 	///Load skill icons
 	TextureLoader::Inst()->load(SkillPhysicalTrainingIconFile, SkillPhysicalTrainingIcon);
 	TextureLoader::Inst()->load(SkillDoubleThrowIconFile, SkillDoubleThrowIcon);
@@ -158,13 +164,15 @@ void World::initialize()
 	changeMap(XmlParser::Inst()->mapID, MAPCHANGE_LOAD);
 	timer = MyTimer(true);
 	///load UI
-	const Player* player = Camera::Inst()->getTarget();
 	Vector2D healthNumTextpos(HealthTextPos);
 	Vector2D manaNumTextpos(ManaTextPos);
 	Vector2D xpTextpos(xpTextPos);
 	healthNumText = Textbox(healthNumTextpos, "", segoeui18, COLOR_WHITE, -1);
 	manaNumText = Textbox(manaNumTextpos, "", segoeui18, COLOR_WHITE, -1);
 	xpNumText = Textbox(xpTextpos, "", segoeui18, COLOR_WHITE, -1);
+	healthBar.setPosition(HealthBarPos);
+	manaBar.setPosition(ManaBarPos);
+	xpBar.setPosition(XPBarPos);
 }
 
 void World::clearWorld()
@@ -319,7 +327,11 @@ void World::changeMap(int mapID, MapChangeType form)
 		///entities
 		getLayer_entity().push_back(new Hostile(HostilePigNPC, 0, 200, height - 200));
 		///items
+		getLayer_entity().push_back(new Item(IronDartItem, 1, 500, 0));
+		getLayer_entity().push_back(new Item(MokbiDartItem, 1, 500, 0));
+		getLayer_entity().push_back(new Item(CrystalDartItem, 1, 500, 0));
 		getLayer_entity().push_back(new Item(SteelyThrowingKnivesItem, 1, 500, 0));
+		getLayer_entity().push_back(new Item(HealthPotionItem, 10, 500, 0));
 		return;
 	}
 }
@@ -402,6 +414,9 @@ void World::updating()
 	for (i = 0; i < len; i++)
 		if (layer_text[i]->active)
 			layer_text[i]->update();
+
+	//update UI
+	UpdateUI();
 }
 
 void World::rendering()
@@ -474,20 +489,28 @@ void World::RenderBackground()
  	TextureLoader::Inst()->drawEx(backgroundID, x, y, 0, 0, Main::Inst()->getRenderWidth(), Main::Inst()->getRenderHeight());
 }
  
+void World::UpdateUI()
+{
+	const Player* player = Camera::Inst()->getTarget();
+
+	healthBar.updateTarget(player->life, player->maxlife);
+	manaBar.updateTarget(player->mana, player->maxmana);
+	xpBar.updateTarget(player->exp, player->expToNextLevel);
+
+	healthNumText.changeText(to_string(player->life) + " / " + to_string(player->maxlife));
+	manaNumText.changeText(to_string(player->mana) + " / " + to_string(player->maxmana));
+	xpNumText.changeText(to_string(player->exp) + " / " + to_string(player->expToNextLevel));
+}
+
 void World::RenderUI()
 {
 	TextureLoader::Inst()->draw(UIpic, 0, Main::Inst()->getRenderHeight(), Main::Inst()->getRenderWidth(), UIHEIGHT);
+	healthBar.draw();
+	manaBar.draw();
+	xpBar.draw();
 
-	const Player* player = Camera::Inst()->getTarget();
-	TextureLoader::Inst()->drawEx2(HealthBar, HealthBarPos, 10, 10, player->life * HealthBarLength / player->maxlife, HealthBarHeight);
-	TextureLoader::Inst()->drawEx2(ManaBar, ManaBarPos, 10, 10, player->mana * HealthBarLength / player->maxmana, HealthBarHeight);
-	TextureLoader::Inst()->drawEx2(xpBar, xpBarPos, 10, 10, player->exp * xpBarLength / player->expToNextLevel, HealthBarHeight);
-
-	healthNumText.changeText(to_string(player->life) + " / " + to_string(player->maxlife));
 	healthNumText.draw();
-	manaNumText.changeText(to_string(player->mana) + " / " + to_string(player->maxmana));
 	manaNumText.draw();
-	xpNumText.changeText(to_string(player->exp) + " / " + to_string(player->expToNextLevel));
 	xpNumText.draw();
 }
 

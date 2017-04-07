@@ -2,6 +2,7 @@
 #include "Object.h"
 #include "Button.h"
 #include "Textbox.h"
+#include "ProgressBar.h"
 #include "Inventory.h"
 
 class CharacterPanel : public Object
@@ -11,6 +12,7 @@ private:
 	Textbox* expText;
 	Textbox* expNextText;
 	Button closeButton;
+	ProgressBar xpBar;
 
 	void Load();
 public:
@@ -19,6 +21,15 @@ public:
 	InventoryItem* helmetSlot;
 
 	CharacterPanel();
+	~CharacterPanel() 
+	{
+		delete levelText; 
+		delete expText; 
+		delete expNextText;
+		delete rightHandSlot;
+		delete leftHandSlot;
+		delete helmetSlot;
+	}
 
 	int type() { return TypeCharacterPanel; }
 	void update();

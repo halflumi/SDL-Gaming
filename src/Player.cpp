@@ -348,6 +348,7 @@ void Player::HandleInput()
 		keyCooldown.start();
 	}
 
+	/// try to move the character
 	if (attackingFrameTick)
 	{
 		movingLeft = false;
